@@ -144,7 +144,8 @@ return [
 		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
-
+        'App\Providers\ConnectorServiceProvider',
+        'App\Providers\ContextAdsServiceProvider',
 	],
 
 	/*
@@ -192,7 +193,8 @@ return [
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
-
+        'Connector' => 'App\Facades\Connector',
+        'ContextAds'=> 'App\Facades\ContextAds',
 	],
 
 ];

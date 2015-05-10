@@ -24,7 +24,8 @@ class RouteServiceProvider extends ServiceProvider {
 	{
 		parent::boot($router);
 
-		//
+		$router->model('customers','App\ActiveCustomer');
+        $router->model('minors','App\BeaconMinor');
 	}
 
 	/**
