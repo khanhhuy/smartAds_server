@@ -9,13 +9,27 @@
 namespace App\Services;
 
 
-
 use App\Category;
 use GuzzleHttp\Client;
 
-class ConnectorService {
+class ConnectorService
+{
 
-    const SUPERMARKET_HOST='http://localhost:8088';
+    private $client;
+
+    public function __construct()
+    {
+        $this->client = new Client(['base_url' => self::getSupermarketMSHost()]);
+    }
+
+    public static function getSupermarketMSHost()
+    {
+        if (config('supermarketms.use_localhost')) {
+            return 'http://localhost:' . config('supermarketms.local_port');
+        } else {
+            return config('supermarketms.remote_host');
+        }
+    }
 
 
     public function getItemIDsFromCategory(Category $category)
@@ -25,8 +39,7 @@ class ConnectorService {
 
     public function getItemIDsFromCategoryID($categoryID)
     {
-        $client=new Client(['base_url'=>self::SUPERMARKET_HOST]);
-        $response=$client->get('/categories/'.$categoryID.'/items');
+        $response = $this->client->get('/categories/'.$categoryID.'/items');
         return $response->json();
     }
 }

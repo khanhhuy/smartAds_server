@@ -15,11 +15,13 @@ use App\BeaconMinor;
 use App\Facades\Connector;
 use App\Repositories\CategoryInterface;
 
-class ContextAdsService {
+class ContextAdsService
+{
     protected $categoryRepo;
+
     public function __construct(CategoryInterface $categoryRepo)
     {
-        $this->categoryRepo=$categoryRepo;
+        $this->categoryRepo = $categoryRepo;
     }
 
     public function getContextAds(ActiveCustomer $customer, BeaconMinor $minor)
@@ -34,24 +36,28 @@ class ContextAdsService {
         //$result=array_values(array_intersect($result1,$adsItems));
         //$contextAds=Ads::join('ads_item','ads.id','=','ads_item.ads_id')->whereIn('item_id',$result1)->select('id','title')->distinct()->get()->all();
         $contextAds1 = Ads::all()->filter(function ($ads) use ($nearbyWatchingItemIDs) {
-            if ($ads->items != null && !empty(array_intersect($ads->items->lists('id'), $nearbyWatchingItemIDs))) {
-                return true;
+            if ($ads->items != null) {
+                $intersect = array_intersect($ads->items->lists('id'), $nearbyWatchingItemIDs);
+                if (!empty($intersect)) {
+                    return true;
+                }
             }
             return false;
         });
-        $contextAds2 = Ads::all()->filter(function($ads) use ($nearbyWatchingItemIDs,$contextAds1) {
-            $categories=$ads->categories;
-            if (!$contextAds1->contains($ads)&&$categories!=null){
-                foreach ($categories as $category){
-                    $itemIDs=Connector::getItemIDsFromCategory($category);
-                    if (!empty(array_intersect($itemIDs,$nearbyWatchingItemIDs))){
+        $contextAds2 = Ads::all()->filter(function ($ads) use ($nearbyWatchingItemIDs, $contextAds1) {
+            $categories = $ads->categories;
+            if (!$contextAds1->contains($ads) && $categories != null) {
+                foreach ($categories as $category) {
+                    $itemIDs = Connector::getItemIDsFromCategory($category);
+                    $intersect = array_intersect($itemIDs, $nearbyWatchingItemIDs);
+                    if (!empty($intersect)) {
                         return true;
                     }
                 }
             }
             return false;
         });
-        $contextAds=array_merge($contextAds1->all(),$contextAds2->all());
+        $contextAds = array_merge($contextAds1->all(), $contextAds2->all());
 
         return $contextAds;
     }
