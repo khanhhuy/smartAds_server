@@ -26,6 +26,7 @@ class RouteServiceProvider extends ServiceProvider {
 
 		$router->model('customers','App\ActiveCustomer');
         $router->model('minors','App\BeaconMinor');
+        $router->model('ads','App\Ads');
 	}
 
 	/**
