@@ -57,7 +57,7 @@ class ContextAdsService
             }
             return false;
         });
-        $contextAds = array_merge($contextAds1->all(), $contextAds2->all());
+        $contextAds = $contextAds1->merge($contextAds2);
 
         return $contextAds;
     }

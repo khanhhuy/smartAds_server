@@ -17,6 +17,8 @@ Route::get('home', 'HomeController@index');
 
 Route::get('customers/{customers}/context-ads/{minors}','ContextAdsController@index');
 Route::get('ads/{ads}/','AdsController@show');
+Route::get('ads','AdsController@index');
+Route::get('customers/{customers}/received-ads','AdsController@receivedIndex');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
