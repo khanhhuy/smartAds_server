@@ -16,7 +16,12 @@ class CreateCategoriesTable extends Migration {
 		{
 			$table->string('id');
             $table->primary('id');
-			$table->timestamps();
+            $table->string('name');
+            $table->string('parent_id')->index()->nullable();
+            $table->foreign('parent_id')->references('id')->on('categories')->onDelete('set null');
+            $table->boolean('is_leaf')->default(true);
+			$table->boolean('is_suitable')->default(false);
+            $table->timestamps();
 		});
 
         Schema::create('category_minor', function(Blueprint $table)

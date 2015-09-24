@@ -22,4 +22,9 @@ class CategoryRepository implements CategoryInterface{
 
         return $itemIDs;
     }
+
+    public function getTaxonomy($convertToArray)
+    {
+        return Connector::getTaxonomy($convertToArray);
+    }
 }

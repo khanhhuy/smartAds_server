@@ -40,6 +40,12 @@ class ConnectorService
     public function getItemIDsFromCategoryID($categoryID)
     {
         $response = $this->client->get('/categories/'.$categoryID.'/items');
-        return $response->json();
+        return json_decode($response->getBody());
+    }
+
+    public function getTaxonomy($convertToArray=false)
+    {
+        $response = $this->client->get('/taxonomy');
+        return json_decode($response->getBody(),$convertToArray);
     }
 }
