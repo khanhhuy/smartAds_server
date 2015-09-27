@@ -16,7 +16,12 @@ class ActiveCustomerSeeder extends Seeder {
 
 
         ActiveCustomer::create(['id'=>'1']);
-        ActiveCustomer::create(['id'=>'2']);
+        ActiveCustomer::create(['id'=>'2',
+            'min_aisle_value'=>'5000',
+            'min_aisle_rate'=>'0.12',
+            'min_entrance_value'=>'20000',
+            'min_entrance_value'=>'0.2',
+        ]);
         $dao=ActiveCustomer::find('1');
         $huy=ActiveCustomer::find('2');
 

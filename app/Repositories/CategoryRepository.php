@@ -9,9 +9,11 @@
 namespace App\Repositories;
 
 use App\BeaconMinor;
+use App\Category;
 use App\Facades\Connector;
 
-class CategoryRepository implements CategoryInterface{
+class CategoryRepository implements CategoryRepositoryInterface
+{
 
     public function getItemIDsFromCategories($categories)
     {
@@ -23,8 +25,24 @@ class CategoryRepository implements CategoryInterface{
         return $itemIDs;
     }
 
-    public function getTaxonomy($convertToArray)
+    public function getTaxonomy($convertToArray = false)
     {
         return Connector::getTaxonomy($convertToArray);
+    }
+
+    public function getAllCategoryNodesOfItems($items)
+    {
+        $allCats = [];
+        foreach ($items as $item) {
+            $cat = Category::find(Connector::getCategoryIDFromItemID($item->id));
+            do {
+                if (in_array($cat->id, $allCats)) {
+                    break;
+                }
+                $allCats[] = $cat->id;
+                $cat = $cat->parentCategory;
+            } while ($cat != null);
+        }
+        return $allCats;
     }
 }

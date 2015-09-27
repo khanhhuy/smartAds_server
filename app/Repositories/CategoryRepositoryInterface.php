@@ -9,6 +9,8 @@ namespace App\Repositories;
 
 use App\BeaconMinor;
 
-interface CategoryInterface {
+interface CategoryRepositoryInterface {
     public function getItemIDsFromCategories($categories);
+    public function getTaxonomy($convertToArray);
+    public function getAllCategoryNodesOfItems($items);
 }

@@ -14,23 +14,25 @@ class CategorySeeder extends Seeder {
 
 	public function run()
 	{
-        DB::table('category_minor')->delete();
-
         $forceRefresh=false;
         if (!$forceRefresh&&!Category::all()->isEmpty()){
             $this->command->info('Table categories not empty, skipped this table. Turn on forceRefresh if you want!');
+            $this->seedCatMinor();
             return ;
         }
-
         DB::table('categories')->delete();
-        $catRepo=App::make('App\Repositories\CategoryInterface');
+        DB::table('category_minor')->delete();
+        $catRepo=App::make('App\Repositories\CategoryRepositoryInterface');
         $taxonomy = $catRepo->getTaxonomy(true);
         $categories = $taxonomy['categories'];
         foreach ($categories as $category) {
             $this->insert($category,null);
         }
 
+        $this->seedCatMinor();
+	}
 
+    private function seedCatMinor(){
         $catFabricSofteners=Category::find('1115193_1071967_1149392');
         $catLaundryDetergents=Category::find('1115193_1071967_1149379');
         $catToothpaste=Category::find('1085666_1007221_1023020');
@@ -44,7 +46,7 @@ class CategorySeeder extends Seeder {
         $minor1->categories()->attach($catFabricSofteners);
         $minor2->categories()->attach($catLaundryDetergents);
         $minor3->categories()->attach([$catSoftDrinks->id, $catToothpaste->id]);
-	}
+    }
 
     private function insert(array $category, $parent)
     {

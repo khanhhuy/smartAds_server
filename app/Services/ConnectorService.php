@@ -48,4 +48,17 @@ class ConnectorService
         $response = $this->client->get('/taxonomy');
         return json_decode($response->getBody(),$convertToArray);
     }
+
+    public function getStores($convertToArray=false)
+    {
+        $response=$this->client->get('/stores');
+        return json_decode($response->getBody(),$convertToArray);
+    }
+
+    public function getCategoryIDFromItemID($itemID)
+    {
+        $response=$this->client->get('/items/'.$itemID.'/category');
+        $cat=json_decode($response->getBody());
+        return $cat->id;
+    }
 }
