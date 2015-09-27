@@ -20,6 +20,8 @@ Route::get('ads/{ads}/','AdsController@show');
 Route::get('ads','AdsController@index');
 Route::get('customers/{customers}/received-ads','AdsController@receivedIndex');
 
+Route::get('mining/{customers}', 'MiningTestingController@index');
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',

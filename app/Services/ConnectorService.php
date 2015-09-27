@@ -10,7 +10,9 @@ namespace App\Services;
 
 
 use App\Category;
+use App\ActiveCustomer;
 use GuzzleHttp\Client;
+use Carbon\Carbon;
 
 class ConnectorService
 {
@@ -48,4 +50,23 @@ class ConnectorService
         $response = $this->client->get('/taxonomy');
         return json_decode($response->getBody(),$convertToArray);
     }
+
+    public function getShoppingHistoryFromCustomer(ActiveCustomer $customer, $fromDate = null, $toDate = null){
+
+        if ($fromDate == null && $toDate == null)
+        {
+            $response = $this->client->get('/customers/'.$customer->id.'/shopping-history');
+        }
+        elseif ($fromDate != null && $toDate != null) {
+            $response = $this->client->get('/customers/'.$customer->id.'/shopping-history'
+                                            .'/'.$fromDate.'/'.$toDate);
+        }
+        else {
+            $response = $this->client->get('/customers/'.$customer->id.'/shopping-history'
+                                            .'/'.$fromDate);
+        }
+
+        return $response->json();
+    }
+
 }
