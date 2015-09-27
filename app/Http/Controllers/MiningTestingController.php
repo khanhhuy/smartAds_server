@@ -35,6 +35,8 @@ class MiningTestingController extends Controller {
             $allWatchingList[$customer->id] = $watchingList;
         }
 
+        //Todo: remove items not in approriate categories
+
         return $allWatchingList;
     }
 

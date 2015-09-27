@@ -14,9 +14,10 @@ class ActiveCustomerSeeder extends Seeder {
         DB::table('active_customers')->delete();
         DB::table('items')->delete();
 
-
         ActiveCustomer::create(['id'=>'1']);
         ActiveCustomer::create(['id'=>'2']);
+        ActiveCustomer::create(['id'=>'3']);
+        ActiveCustomer::create(['id'=>'4']);
         $dao=ActiveCustomer::find('1');
         $huy=ActiveCustomer::find('2');
 
