@@ -15,9 +15,11 @@ class CreateBeaconsTable extends Migration {
         Schema::create('beacon_minors', function(Blueprint $table)
         {
             $table->smallInteger('minor',true,true);
+            $table->boolean('is_entry_minor')->default(false);
             $table->timestamps();
         });
-        Schema::create('beacons', function(Blueprint $table)
+
+        /*Schema::create('beacons', function(Blueprint $table)
 		{
             $table->smallInteger('minor')->unsigned();
             $table->foreign('minor')->references('minor')->on('beacon_minors')->onDelete('cascade');
@@ -25,7 +27,7 @@ class CreateBeaconsTable extends Migration {
             $table->string('color')->nullable();
             $table->timestamps();
         });
-        DB::statement('ALTER TABLE  `beacons` DROP PRIMARY KEY , ADD PRIMARY KEY (  `major` ,  `minor` ) ;');
+        DB::statement('ALTER TABLE  `beacons` DROP PRIMARY KEY , ADD PRIMARY KEY (  `major` ,  `minor` ) ;');*/
 	}
 
 	/**
@@ -35,7 +37,6 @@ class CreateBeaconsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('beacons');
         Schema::drop('beacon_minors');
 	}
 

@@ -18,10 +18,10 @@ class CreateActiveCustomersTable extends Migration {
 			$table->timestamp('last_active');
 			$table->timestamp('last_mining');
 
-			$table->decimal('min_entrance_value', 20, 5);
-			$table->decimal('min_entrance_rate', 5, 4);
-			$table->decimal('min_aisle_value', 20, 5);
-			$table->decimal('min_aisle_rate', 5, 4);
+			$table->decimal('min_entrance_value',20,5)->nullable();
+            $table->decimal('min_entrance_rate',5,4)->nullable();
+			$table->decimal('min_aisle_value',20,5)->nullable();
+            $table->decimal('min_aisle_rate',5,4)->nullable();
 
 			$table->timestamps();
             $table->primary('id');

@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\ActiveCustomer;
+use App\BeaconMajor;
 use App\BeaconMinor;
 use App\Facades\ContextAds;
 use App\Http\Requests;
@@ -10,7 +11,7 @@ use Carbon\Carbon;
 class ContextAdsController extends Controller
 {
 
-    public function index(ActiveCustomer $customer, BeaconMinor $minor)
+    /*public function index(ActiveCustomer $customer, BeaconMinor $minor)
     {
         $contextAds = ContextAds::getContextAds($customer, $minor);
         $currentReceivedAds = $customer->receivedAds;
@@ -21,6 +22,12 @@ class ContextAdsController extends Controller
         $customer->receivedAds()->attach($contextAds->diff($currentReceivedAds)->lists('id'));
 
 
+        return $contextAds;
+    }*/
+
+    public function index(ActiveCustomer $customer, BeaconMajor $major, BeaconMinor $minor)
+    {
+        $contextAds = ContextAds::getContextAds($customer, $major, $minor);
         return $contextAds;
     }
 
