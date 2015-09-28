@@ -40,7 +40,7 @@ class CreateAdsTable extends Migration {
 	 */
 	public function down()
 	{
-        Schema::drop('ads_item');
         Schema::drop('ads');
+        Schema::drop('ads_item');
 	}
 }

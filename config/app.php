@@ -146,6 +146,7 @@ return [
 		'App\Providers\RouteServiceProvider',
         'App\Providers\ConnectorServiceProvider',
         'App\Providers\ContextAdsServiceProvider',
+        'App\Providers\MiningProvider',
 	],
 
 	/*
@@ -195,6 +196,7 @@ return [
 		'View'      => 'Illuminate\Support\Facades\View',
         'Connector' => 'App\Facades\Connector',
         'ContextAds'=> 'App\Facades\ContextAds',
+        'Mining'	=> 'App\Facades\Mining'
 	],
 
 ];

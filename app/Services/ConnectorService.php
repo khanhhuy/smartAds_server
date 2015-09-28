@@ -55,15 +55,15 @@ class ConnectorService
 
         if ($fromDate == null && $toDate == null)
         {
-            $response = $this->client->get('/customers/'.$customer->id.'/shopping-history');
+           $response = $this->client->get('/customers/'.$customer->id.'/shopping-history');
         }
         elseif ($fromDate != null && $toDate != null) {
             $response = $this->client->get('/customers/'.$customer->id.'/shopping-history'
-                                            .'/'.$fromDate.'/'.$toDate);
+                                            .'?from='.$fromDate.'&to='.$toDate);
         }
         else {
             $response = $this->client->get('/customers/'.$customer->id.'/shopping-history'
-                                            .'/'.$fromDate);
+                                            .'?from='.$fromDate);
         }
 
         return $response->json();

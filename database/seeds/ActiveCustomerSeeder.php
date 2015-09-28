@@ -35,6 +35,9 @@ class ActiveCustomerSeeder extends Seeder {
         Item::create(['id'=>'5']);
         Item::create(['id'=>'6']);
         Item::create(['id'=>'7']);
+        Item::create(['id'=>'23591099']);
+        Item::create(['id'=>'23591257']);
+        Item::create(['id'=>'43172984']);
 
         $dao->watchingList()->attach(['1','2','3','4']);
         $huy->watchingList()->attach(['3','5','6','7']);
