@@ -82,4 +82,11 @@ class ConnectorService
         return $cat->id;
     }
 
+    public function validateAuthentication($email,$password)
+    {
+        $response=$this->client->post('/auth/validate',[
+            'query'=>compact('email','password')
+        ]);
+        dd($response);
+    }
 }

@@ -24,6 +24,7 @@ Route::get('customers/{customers}/received-ads','AdsController@receivedIndex');
 Route::get('mining/{customers}', 'MiningTestingController@index');
 
 Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
+	'portal/auth' => 'Auth\PortalAuthController',
+	'portal/password' => 'Auth\PasswordController',
 ]);
+Route::controller('auth','Auth\ClientAuthController');
