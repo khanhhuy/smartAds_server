@@ -27,4 +27,4 @@ Route::controllers([
 	'portal/auth' => 'Auth\PortalAuthController',
 	'portal/password' => 'Auth\PasswordController',
 ]);
-Route::controller('auth','Auth\ClientAuthController');
+Route::controller('auth','Auth\APIAuthController');

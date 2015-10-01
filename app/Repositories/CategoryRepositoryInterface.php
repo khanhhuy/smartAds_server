@@ -7,8 +7,6 @@
  */
 namespace App\Repositories;
 
-use App\BeaconMinor;
-
 interface CategoryRepositoryInterface {
     public function getItemIDsFromCategories($categories);
     public function getTaxonomy($convertToArray);
