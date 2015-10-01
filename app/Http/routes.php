@@ -21,7 +21,11 @@ Route::get('ads/{ads}/','AdsController@show');
 Route::get('ads','AdsController@index');
 Route::get('customers/{customers}/received-ads','AdsController@receivedIndex');
 
+Route::get('mining/tree', 'MiningTestingController@getCategoryTree');
 Route::get('mining/{customers}', 'MiningTestingController@index');
+
+
+Route::get('customers/{customers}/update-request', 'AccountController@update');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',

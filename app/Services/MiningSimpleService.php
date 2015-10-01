@@ -5,6 +5,7 @@ use App\ActiveCustomer;
 use App\Category;
 use App\Facades\Connector;
 use Carbon\Carbon;
+use App\Item;
 
 class MiningSimpleService
 {
@@ -52,6 +53,9 @@ class MiningSimpleService
             $catID = Connector::getCategoryIDFromItemID($item);
             if(!Category::find($catID)['is_suitable']) {
                 unset($watchingList[$key]);
+            }
+            elseif (Item::find($item) == null) {
+                Item::create(['id'=>$item]);
             }
         }
 
