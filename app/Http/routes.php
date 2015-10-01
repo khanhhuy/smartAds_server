@@ -28,6 +28,7 @@ Route::get('mining/{customers}', 'MiningTestingController@index');
 Route::get('customers/{customers}/update-request', 'AccountController@update');
 
 Route::controllers([
-	'auth' => 'Auth\AuthController',
-	'password' => 'Auth\PasswordController',
+	'portal/auth' => 'Auth\PortalAuthController',
+	'portal/password' => 'Auth\PasswordController',
 ]);
+Route::controller('auth','Auth\APIAuthController');

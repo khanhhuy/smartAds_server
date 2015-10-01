@@ -63,7 +63,7 @@ class ContextAdsService
         $result['aisleAds'] = $aisleAds;
 
 
-        return json_encode((object)$result);
+        return ((object)$result);
     }
 
     /*public function getContextAds(ActiveCustomer $customer, BeaconMinor $minor)
