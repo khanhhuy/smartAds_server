@@ -35,7 +35,7 @@ class MiningSimpleService
                                                 $fromDate = null, $toDate = null) {
 
         $transactions = Connector::getShoppingHistoryFromCustomer($customer, $fromDate, $toDate);
-        $watchingList = array();
+        $watchingList = [];
 
         if (empty($transactions)) {
             return $watchingList;
@@ -66,11 +66,11 @@ class MiningSimpleService
         }
         else {
             //add new item to current watching list
-            $currentWatchingList = $customer->watchingList();
-            foreach ($watchingList as $key => $item) {
-                if (in_array($item, $currentWatchingList)){
+            $currentWatchingList = $customer->watchingList()->get()->toArray();
+            foreach ($currentWatchingList as $key => $item) {
+                $key = array_search($item['id'], $watchingList);
+                if ($key !== false)
                     unset($watchingList[$key]);
-                }
             }
         }
 

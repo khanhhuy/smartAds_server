@@ -72,7 +72,7 @@ class ConnectorService
                                             .'?from='.$fromDate);
         }
 
-        return json_decode($response->getBody());
+        return json_decode($response->getBody(), true);
     }
 
     public function getStores($convertToArray=false)

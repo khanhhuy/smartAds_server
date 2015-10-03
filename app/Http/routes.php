@@ -21,11 +21,13 @@ Route::get('ads/{ads}/','AdsController@show');
 Route::get('ads','AdsController@index');
 Route::get('customers/{customers}/received-ads','AdsController@receivedIndex');
 
-Route::get('mining/tree', 'MiningTestingController@getCategoryTree');
-Route::get('mining/{customers}', 'MiningTestingController@index');
+Route::get('mining/category', 'MiningController@getListCategories');
+Route::post('mining/category', 'MiningController@selectCategory');
 
+//for testing
+Route::get('mining/{customers}', 'MiningController@index');
 
-Route::get('customers/{customers}/update-request', 'AccountController@update');
+Route::post('customers/{customers}/update-request', 'AccountController@update');
 
 Route::controllers([
 	'portal/auth' => 'Auth\PortalAuthController',

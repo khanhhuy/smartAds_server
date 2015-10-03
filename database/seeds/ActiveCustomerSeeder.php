@@ -25,8 +25,8 @@ class ActiveCustomerSeeder extends Seeder {
         ActiveCustomer::create(['id'=>'3']);
         ActiveCustomer::create(['id'=>'4']);
 
-        $dao=ActiveCustomer::find('1');
-        $huy=ActiveCustomer::find('2');
+        // $dao=ActiveCustomer::find('1');
+        // $huy=ActiveCustomer::find('2');
 
         Item::create(['id'=>'1']);
         Item::create(['id'=>'2']);
@@ -39,8 +39,8 @@ class ActiveCustomerSeeder extends Seeder {
         Item::create(['id'=>'23591257']);
         Item::create(['id'=>'43172984']);
 
-        $dao->watchingList()->attach(['1','2','3','4']);
-        $huy->watchingList()->attach(['3','5','6','7']);
+        // $dao->watchingList()->attach(['1','2','3','4']);
+        // $huy->watchingList()->attach(['3','5','6','7']);
 	}
 
 }

@@ -4,6 +4,10 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\ActiveCustomer;
 use App\Facades\Mining;
+
+use Illuminate\Support\Facades\Queue;
+use App\Commands\MiningDelay;
+
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;
@@ -31,12 +35,12 @@ class AccountController extends Controller {
 		}
 		//update after 18h
 		else {
-			//TODO:set up event update after 18h
-			Mining::miningCustomer($customer, true, $lastMiningDate->toDateString());
+			$time = Carbon::now()->addMinutes(10);
+			Queue::later($time, new MiningDelay($customer, $lastMiningDate->toDateString()));
+			//Queue::push(new MiningDelay($customer, $lastMiningDate));
 		}
 
 		$customer->last_mining = Carbon::now();
-
 		return $customer->watchingList()->get();
 	}
 

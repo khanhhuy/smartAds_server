@@ -135,6 +135,7 @@ return [
 		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
+		'Illuminate\Html\HtmlServiceProvider',
 
 		/*
 		 * Application Service Providers...
@@ -196,7 +197,9 @@ return [
 		'View'      => 'Illuminate\Support\Facades\View',
         'Connector' => 'App\Facades\Connector',
         'ContextAds'=> 'App\Facades\ContextAds',
-        'Mining'	=> 'App\Facades\Mining'
+        'Mining'	=> 'App\Facades\Mining',
+        'Html'      => 'Illuminate\Html\HtmlFacade',
+    	'Form'      => 'Illuminate\Html\FormFacade',
 	],
 
 ];
