@@ -27,6 +27,7 @@ Route::post('mining/category', 'MiningController@selectCategory');
 //for testing
 Route::get('mining/{customers}', 'MiningController@index');
 
+
 Route::post('customers/{customers}/update-request', 'AccountController@update');
 
 Route::get('account-status','CustomersController@accountStatus');
