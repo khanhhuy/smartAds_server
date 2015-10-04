@@ -35,7 +35,8 @@ class AccountController extends Controller {
 		}
 		//update after 18h
 		else {
-			$time = Carbon::now()->addMinutes(10);
+			//testing - 10 secs
+			$time = Carbon::now()->addSecond(10);
 			Queue::later($time, new MiningDelay($customer, $lastMiningDate->toDateString()));
 			//Queue::push(new MiningDelay($customer, $lastMiningDate));
 		}
