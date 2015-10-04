@@ -34,14 +34,17 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $allCats = [];
         foreach ($items as $item) {
-            $cat = Category::find(Connector::getCategoryIDFromItemID($item->id));
-            do {
-                if (in_array($cat->id, $allCats)) {
-                    break;
-                }
-                $allCats[] = $cat->id;
-                $cat = $cat->parentCategory;
-            } while ($cat != null);
+            $remoteCat = Connector::getCategoryFromItemID($item->id);
+            if (!empty($remoteCat)) {
+                $cat = Category::find($remoteCat->id);
+                do {
+                    if (in_array($cat->id, $allCats)) {
+                        break;
+                    }
+                    $allCats[] = $cat->id;
+                    $cat = $cat->parentCategory;
+                } while ($cat != null);
+            }
         }
         return $allCats;
     }

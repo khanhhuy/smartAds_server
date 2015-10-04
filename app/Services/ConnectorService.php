@@ -12,7 +12,7 @@ namespace App\Services;
 use App\Category;
 use App\ActiveCustomer;
 use GuzzleHttp\Client;
-use Carbon\Carbon;
+use App\Utils\Utils;
 
 class ConnectorService
 {
@@ -39,6 +39,15 @@ class ConnectorService
         }
     }
 
+    private static function decodeResponse($response){
+        $result=json_decode($response->getBody());
+        if (Utils::emptyObject($result)){
+            return null;
+        }
+        else{
+            return $result;
+        }
+    }
 
     public function getItemIDsFromCategory(Category $category)
     {
@@ -81,11 +90,10 @@ class ConnectorService
         return json_decode($response->getBody(),$convertToArray);
     }
 
-    public function getCategoryIDFromItemID($itemID)
+    public function getCategoryFromItemID($itemID)
     {
         $r=$this->client->get('items/'.$itemID.'/category');
-        $cat=json_decode($r->getBody());
-        return $cat->id;
+        return self::decodeResponse($r);
     }
 
     public function validateAuthentication($email,$password)
@@ -93,7 +101,8 @@ class ConnectorService
         $response=$this->client->post('auth/validate',[
             'form_params'=>compact('email','password')
         ]);
-        return json_decode($response->getBody());
+        $r=json_decode($response->getBody());
+        return $r->result;
     }
 
     public function getCustomerFromEmail($email)
@@ -101,6 +110,22 @@ class ConnectorService
         $response=$this->client->get('customer-by-email',[
            'query'=>compact('email')
         ]);
-        return json_decode($response->getBody());
+        return self::decodeResponse($response);
     }
+
+    public function registerCustomer($email, $password)
+    {
+        define('MAX', '10');
+        for ($i=0;$i<MAX;$i++){
+            $response=$this->client->post('auth/register',[
+                'form_params'=>compact('email','password')
+            ]);
+            $result=json_decode($response->getBody());
+            if ($result->result==true){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

@@ -4,11 +4,9 @@ use App\ActiveCustomer;
 use App\Facades\Connector;
 use App\Http\Controllers\Controller;
 use App\Repositories\CustomerRepositoryInterface;
-use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Auth\Registrar;
 use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
+use stdClass;
 
 class APIAuthController extends Controller
 {
@@ -26,8 +24,6 @@ class APIAuthController extends Controller
     public function __construct(CustomerRepositoryInterface $customerRepo)
     {
         $this->customerRepo = $customerRepo;
-
-        $this->middleware('guest', ['except' => 'getLogout']);
     }
 
     /**
@@ -38,22 +34,37 @@ class APIAuthController extends Controller
      */
     public function postLogin(Request $request)
     {
-        $this->validate($request, [
-            'email' => 'required|email', 'password' => 'required',
-        ]);
+        if (!$request->has('email') || !$request->has('password')) {
+            return $this->badRequest();
+        }
 
-        $validateResult = Connector::validateAuthentication($request->input('email'),$request->input('password'));
+        $validateResult = Connector::validateAuthentication($request->input('email'), $request->input('password'));
         if ($validateResult) {
             $customerID = $this->customerRepo->getCustomerIDFromEmail($request->input('email'));
-            $customer = ActiveCustomer::firstOrCreate(['id'=>$customerID]);
+            $customer = ActiveCustomer::firstOrCreate(['id' => $customerID]);
             $token = $this->refreshRememberToken($customer);
-            $r['customerID'] = $customerID;
-            $r['token'] = $token;
+            $r = new stdClass();
+            $r->customerID = $customerID;
+            $r->accessToken = $token;
+            return $r;
+        } else {
+            return $this->respondWithErrorMessage('Wrong email or password');
+        }
+    }
+
+    public function postRegister(Request $request)
+    {
+        if (!$request->has('email') || !$request->has('password')) {
+            return $this->badRequest();
+        }
+        $customer = $this->customerRepo->getCustomerFromEmail($request->input('email'));
+        if (!empty($customer)&&!$customer->havePassword){
+            $r['result']=Connector::registerCustomer($request->input('email'), $request->input('password'));
         }
         else{
-            $r=false;
+            $r['result']=false;
         }
-        return response()->json($r);
+        return $r;
     }
 
     private function refreshRememberToken(ActiveCustomer $customer)

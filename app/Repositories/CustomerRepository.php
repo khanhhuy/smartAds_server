@@ -24,4 +24,10 @@ class CustomerRepository implements CustomerRepositoryInterface
             return null;
         }
     }
+
+    public function getCustomerFromEmail($email)
+    {
+        $customer=Connector::getCustomerFromEmail($email);
+        return $customer;
+    }
 }
