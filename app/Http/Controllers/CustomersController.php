@@ -30,7 +30,7 @@ class CustomersController extends Controller {
                 $r['result']='HAVE_PASSWORD';
             }
         }
-        return $r;
+        return response()->json($r);
     }
 
 }

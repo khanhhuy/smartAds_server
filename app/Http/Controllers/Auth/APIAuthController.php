@@ -43,10 +43,9 @@ class APIAuthController extends Controller
             $customerID = $this->customerRepo->getCustomerIDFromEmail($request->input('email'));
             $customer = ActiveCustomer::firstOrCreate(['id' => $customerID]);
             $token = $this->refreshRememberToken($customer);
-            $r = new stdClass();
-            $r->customerID = $customerID;
-            $r->accessToken = $token;
-            return $r;
+            $r['customerID'] = $customerID;
+            $r['accessToken'] = $token;
+            return response()->json($r);
         } else {
             return $this->respondWithErrorMessage('Wrong email or password');
         }
@@ -64,7 +63,7 @@ class APIAuthController extends Controller
         else{
             $r['result']=false;
         }
-        return $r;
+        return response()->json($r);
     }
 
     private function refreshRememberToken(ActiveCustomer $customer)

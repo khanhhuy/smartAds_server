@@ -63,7 +63,7 @@ class ContextAdsService
         $result['aisleAds'] = $aisleAds;
 
 
-        return ((object)$result);
+        return $result;
     }
 
     /*public function getContextAds(ActiveCustomer $customer, BeaconMinor $minor)

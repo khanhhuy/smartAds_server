@@ -11,7 +11,7 @@ abstract class Controller extends BaseController {
     protected function respondWithErrorMessage($errorMessage){
         $error['message'] = $errorMessage;
         $r['errors'] = [$error];
-        return $r;
+        return response()->json($r);
     }
     protected function badRequest(){
         return $this->respondWithErrorMessage('Bad Request');
