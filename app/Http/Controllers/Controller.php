@@ -8,4 +8,12 @@ abstract class Controller extends BaseController {
 
 	use DispatchesCommands, ValidatesRequests;
 
+    protected function respondWithErrorMessage($errorMessage){
+        $error['message'] = $errorMessage;
+        $r['errors'] = [$error];
+        return $r;
+    }
+    protected function badRequest(){
+        return $this->respondWithErrorMessage('Bad Request');
+    }
 }

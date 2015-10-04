@@ -28,7 +28,7 @@ class ContextAdsController extends Controller
     public function index(ActiveCustomer $customer, BeaconMajor $major, BeaconMinor $minor)
     {
         $contextAds = ContextAds::getContextAds($customer, $major, $minor);
-        return response()->json($contextAds);
+        return $contextAds;
     }
 
 }
