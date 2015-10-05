@@ -21,13 +21,14 @@ Route::get('ads/{ads}/','AdsController@show');
 Route::get('ads','AdsController@index');
 Route::get('customers/{customers}/received-ads','AdsController@receivedIndex');
 
+//TODO: Change URL
 Route::get('mining/category', 'MiningController@getListCategories');
 Route::post('mining/category', 'MiningController@selectCategory');
 
 //for testing
+
+
 Route::get('mining/{customers}', 'MiningController@index');
-
-
 Route::post('customers/{customers}/update-request', 'AccountController@update');
 
 Route::get('account-status','CustomersController@accountStatus');
