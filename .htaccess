@@ -1,7 +1,9 @@
+# Do not remove this line or mod_rewrite rules and search engine friendly URLs will stop working
+RewriteBase /
 php_value display_errors Off
 php_flag magic_quotes 1
 php_flag magic_quotes_gpc 1
 php_value mbstring.http_input auto
-php_value date.timezone America/New_York
+php_value date.timezone Asia/Ho_Chi_Minh
 RewriteEngine On
 RewriteRule ^(.*)$ public/$1 [L]
