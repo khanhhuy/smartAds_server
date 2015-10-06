@@ -43,6 +43,11 @@ class AdsController extends Controller
 
     public function manage()
     {
-        return view('manager-master');
+        return view('ads.manage');
+    }
+
+    public function createPromotion()
+    {
+        return view('ads.create');
     }
 }

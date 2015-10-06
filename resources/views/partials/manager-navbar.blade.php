@@ -3,9 +3,9 @@
 @section('navbar-content')
     <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav my-nav-pills navbar-nav">
-            <li class="active"><a href="#"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span> Manage Ads</a></li>
-            <li><a href="#about"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Promotion</a></li>
-            <li><a href="#contact"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Targeted Ads</a></li>
+            <li {!!Utils::setActiveClassManager('ads')!!}><a href="{{url('manager/ads')}}"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span> Manage Ads</a></li>
+            <li {!!Utils::setActiveClassManager('ads/promotion/create')!!}><a href="{{url('manager/ads/promotion/create')}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Promotion</a></li>
+            <li {!!Utils::setActiveClassManager('ads/targeted/create')!!}><a href="{{url('manager/ads/targeted/create')}}"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Targeted Ads</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">

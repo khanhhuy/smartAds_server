@@ -28,6 +28,8 @@
     margin-left: 3px; }
   .mynavbar .navbar-nav .dropdown a, .mynavbar .navbar-nav .dropdown a:hover, .mynavbar .navbar-nav .dropdown a:focus {
     color: #337ab7; }
+  .mynavbar .navbar-brand {
+    font-size: 25px; }
 
 /*# sourceMappingURL=app.css.map */
 
