@@ -2,7 +2,6 @@
 
 use App\ActiveCustomer;
 use App\Ads;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Request;
 
 
@@ -11,12 +10,12 @@ class AdsController extends Controller
 
     public function show($ads)
     {
-        return view('ads.' . $ads->id, compact('ads'));
+        return view('ads.show.' . $ads->id, compact('ads'));
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $idOnly = Request::input('id_only');
+        $idOnly = $request->input('id_only');
         if ($idOnly != null && $idOnly == true) {
             return Ads::lists('id');
         } else {
@@ -24,14 +23,14 @@ class AdsController extends Controller
         }
     }
 
-    public function receivedIndex(ActiveCustomer $customer)
+    public function receivedIndex(Request $request,ActiveCustomer $customer)
     {
         define('LIMIT_DEFAULT', 25);
-        $limit = Request::input('limit', LIMIT_DEFAULT);
+        $limit = $request->input('limit', LIMIT_DEFAULT);
         if ($limit < 1) {
             $limit = LIMIT_DEFAULT;
         }
-        $result=$customer->receivedAds()->latest('last_received')->take($limit)->get();
+        $result = $customer->receivedAds()->latest('last_received')->take($limit)->get();
 
         $idOnly = Request::input('id_only');
         if ($idOnly != null && $idOnly == true) {
@@ -40,5 +39,10 @@ class AdsController extends Controller
             return $result;
         }
 
+    }
+
+    public function manage()
+    {
+        return view('manager-master');
     }
 }
