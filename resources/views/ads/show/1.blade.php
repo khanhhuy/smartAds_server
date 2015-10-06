@@ -1,0 +1,1 @@
+@extends('ads.ads-master')

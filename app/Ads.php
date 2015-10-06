@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class Ads extends Model
 {
 
-    protected $visible = ['id', 'title','minors'];
+    protected $visible = ['id', 'title','start_date','end_date','minors'];
 
     public function items()
     {

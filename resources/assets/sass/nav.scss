@@ -1,0 +1,45 @@
+$nav-text-color: #337ab7;
+.mynavbar {
+  background-color: #FFF;
+
+  .navbar-brand, .navbar-brand:hover, .navbar-brand:focus {
+    color: $nav-text-color;
+  }
+  .navbar-nav > li > {
+    a, a:hover,a:focus {
+      color: $nav-text-color;
+    }
+  }
+  .nav > li > a:hover {
+    background-color: #eee;
+  }
+  .my-nav-pills > li > a {
+    border-radius: 4px;
+  }
+  .my-nav-pills > li + li {
+    margin-left: 2px;
+  }
+  .my-nav-pills > li.active > a,
+  .my-nav-pills > li.active > a:hover,
+  .my-nav-pills > li.active > a:focus {
+    color: #fff;
+    background-color: #337ab7;
+  }
+  .list-group-item.active > .badge,
+  .my-nav-pills > .active > a > .badge {
+    color: #337ab7;
+    background-color: #fff;
+  }
+  .my-nav-pills > li > a > .badge {
+    margin-left: 3px;
+  }
+
+  .navbar-nav .dropdown {
+    a, a:hover,a:focus {
+      color: $nav-text-color;
+    }
+  }
+  .navbar-brand{
+    font-size: 25px;
+  }
+}

@@ -200,6 +200,7 @@ return [
         'Mining'	=> 'App\Facades\Mining',
         'Html'      => 'Illuminate\Html\HtmlFacade',
     	'Form'      => 'Illuminate\Html\FormFacade',
+		'Utils' => 'App\Utils\Utils',
 	],
 
 ];
