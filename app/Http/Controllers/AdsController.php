@@ -48,6 +48,6 @@ class AdsController extends Controller
 
     public function createPromotion()
     {
-        return view('ads.create');
+        return view('ads.promotions.create');
     }
 }

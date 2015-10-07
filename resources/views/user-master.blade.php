@@ -22,7 +22,9 @@
 </head>
 <body>
     @yield('navbar')
-
+    <div class="container">
+        @yield('content')
+    </div>
     <script src="{{asset('/js/all.js')}}"></script>
     @yield('body-footer')
 </body>

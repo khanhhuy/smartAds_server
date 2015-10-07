@@ -26,4 +26,24 @@
   .mynavbar .navbar-brand {
     font-size: 25px; }
 
+.promotion-form input[type=date].form-control {
+  width: initial; }
+
+.promotion-form input[type=number].form-control {
+  width: initial; }
+
+@media (min-width: 768px) {
+  .promotion-form .my-inline-control {
+    display: initial; }
+  .promotion-form .my-between-label {
+    width: 20px;
+    margin-right: 15px; }
+  .promotion-form .my-inline-input-group {
+    display: inline-table; }
+    .promotion-form .my-inline-input-group input[type=number] {
+      float: initial; } }
+
+.promotion-form .my-inline-input-group .input-group-addon {
+  width: initial; }
+
 /*# sourceMappingURL=app.css.map */

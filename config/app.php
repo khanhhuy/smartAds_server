@@ -148,6 +148,12 @@ return [
         'App\Providers\ConnectorServiceProvider',
         'App\Providers\ContextAdsServiceProvider',
         'App\Providers\MiningProvider',
+        'App\Providers\ViewComposerServiceProvider',
+
+        /**
+         * IDE Helper Service Providers....
+         */
+        'Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider',
 	],
 
 	/*
