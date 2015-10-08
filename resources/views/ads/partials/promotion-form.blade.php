@@ -2,7 +2,7 @@
     <legend>Promotion Info</legend>
     <div class="form-group">
         {!! Form::label('itemsID','Items',['class'=>'col-sm-3 control-label']) !!}
-        <div class="col-sm-5">
+        <div class="col-sm-7 col-lg-6">
             {!! Form::select('itemsID[]',[],null,['id'=>'itemsID','class'=>'form-control','multiple','data-placeholder'=>' e.g. Tide Downy Washing Powder 4.5kg']) !!}
         </div>
     </div>
@@ -16,29 +16,29 @@
     </div>
     <div class="form-group">
         {!! Form::label('targetsID','Target Stores/Areas',['class'=>'col-sm-3 control-label']) !!}
-        <div class="col-sm-5">
+        <div class="col-sm-7 col-lg-6">
             {!! Form::select('targetsID[]',$targets,null,['id'=>'targetsID','class'=>'form-control','multiple','data-placeholder'=>' e.g. Tp. Hồ Chí Minh + Co.opmart Bình Dương']) !!}
         </div>
     </div>
     <div class="form-group">
         {!! Form::label('start_date','From',['class'=>'col-sm-3 control-label']) !!}
-        <div class="col-sm-4 col-lg-3">
+        <div class="col-sm-5 col-lg-4">
             <input type="date" name="start_date" id="start_date" class="form-control my-inline-control"/>
         </div>
-        <div class="col-sm-5 col-lg-6">
+        <div class="col-sm-4 col-lg-5">
             {!! Form::label('end_date','To',['class'=>'control-label my-between-label']) !!}
             <input type="date" name="end_date" id="end_date" class="form-control my-inline-control"/>
         </div>
     </div>
     <div class="form-group">
         {!! Form::label('discount_value','Discount Amount',['class'=>'col-sm-3 control-label']) !!}
-        <div class="col-sm-4 col-lg-3">
+        <div class="col-sm-5 col-lg-4">
             <div class="input-group my-inline-input-group">
                 {!! Form::input('number','discount_value',null,['class'=>'form-control my-inline-control', 'min'=>'0.001','step'=>'0.001','placeholder'=>'e.g. 10.50']) !!}
                 <div class="input-group-addon">VND</div>
             </div>
         </div>
-        <div class="col-sm-5 col-lg-6">
+        <div class="col-sm-4 col-lg-5">
             {!! Form::label('','Rate',['class'=>'control-label my-between-label']) !!}
             <div class="input-group my-inline-input-group">
                 {!! Form::input('number','discount_rate',null,['class'=>'form-control my-inline-control', 'min'=>'0.01','step'=>'0.01','max'=>'100','placeholder'=>'e.g. 20']) !!}
@@ -51,7 +51,7 @@
     <legend>Mobile Display</legend>
     <div class="form-group">
         {!! Form::label('title','Title',['class'=>'col-sm-3 control-label']) !!}
-        <div class="col-sm-6 col-md-5">
+        <div class="col-sm-7 col-md-6">
             {!! Form::text('title',null,['class'=>'form-control','required'=>'required','minlength'=>'3','placeholder'=>'e.g. Tide Downy Washing Powder 4.5kg Discount 20%']) !!}
         </div>
     </div>
@@ -92,8 +92,14 @@
     </div>
     <div class="form-group">
         {!! Form::label('web_url','Web Page URL',['class'=>'col-sm-3 control-label']) !!}
-        <div class="col-sm-8 col-md-6">
+        <div class="col-sm-8 col-md-7">
             {!! Form::url('web_url',null,['class'=>'form-control','placeholder'=>'eg. http://example.com/ads/a100.html']) !!}
         </div>
     </div>
 </fieldset>
+<div class="form-group">
+    <div class="col-sm-offset-3 col-sm-10">
+        <input type="submit" class="btn btn-primary" value="{{$btnSubmitName}}"/>
+    </div>
+</div>
+

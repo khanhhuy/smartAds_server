@@ -5,16 +5,16 @@
     <link href="{{asset('/css/select2.min.css')}}" rel="stylesheet"/>
 @endsection
 @section('content')
-    {{--<br/>--}}
-    {{--<div class="row">--}}
-        {{--<div class="col-md-1"></div>--}}
-        {{--<div class="col-md-11">--}}
+    <br/>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
             @include('errors.list')
             {!! Form::open(['url'=> 'ads/promotions','class'=>'form-horizontal promotion-form']) !!}
             @include('ads.partials.promotion-form',['btnSubmitName'=>'Add'])
             {!! Form::close() !!}
-        {{--</div>--}}
-    {{--</div>--}}
+        </div>
+    </div>
 @endsection
 
 @section('body-footer')

@@ -58,8 +58,8 @@ class ContextAdsService
             $a['minors'] = $minors;
         }
 
-        $result['entranceAds'] = $entranceAds;
-        $result['aisleAds'] = $aisleAds;
+        $result['entranceAds'] = $entranceAds->values();
+        $result['aisleAds'] = $aisleAds->values();
 
 
         return $result;
