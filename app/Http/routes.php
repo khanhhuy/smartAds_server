@@ -40,7 +40,7 @@ Route::get('manager', function () {
     return redirect('manager/ads');
 });
 Route::get('manager/ads', 'AdsController@manage');
-Route::get('manager/ads/promotion/create', 'AdsController@createPromotion');
+Route::get('manager/ads/promotions/create', 'AdsController@createPromotion');
 
 Route::get('admin', function () {
 	return redirect('admin/minors');

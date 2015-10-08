@@ -22,9 +22,9 @@ class BeaconSeeder extends Seeder {
         $mintMinor=BeaconMinor::create(['minor'=>'2']);
         $blueMinor=BeaconMinor::create(['minor'=>'3']);
         $m1=BeaconMajor::create(['major'=>'1']);
-        $m1->store()->associate(Store::find('vn_tphcm_binhtan'))->save();
-        BeaconMajor::create(['major'=>'2'])->store()->associate(Store::find('vn_tphcm_binhtrieu'));
-        BeaconMajor::create(['major'=>'3'])->store()->associate(Store::find('vn_dongnam_binhduong'));
+        $m1->store()->associate(Store::find('S_vn_tphcm_binhtan'))->save();
+        BeaconMajor::create(['major'=>'2'])->store()->associate(Store::find('S_vn_tphcm_binhtrieu'));
+        BeaconMajor::create(['major'=>'3'])->store()->associate(Store::find('S_vn_dongnam_binhduong'));
 
         /*$icy=new Beacon(['major'=>'1','color' => 'icy marshmallow']);
         $icyMinor->beacons()->save($icy);
