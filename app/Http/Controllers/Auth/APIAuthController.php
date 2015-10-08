@@ -45,6 +45,9 @@ class APIAuthController extends Controller
             $token = $this->refreshRememberToken($customer);
             $r['customerID'] = $customerID;
             $r['accessToken'] = $token;
+
+            //TODO: Transaction process
+
             return response()->json($r);
         } else {
             return $this->respondWithErrorMessage('Wrong email or password');

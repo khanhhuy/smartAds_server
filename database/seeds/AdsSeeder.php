@@ -28,7 +28,7 @@ class AdsSeeder extends Seeder {
         'discount_rate'=>'0.2'])->items()->attach(5);
 
         Ads::create(['id'=>3,'title'=>'Kem đánh răng COLGATE the mát bạc hà 150g Giảm giá 19%',
-        'is_whole_system'=>false,'end_date'=>Carbon::createFromDate(2015,1,1),
+        'is_whole_system'=>false,'end_date'=>Carbon::createFromDate(2016,1,1),
             'discount_value'=>'3800',
             'discount_rate'=>'0.19'])->items()->attach(2);
 

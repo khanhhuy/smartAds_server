@@ -50,7 +50,6 @@ class ContextAdsService
             return $ads->discount_value >= $minEntranceDiscountValue || $ads->discount_rate >= $minEntranceDiscountRate;
         });
         $aisleAds = $contextAds->diff($entranceAds);
-
         foreach ($aisleAds as $a) {
             $items = $a->items;
             $cats = $this->categoryRepo->getAllCategoryNodesOfItems($items);
