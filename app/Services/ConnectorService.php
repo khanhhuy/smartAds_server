@@ -128,4 +128,8 @@ class ConnectorService
         return false;
     }
 
+    public static function getItemSearchURL()
+    {
+        return self::getSupermarketMSHost().'/search';
+    }
 }

@@ -35,13 +35,13 @@ class StoreSeeder extends Seeder {
     private function insert($as, $parentID)
     {
         if (array_key_exists('children', $as)) {
-            Area::create(['id'=>'A_'.$as['id'],'parent_id'=>$parentID]);
+            Area::create(['id'=>'A_'.$as['id'],'parent_id'=>$parentID,'name'=>$as['name']]);
             foreach ($as['children'] as $child) {
                 $this->insert($child,'A_'.$as['id']);
             }
         }
         else{
-            Store::create(['id'=>'S_'.$as['id'],'area_id'=>$parentID]);
+            Store::create(['id'=>'S_'.$as['id'],'area_id'=>$parentID,'name'=>$as['name']]);
         }
     }
 }

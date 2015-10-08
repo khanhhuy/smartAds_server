@@ -1,4 +1,5 @@
 .promotion-form {
+
   input[type=date].form-control {
     width: initial;
   }
@@ -23,4 +24,13 @@
   .my-inline-input-group .input-group-addon {
     width: initial;
   }
+  #is_whole_system{
+    position: initial;
+  }
+  input#image_file{
+    margin-bottom: 12px;
+  }
+}
+#select2-targetsID-results.select2-results__options{
+  max-height: 400px;
 }

@@ -1,5 +1,7 @@
 .mynavbar {
   background-color: #FFF; }
+  .mynavbar .navbar-header {
+    margin-right: 15px; }
   .mynavbar .navbar-brand, .mynavbar .navbar-brand:hover, .mynavbar .navbar-brand:focus {
     color: #337ab7; }
   .mynavbar .navbar-nav > li > a, .mynavbar .navbar-nav > li > a:hover, .mynavbar .navbar-nav > li > a:focus {
@@ -45,5 +47,17 @@
 
 .promotion-form .my-inline-input-group .input-group-addon {
   width: initial; }
+
+.promotion-form #is_whole_system {
+  position: initial; }
+
+.promotion-form input#image_file {
+  margin-bottom: 12px; }
+
+#select2-targetsID-results.select2-results__options {
+  max-height: 400px; }
+
+html {
+  overflow-y: scroll; }
 
 /*# sourceMappingURL=app.css.map */

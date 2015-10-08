@@ -16,6 +16,7 @@ class CreateAreasTable extends Migration
         Schema::create('areas', function (Blueprint $table) {
             $table->string('id');
             $table->primary('id');
+            $table->string('name');
             $table->string('parent_id')->index()->nullable();
             $table->foreign('parent_id')->references('id')->on('areas')->onDelete('cascade');
             $table->timestamps();

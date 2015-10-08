@@ -1,6 +1,9 @@
 $nav-text-color: #337ab7;
 .mynavbar {
   background-color: #FFF;
+  .navbar-header{
+    margin-right:15px;
+  }
 
   .navbar-brand, .navbar-brand:hover, .navbar-brand:focus {
     color: $nav-text-color;
