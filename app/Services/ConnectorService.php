@@ -132,4 +132,9 @@ class ConnectorService
     {
         return self::getSupermarketMSHost().'/search';
     }
+
+    public function getItemNameByID($itemID)
+    {
+        return $this->client->get('items/'.$itemID.'/name')->getBody();
+    }
 }

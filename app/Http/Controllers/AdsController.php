@@ -5,11 +5,18 @@ use App\Ads;
 use App\Area;
 use App\Http\Requests\PromotionRequest;
 use App\Item;
+use App\Repositories\ItemRepositoryInterface;
 use Request;
 
 
 class AdsController extends Controller
 {
+    protected $itemRepo;
+
+    public function __construct(ItemRepositoryInterface $itemRepo)
+    {
+        $this->itemRepo = $itemRepo;
+    }
 
     public function show(Ads $ads)
     {
@@ -56,7 +63,9 @@ class AdsController extends Controller
 
     public function createPromotion()
     {
-        return view('ads.promotions.create')->with(['items' => []]);
+        $ads=new Ads;
+        $items=[];
+        return view('ads.promotions.create')->with(compact(['ads','items']));
     }
 
     public function storePromotion(PromotionRequest $request)
@@ -69,13 +78,13 @@ class AdsController extends Controller
                 if (empty($request->input('image_url'))) {
                     return redirect()->back()->withInput()->withErrors('Image URL is required');
                 } else {
-                    $ads = self::createAdsFromRequest($request);
+                    $ads = self::createPromotionFromRequest($request);
                 }
             } else {
                 if (!($request->hasFile('image_file'))) {
                     return redirect()->back()->withInput()->withErrors('Image File is required');
                 } else {
-                    $ads = self::createAdsFromRequest($request);
+                    $ads = self::createPromotionFromRequest($request);
                     $image = $request->file('image_file');
                     $fullSaveFileName = $ads->id . '.' . $image->getClientOriginalExtension();
                     $image->move(public_path('/img/ads'), $fullSaveFileName);
@@ -83,7 +92,7 @@ class AdsController extends Controller
                 }
             }
         } else {
-            $ads = self::createAdsFromRequest($request);
+            $ads = self::createPromotionFromRequest($request);
         }
 
 
@@ -92,7 +101,7 @@ class AdsController extends Controller
             Item::firstOrCreate(['id' => $itemID]);
         }
         $ads->items()->attach($itemsID);
-        if (!$request->has('is_whole_system')||!$request->input('is_whole_system')) {
+        if (!$request->has('is_whole_system') || !$request->input('is_whole_system')) {
             $targetsID = $request->input('targetsID');
             if (!empty($targetsID)) {
                 foreach ($targetsID as $targetID) {
@@ -109,12 +118,30 @@ class AdsController extends Controller
         return 'success';
     }
 
-    private static function createAdsFromRequest($request)
+    private static function createPromotionFromRequest($request)
     {
         $inputs = $request->except(['_token', 'itemsID', 'targetsID']);
-        $inputs['discount_rate'] /= 100;
+        $inputs['discount_rate'] /= 100.0;
         $inputs['is_promotion'] = true;
 
         return Ads::create($inputs);
+    }
+
+    public function edit(Ads $ads)
+    {
+        if ($ads->is_promotion) {
+            $items1 = $ads->items;
+            foreach ($items1 as $item) {
+                $items[$item->id] = $this->itemRepo->getItemNameByID($item->id) . " [" . $item->id . "]";
+            }
+            return view('ads.promotions.edit')->with(compact(['items', 'ads']));
+        } else {
+            return 'TODO Khanh Huy: Edit Targeted Ads';
+        }
+    }
+
+    public function update(Ads $ads)
+    {
+
     }
 }

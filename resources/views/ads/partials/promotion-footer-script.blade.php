@@ -1,15 +1,18 @@
 <script src="{{asset('/js/select2.min.js')}}"></script>
 <script>
     templateFunc = function (item) {
-        if (typeof item.id === "undefined") {
+        if (typeof item.name === "undefined") {
             return item.text;
         }
         else {
-            return item.name + "[" + item.id + "]";
+            return item.name + " [" + item.id + "]";
         }
     };
     $('#targetsID').select2();
-    $('#target-group').hide();
+    var wholeSystemCheckbox = $("#is_whole_system")[0];
+    if (wholeSystemCheckbox.checked) {
+        $('#target-group').hide();
+    }
     $('#itemsID').select2({
         ajax: {
             delay: 250,

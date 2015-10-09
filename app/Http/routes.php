@@ -42,6 +42,8 @@ Route::get('manager', function () {
 Route::get('manager/ads', 'AdsController@manage');
 Route::get('manager/ads/promotions/create', 'AdsController@createPromotion');
 Route::post('ads/promotions', 'AdsController@storePromotion');
+Route::get('manager/ads/{ads}/edit', 'AdsController@edit');
+Route::put('manager/ads/{ads}', ['as'=>'promotions.update','use'=>'AdsController@update']);
 
 Route::get('admin', function () {
 	return redirect('admin/minors');

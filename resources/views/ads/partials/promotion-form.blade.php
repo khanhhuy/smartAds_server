@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="form-group">
-        {!! Form::label('is_whole_system','Is whole system Ads?',['class'=>'col-sm-3 control-label']) !!}
+        {!! Form::label('is_whole_system','Apply on whole system?',['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 ">
             <div class="checkbox-inline">
                 {!! Form::checkbox('is_whole_system',1,true) !!}
@@ -24,11 +24,11 @@
     <div class="form-group">
         {!! Form::label('start_date','From',['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-4 col-lg-3">
-            {!! Form::input('date','start_date',date('Y-m-d'),['class'=>'form-control my-inline-control','required'=>'required']) !!}
+            {!! Form::input('date','start_date',$ads->start_date,['class'=>'form-control my-inline-control','required'=>'required']) !!}
         </div>
         <div class="col-sm-5 col-lg-6">
             {!! Form::label('end_date','To',['class'=>'control-label my-between-label','required'=>'required']) !!}
-            {!! Form::input('date','end_date',date('Y-m-d', strtotime("+1 week")),['class'=>'form-control my-inline-control','required'=>'required']) !!}
+            {!! Form::input('date','end_date',$ads->end_date,['class'=>'form-control my-inline-control','required'=>'required']) !!}
         </div>
     </div>
     <div class="form-group">
@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="col-sm-5 col-lg-6">
-            {!! Form::label('','Rate',['class'=>'control-label my-between-label']) !!}
+            {!! Form::label('discount_rate','Rate',['class'=>'control-label my-between-label']) !!}
             <div class="input-group my-inline-input-group">
                 {!! Form::input('number','discount_rate',null,['class'=>'form-control my-inline-control', 'min'=>'0.01','step'=>'0.01','max'=>'100',
                 'required'=>'required','placeholder'=>'e.g. 20']) !!}
@@ -73,22 +73,22 @@
         {!! Form::label(null,'Image',['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-8 col-md-6">
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#tab-image-upload" aria-controls="image-upload"
-                                                          role="tab"
-                                                          data-toggle="tab">Upload</a></li>
-                <li role="presentation"><a href="#tab-image-link" aria-controls="image-link" role="tab"
-                                           data-toggle="tab">Link</a></li>
+                <li role="presentation" class="active"><a href="#tab-image-link" aria-controls="image-link" role="tab"
+                                                          data-toggle="tab">Link</a></li>
+                <li role="presentation"><a href="#tab-image-upload" aria-controls="image-upload"
+                                           role="tab"
+                                           data-toggle="tab">Upload</a></li>
             </ul>
-            <input type="hidden" id="provide_image_link" name="provide_image_link" value="0" />
+            <input type="hidden" id="provide_image_link" name="provide_image_link" value="1"/>
             <!-- Tab panes -->
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane fade in active" id="tab-image-upload">
+                <div role="tabpanel" class="tab-pane fade in active" id="tab-image-link">
                     <br/>
-                    {!! Form::file('image_file',['id'=>'image_file','required'=>'required','accept'=>'image/*']) !!}
+                    {!! Form::url('image_url',null,['class'=>'form-control','required'=>'required','placeholder'=>'Image URL']) !!}
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="tab-image-link">
+                <div role="tabpanel" class="tab-pane fade" id="tab-image-upload">
                     <br/>
-                    {!! Form::url('image_url',null,['class'=>'form-control','placeholder'=>'Image URL']) !!}
+                    {!! Form::file('image_file',['id'=>'image_file','accept'=>'image/*']) !!}
                 </div>
             </div>
         </div>
@@ -105,4 +105,3 @@
         <input type="submit" class="btn btn-primary" value="{{$btnSubmitName}}"/>
     </div>
 </div>
-
