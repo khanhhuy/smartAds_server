@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Smart Ads</a>
+            <a class="navbar-brand" href="@yield('home')">Smart Ads</a>
         </div>
         @yield('navbar-content')
     </div>

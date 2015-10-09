@@ -1,5 +1,7 @@
 @extends('partials.navbar')
 
+@section('home',url('/admin'))
+
 @section('navbar-content')
     <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav my-nav-pills navbar-nav">

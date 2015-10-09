@@ -22,6 +22,10 @@ class CreateAdsTable extends Migration {
             $table->boolean('is_whole_system')->default(true);
             $table->decimal('discount_value',20,5)->nullable();
             $table->decimal('discount_rate',5,4)->nullable();
+            $table->boolean('image_display')->default(true);
+            $table->boolean('provide_image_link')->nullable();
+            $table->string('image_url',2083)->nullable();
+            $table->string('web_url',2083)->nullable();
 			$table->timestamps();
 		});
         Schema::create('ads_item', function(Blueprint $table)

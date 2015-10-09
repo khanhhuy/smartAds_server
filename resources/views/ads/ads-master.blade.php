@@ -12,7 +12,7 @@
 <div class="container">
     @section('content')
         <h5>{{$ads->title}}</h5>
-        <img src="{{asset('img/'.$ads->id.'.png')}}" alt="{{$ads->title}}" />
+        <img src="{!! $ads->image_url !!}" alt="{{$ads->title}}" />
     @show
 </div>
 
