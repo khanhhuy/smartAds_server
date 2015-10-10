@@ -50,8 +50,8 @@ class ProcessTransactionService
 
         //check if item belongs to suitable categories
         foreach ($watchingList as $key => $item) {
-            $catID = Connector::getCategoryFromItemID($item);
-            if(!Category::find($catID)['is_suitable']) {
+            $cat = Connector::getCategoryFromItemID($item);
+            if(!Category::find($cat->id)['is_suitable']) {
                 unset($watchingList[$key]);
             }
             elseif (Item::find($item) == null) {

@@ -20,10 +20,12 @@ Route::get('customers/{customers}/received-ads','AdsController@receivedIndex');
 Route::get('account-status','CustomersController@accountStatus');
 Route::get('process-trans/category', 'ProcessTransactionController@getListCategories');
 Route::post('process-trans/category', 'ProcessTransactionController@selectCategory');
+Route::post('customers/{customers}/update-request', 'AccountController@update');
+
 //for testing
 Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
+Route::get('customers/{customers}/update-request', 'AccountController@update');
 
-Route::post('customers/{customers}/update-request', 'AccountController@update');
 
 Route::controllers([
 	'portal/auth' => 'Auth\PortalAuthController',
