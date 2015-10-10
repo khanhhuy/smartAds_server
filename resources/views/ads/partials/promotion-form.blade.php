@@ -28,7 +28,13 @@
         </div>
         <div class="col-sm-5 col-lg-6">
             {!! Form::label('end_date','To',['class'=>'control-label my-between-label','required'=>'required']) !!}
-            {!! Form::input('date','end_date',$ads->end_date,['class'=>'form-control my-inline-control','required'=>'required']) !!}
+            {!! Form::input('date','end_date',$ads->end_date,['class'=>'form-control my-inline-control','required'=>'required'
+           ]) !!}
+
+            <div id="date-error" style="display: none">
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                End Date must not before Start Date
+            </div>
         </div>
     </div>
     <div class="form-group">

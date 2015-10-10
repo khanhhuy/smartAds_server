@@ -72,6 +72,9 @@
 .promotion-form .myHiddenInputGroup {
   display: none; }
 
+.promotion-form .popover {
+  max-width: 100%; }
+
 #select2-targetsID-results.select2-results__options {
   max-height: 400px; }
 

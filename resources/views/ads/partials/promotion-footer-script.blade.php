@@ -1,4 +1,5 @@
 <script src="{{asset('/js/select2.min.js')}}"></script>
+<script src="{{asset('/js/jquery.validate.min.js')}}"></script>
 <script>
     templateFunc = function (item) {
         if (typeof item.name === "undefined") {
@@ -82,7 +83,7 @@
             setRequiredImageGroup(false);
         }
     });
-    if ($('input[name=image_display]:radio:checked').val()==0){
+    if ($('input[name=image_display]:radio:checked').val() == 0) {
         $('#imageInputGroup').hide();
         $('#webInputGroup').show();
         setRequiredWebGroup(true);
@@ -104,5 +105,31 @@
     tabImageLink.on('hidden.bs.tab', function () {
         updateRequiredInImageGroup();
         $('#provide_image_link').val(0);
+    });
+
+    //validate
+    $('#end_date').popover({
+        trigger: 'manual',
+        html: true,
+        content: function () {
+            return $('#date-error').html();
+        }
+    });
+    $('.promotion-form').submit(function (e){
+        e.preventDefault();
+        var start_date=$('#start_date').val(),end_date=$('#end_date').val();
+        var ts=Date.parse(start_date),te=Date.parse(end_date);
+        var cancel=false;
+        if (!isNaN(ts)&&!isNaN(te))
+        {
+            if (new Date(start_date)>new Date(end_date)){
+                $('#end_date').popover('show');
+                $('#end_date').focus();
+                cancel=true;
+            }
+        }
+        if (!cancel){
+            this.submit();
+        }
     });
 </script>

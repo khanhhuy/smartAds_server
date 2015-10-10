@@ -122,6 +122,7 @@ class AdsController extends Controller
                 $errors[] = 'Image File is required';
             }
         }
+        return $errors;
     }
 
     private static function createPromotionFromRequest($request)
