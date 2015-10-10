@@ -17,13 +17,11 @@ Route::get('ads/{ads}/','AdsController@show');
 Route::get('ads','AdsController@index');
 Route::get('customers/{customers}/received-ads','AdsController@receivedIndex');
 
-//TODO: Change URL
 Route::get('account-status','CustomersController@accountStatus');
-Route::get('mining/category', 'MiningController@getListCategories');
-Route::post('mining/category', 'MiningController@selectCategory');
-
+Route::get('process-trans/category', 'ProcessTransactionController@getListCategories');
+Route::post('process-trans/category', 'ProcessTransactionController@selectCategory');
 //for testing
-Route::get('mining/{customers}', 'MiningController@index');
+Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
 
 Route::post('customers/{customers}/update-request', 'AccountController@update');
 

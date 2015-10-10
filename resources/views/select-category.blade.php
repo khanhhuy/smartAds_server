@@ -16,7 +16,7 @@
 <body>
     <div class="container">
 
-        {!! Form::open(array('url' => 'mining/category')) !!}
+        {!! Form::open(array('url' => 'process-trans/category')) !!}
 
             <ul id="category" class="bonsai">
             @foreach ($tree as $lv1node)
