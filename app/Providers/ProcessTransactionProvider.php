@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
-use App\Services\MiningSimpleService;
+use App\Services\ProcessTransactionService;
 
-class MiningProvider extends ServiceProvider {
+class ProcessTransactionProvider extends ServiceProvider {
 
 	/**
 	 * Bootstrap the application services.
@@ -23,8 +23,8 @@ class MiningProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		App::bind('mining',function(){
-            return new MiningSimpleService();
+		App::bind('processTransaction', function(){
+            return new ProcessTransactionService();
         });
 	}
 

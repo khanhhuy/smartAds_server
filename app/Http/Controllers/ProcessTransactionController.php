@@ -7,17 +7,16 @@ use DB;
 use App\Category;
 
 use App\ActiveCustomer;
-use App\Facades\Mining;
+use App\Facades\ProcessTransaction;
 use Carbon\Carbon;
 use App\Facades\Connector;
 
-class MiningController extends Controller {
+class ProcessTransactionController extends Controller {
 
 	public function index(ActiveCustomer $customer)
 	{
-        $from = Carbon::now()->subMonths(config('mining.mining_range_months'))->toDateString();
-        //return Mining::miningCustomer($customer, false);
-		return Mining::miningAllCustomer($from);
+        $from = Carbon::now()->subMonths(config('process-trans.process_range_months'))->toDateString();
+		return ProcessTransaction::processAllCustomer($from);
 	}
 
     public function getListCategories() {

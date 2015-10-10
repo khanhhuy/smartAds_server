@@ -7,9 +7,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Bus\SelfHandling;
 use Illuminate\Contracts\Queue\ShouldBeQueued;
 
-use App\Facades\Mining;
+use App\Facades\ProcessTransaction;
 
-class MiningDelay extends Command implements SelfHandling, ShouldBeQueued {
+class ProcessDelay extends Command implements SelfHandling, ShouldBeQueued {
 
 	use InteractsWithQueue, SerializesModels;
 
@@ -19,12 +19,12 @@ class MiningDelay extends Command implements SelfHandling, ShouldBeQueued {
 	 * @return void
 	 */
 
-	protected $customer, $lastMiningDate;
+	protected $customer, $lastProcessDate;
 
-	public function __construct($customer, $lastMiningDate = null)
+	public function __construct($customer, $lastProcessDate = null)
 	{
 		$this->customer = $customer;
-		$this->lastMiningDate = $lastMiningDate;
+		$this->lastProcessDate = $lastProcessDate;
 	}
 
 	/**
@@ -34,7 +34,7 @@ class MiningDelay extends Command implements SelfHandling, ShouldBeQueued {
 	 */
 	public function handle()
 	{
-		Mining::miningCustomer($this->customer, true, $this->lastMiningDate);
+		ProcessTransaction::processCustomer($this->customer, true, $this->lastProcessDate);
 	}
 
 }

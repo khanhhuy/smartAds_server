@@ -7,20 +7,20 @@ use App\Facades\Connector;
 use Carbon\Carbon;
 use App\Item;
 
-class MiningSimpleService
+class ProcessTransactionService
 {
     public function __construct()
     {
     }
 
-    public function miningAllCustomer($fromDate = null, $toDate = null){
+    public function processAllCustomer($fromDate = null, $toDate = null){
 
         $allCustomer = ActiveCustomer::all();
         $allWatchingList = array();
 
         foreach ($allCustomer as $index => $customer) {
 
-            $watchingList = self::miningCustomer($customer, false, $fromDate, $toDate);
+            $watchingList = self::processCustomer($customer, false, $fromDate, $toDate);
 
             //for testing
             $allWatchingList[$index]['customer'] = $customer->id;
@@ -31,7 +31,7 @@ class MiningSimpleService
         return $allWatchingList;
     }
 
-    public function miningCustomer(ActiveCustomer $customer, $isContinue = false,
+    public function processCustomer(ActiveCustomer $customer, $isContinue = false,
                                                 $fromDate = null, $toDate = null) {
 
         $transactions = Connector::getShoppingHistoryFromCustomer($customer, $fromDate, $toDate);
@@ -50,8 +50,8 @@ class MiningSimpleService
 
         //check if item belongs to suitable categories
         foreach ($watchingList as $key => $item) {
-            $catID = Connector::getCategoryIDFromItemID($item);
-            if(!Category::find($catID)['is_suitable']) {
+            $cat = Connector::getCategoryFromItemID($item);
+            if(!Category::find($cat->id)['is_suitable']) {
                 unset($watchingList[$key]);
             }
             elseif (Item::find($item) == null) {

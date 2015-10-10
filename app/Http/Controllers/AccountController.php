@@ -3,10 +3,10 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\ActiveCustomer;
-use App\Facades\Mining;
+use App\Facades\ProcessTransaction;
 
 use Illuminate\Support\Facades\Queue;
-use App\Commands\MiningDelay;
+use App\Commands\ProcessDelay;
 
 use Carbon\Carbon;
 
@@ -26,19 +26,18 @@ class AccountController extends Controller {
 
 	public function update(ActiveCustomer $customer) {
 
-		$from = Carbon::now()->subMonths(config('mining.mining_range_months'))->toDateString();
-		$lastMiningDate = Carbon::createFromFormat('Y-m-d H:i:s', $customer->last_mining);
+		$from = Carbon::now()->subMonths(config('process-trans.process_range_months'))->toDateString();
+		$lastProcessDate = Carbon::createFromFormat('Y-m-d H:i:s', $customer->last_mining);
 
-		if (Carbon::now()->subDays(config('mining.mining_range_lastMiningDays'))
-					->gt($lastMiningDate)) {
-			Mining::miningCustomer($customer, false, $from);
+		if (Carbon::now()->subDays(config('process-trans.process_range_lastProcessDays'))
+					->gt($lastProcessDate)) {
+			ProcessTransaction::processCustomer($customer, false, $from);
 		}
 		//update after 18h
 		else {
 			//testing - 10 secs
 			$time = Carbon::now()->addSecond(10);
-			Queue::later($time, new MiningDelay($customer, $lastMiningDate->toDateString()));
-			//Queue::push(new MiningDelay($customer, $lastMiningDate));
+			Queue::later($time, new ProcessDelay($customer, $lastProcessDate->toDateString()));
 		}
 
 		$customer->last_mining = Carbon::now();

@@ -147,7 +147,7 @@ return [
 		'App\Providers\RouteServiceProvider',
         'App\Providers\ConnectorServiceProvider',
         'App\Providers\ContextAdsServiceProvider',
-        'App\Providers\MiningProvider',
+        'App\Providers\ProcessTransactionProvider',
         'App\Providers\ViewComposerServiceProvider',
 
         /**
@@ -203,7 +203,7 @@ return [
 		'View'      => 'Illuminate\Support\Facades\View',
         'Connector' => 'App\Facades\Connector',
         'ContextAds'=> 'App\Facades\ContextAds',
-        'Mining'	=> 'App\Facades\Mining',
+        'ProcessTransaction'	=> 'App\Facades\ProcessTransaction',
         'Html'      => 'Illuminate\Html\HtmlFacade',
     	'Form'      => 'Illuminate\Html\FormFacade',
 		'Utils' => 'App\Utils\Utils',
