@@ -13,6 +13,9 @@
     if (wholeSystemCheckbox.checked) {
         $('#target-group').hide();
     }
+    else {
+        $('#target-group select').attr('required', 'required');
+    }
     $('#itemsID').select2({
         ajax: {
             delay: 250,
@@ -43,7 +46,7 @@
         }
         else {
             $('#target-group').hide('fast');
-            $('#target-group select').removeAttr('required', 'required');
+            $('#target-group select').removeAttr('required');
         }
     });
     function setRequiredImageGroup(required) {
@@ -79,6 +82,16 @@
             setRequiredImageGroup(false);
         }
     });
+    if ($('input[name=image_display]:radio:checked').val()==0){
+        $('#imageInputGroup').hide();
+        $('#webInputGroup').show();
+        setRequiredWebGroup(true);
+        setRequiredImageGroup(false);
+    }
+    else {
+        setRequiredImageGroup(true);
+    }
+
     updateRequiredInImageGroup = function () {
         $('#imageInputGroup input').removeAttr('required');
         $('#imageInputGroup .tab-pane.active input').attr('required', 'required');

@@ -96,4 +96,9 @@ class Ads extends Model
             return Carbon::now()->addWeek(1)->format('Y-m-d');
         }
     }
+
+    public function setDiscountRateAttribute($rate)
+    {
+        $this->attributes['discount_rate']=$rate/100;
+    }
 }

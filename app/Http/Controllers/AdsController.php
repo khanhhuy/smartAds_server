@@ -63,38 +63,27 @@ class AdsController extends Controller
 
     public function createPromotion()
     {
-        $ads=new Ads;
-        $items=[];
-        return view('ads.promotions.create')->with(compact(['ads','items']));
+        $ads = new Ads;
+        $items = [];
+        return view('ads.promotions.create')->with(compact(['ads', 'items']));
     }
 
     public function storePromotion(PromotionRequest $request)
     {
-        if ($request->input('start_date') > $request->input('end_date')) {
-            return redirect()->back()->withInput()->withErrors('Start Date must be before End Date');
-        }
-        if ($request->input('image_display')) {
-            if ($request->input('provide_image_link')) {
-                if (empty($request->input('image_url'))) {
-                    return redirect()->back()->withInput()->withErrors('Image URL is required');
-                } else {
-                    $ads = self::createPromotionFromRequest($request);
-                }
-            } else {
-                if (!($request->hasFile('image_file'))) {
-                    return redirect()->back()->withInput()->withErrors('Image File is required');
-                } else {
-                    $ads = self::createPromotionFromRequest($request);
-                    $image = $request->file('image_file');
-                    $fullSaveFileName = $ads->id . '.' . $image->getClientOriginalExtension();
-                    $image->move(public_path('/img/ads'), $fullSaveFileName);
-                    $ads->image_url = ('/img/ads/' . $fullSaveFileName);
-                }
-            }
-        } else {
-            $ads = self::createPromotionFromRequest($request);
+        $errors = self::customValidatePromotionRequest($request);
+        if (!empty($errors)) {
+            return redirect()->back()->withInput()->withErrors($errors);
         }
 
+        $ads = self::createPromotionFromRequest($request);
+        if ($request->input('image_display')) {
+            if (!$request->input('provide_image_link')) {
+                $image = $request->file('image_file');
+                $fullSaveFileName = $ads->id . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('/img/ads'), $fullSaveFileName);
+                $ads->image_url = ('/img/ads/' . $fullSaveFileName);
+            }
+        }
 
         $itemsID = $request->input('itemsID');
         foreach ($itemsID as $itemID) {
@@ -115,13 +104,29 @@ class AdsController extends Controller
             }
         }
         $ads->save();
-        return 'success';
+        return redirect()->route('promotions.create');
+    }
+
+    private static function customValidatePromotionRequest($request)
+    {
+        $errors = [];
+        if ($request->input('start_date') > $request->input('end_date')) {
+            $errors[] = 'Start Date must be before End Date';
+        }
+        if ($request->input('image_display')) {
+            if ($request->input('provide_image_link')) {
+                if (empty($request->input('image_url'))) {
+                    $errors[] = 'Image URL is required';
+                }
+            } elseif (!($request->hasFile('image_file'))) {
+                $errors[] = 'Image File is required';
+            }
+        }
     }
 
     private static function createPromotionFromRequest($request)
     {
-        $inputs = $request->except(['_token', 'itemsID', 'targetsID']);
-        $inputs['discount_rate'] /= 100.0;
+        $inputs = $request->except(['_token', '_method', 'itemsID', 'targetsID']);
         $inputs['is_promotion'] = true;
 
         return Ads::create($inputs);
@@ -140,8 +145,65 @@ class AdsController extends Controller
         }
     }
 
-    public function update(Ads $ads)
+    public function updatePromotion(Ads $ads, PromotionRequest $request)
     {
+        $errors = self::customValidatePromotionRequest($request);
+        if (!empty($errors)) {
+            return redirect()->back()->withInput()->withErrors($errors);
+        }
+        $inputs = $request->except(['_token', '_method', 'itemsID', 'targetsID', 'provide_image_link', 'image_url']);
+        if (!$request->has('is_whole_system')) {
+            $inputs['is_whole_system'] = false;
+        }
+        $ads->update($inputs);
+        $ads->areas()->detach();
+        $ads->stores()->detach();
 
+        //items
+        $itemsID = $request->input('itemsID');
+        foreach ($itemsID as $itemID) {
+            Item::firstOrCreate(['id' => $itemID]);
+        }
+        $ads->items()->sync($itemsID);
+
+        //targets
+        if (!$inputs['is_whole_system']) {
+            $targetsID = $request->input('targetsID');
+            if (!empty($targetsID)) {
+                foreach ($targetsID as $targetID) {
+                    $a = Area::find($targetID);
+                    if (!empty($a)) {
+                        $ads->areas()->attach($targetID);
+                    } else {
+                        $ads->stores()->attach($targetID);
+                    }
+                }
+            }
+        }
+
+        //image
+        if ($request->input('image_display')) {
+            if (!$request->input('provide_image_link')) {
+                $ads->provide_image_link=false;
+                $image = $request->file('image_file');
+                $fullSaveFileName = $ads->id . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('/img/ads'), $fullSaveFileName);
+                $ads->image_url = ('/img/ads/' . $fullSaveFileName);
+            }
+            else{
+                if ($ads->provide_image_link){
+                    $ads->image_url=$request->input('image_url');
+                }
+                else{
+                    if ($ads->image_url!==$request->input('image_url')){
+                        $ads->provide_image_link=true;
+                        $ads->image_url=$request->input('image_url');
+                    }
+                }
+            }
+        }
+
+        $ads->save();
+        return 'success';
     }
 }

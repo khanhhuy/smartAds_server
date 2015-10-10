@@ -102,6 +102,11 @@ return [
 	|
 	*/
 
-	'attributes' => [],
+	'attributes' => [
+		'targetsID' => 'Target Stores/Areas',
+        'itemsID'=> 'Items',
+        'is_whole_system' => 'Apply On Whole System',
+        'image_display' => 'Display Type'
+	],
 
 ];

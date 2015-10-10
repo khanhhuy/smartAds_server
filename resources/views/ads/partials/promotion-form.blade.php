@@ -84,7 +84,7 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane fade in active" id="tab-image-link">
                     <br/>
-                    {!! Form::url('image_url',null,['class'=>'form-control','required'=>'required','placeholder'=>'Image URL']) !!}
+                    {!! Form::url('image_url',null,['class'=>'form-control','placeholder'=>'Image URL']) !!}
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="tab-image-upload">
                     <br/>

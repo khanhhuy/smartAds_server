@@ -40,10 +40,10 @@ Route::get('manager', function () {
     return redirect('manager/ads');
 });
 Route::get('manager/ads', 'AdsController@manage');
-Route::get('manager/ads/promotions/create', 'AdsController@createPromotion');
+Route::get('manager/ads/promotions/create', ['as'=>'promotions.create','uses'=>'AdsController@createPromotion']);
 Route::post('ads/promotions', 'AdsController@storePromotion');
 Route::get('manager/ads/{ads}/edit', 'AdsController@edit');
-Route::put('manager/ads/{ads}', ['as'=>'promotions.update','use'=>'AdsController@update']);
+Route::put('manager/ads/{ads}', ['as'=>'promotions.update','uses'=>'AdsController@updatePromotion']);
 
 Route::get('admin', function () {
 	return redirect('admin/minors');
