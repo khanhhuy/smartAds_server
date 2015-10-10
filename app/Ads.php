@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 class Ads extends Model
 {
 
-    protected $visible = ['id', 'title','start_date','end_date','minors'];
+    protected $visible = ['id', 'title', 'start_date', 'end_date', 'minors'];
+    protected $fillable = ['title', 'start_date', 'end_date', 'is_whole_system','is_promotion',
+        'discount_value', 'discount_rate', 'image_display', 'provide_image_link', 'image_url', 'web_url'];
 
     public function items()
     {
@@ -16,6 +18,16 @@ class Ads extends Model
     public function categories()
     {
         return $this->belongsToMany('App\Category');
+    }
+
+    public function stores()
+    {
+        return $this->belongsToMany('App\Store');
+    }
+
+    public function areas()
+    {
+        return $this->belongsToMany('App\Area');
     }
 
     public function scopeAvailable($query)
@@ -29,9 +41,18 @@ class Ads extends Model
     {
         $minValue = $customer->getMinDiscountValue();
         $minRate = $customer->getMinDiscountRate();
-        return $query->available()->where(function ($query) use($minValue,$minRate) {
+        return $query->available()->where(function ($query) use ($minValue, $minRate) {
             $query->where('discount_value', '>=', $minValue)->orWhere('discount_rate', '>=', $minRate);
         });
     }
 
+    public function getImageUrlAttribute($value)
+    {
+        if ($this->provide_image_link){
+            return $value;
+        }
+        else{
+            return asset($value);
+        }
+    }
 }

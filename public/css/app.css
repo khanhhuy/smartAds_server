@@ -31,15 +31,18 @@
 .promotion-form input[type=date].form-control {
   width: initial; }
 
-.promotion-form input[type=number].form-control {
-  width: initial; }
+.promotion-form input[name=discount_value].form-control {
+  width: 150px; }
+
+.promotion-form input[name=discount_rate].form-control {
+  width: 90px; }
 
 @media (min-width: 768px) {
   .promotion-form .my-inline-control {
     display: initial; }
   .promotion-form .my-between-label {
     width: 20px;
-    margin-left: -40px;
+    margin-left: -35px;
     margin-right: 15px; }
   .promotion-form .my-inline-input-group {
     display: inline-table; }
@@ -57,6 +60,12 @@
 
 .promotion-form input[type=submit].btn {
   min-width: 80px; }
+
+.promotion-form select.form-control {
+  height: 34px; }
+
+.promotion-form .myHiddenInputGroup {
+  display: none; }
 
 #select2-targetsID-results.select2-results__options {
   max-height: 400px; }
