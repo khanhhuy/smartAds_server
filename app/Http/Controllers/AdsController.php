@@ -6,7 +6,7 @@ use App\Area;
 use App\Http\Requests\PromotionRequest;
 use App\Item;
 use App\Repositories\ItemRepositoryInterface;
-use Request;
+use Illuminate\Http\Request;
 
 
 class AdsController extends Controller

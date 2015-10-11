@@ -11,27 +11,31 @@
 |
 */
 
-//Route::get('customers/{customers}/context-ads/{minors}','ContextAdsController@index');
-Route::get('customers/{customers}/context-ads/{majors}/{minors}','ContextAdsController@index');
-Route::get('ads/{ads}/','AdsController@show');
-Route::get('ads','AdsController@index');
-Route::get('customers/{customers}/received-ads','AdsController@receivedIndex');
+Route::group(['prefix'=>'api/v1'],function(){
+	Route::get('customers/{customers}/context-ads/{majors}/{minors}','ContextAdsController@index');
+	Route::get('ads','AdsController@index');
+	Route::get('customers/{customers}/received-ads','AdsController@receivedIndex');
+	Route::get('account-status','CustomersController@accountStatus');
 
-Route::get('account-status','CustomersController@accountStatus');
+
+	Route::post('customers/{customers}/update-request', 'AccountController@update');
+	Route::get('customers/{customers}/update-request', 'AccountController@update');
+	Route::controller('auth','Auth\APIAuthController');
+});
+Route::get('ads/{ads}/','AdsController@show');
+
+
 Route::get('process-trans/category', 'ProcessTransactionController@getListCategories');
 Route::post('process-trans/category', 'ProcessTransactionController@selectCategory');
-Route::post('customers/{customers}/update-request', 'AccountController@update');
-
 //for testing
 Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
-Route::get('customers/{customers}/update-request', 'AccountController@update');
+
 
 
 Route::controllers([
 	'portal/auth' => 'Auth\PortalAuthController',
 	'portal/password' => 'Auth\PasswordController',
 ]);
-Route::controller('auth','Auth\APIAuthController');
 
 //portal
 Route::get('/', 'WelcomeController@index');
@@ -40,6 +44,7 @@ Route::get('manager', function () {
     return redirect('manager/ads');
 });
 Route::get('manager/ads', 'AdsController@manage');
+Route::get('ads/manage-processing', 'AdsController@manage');
 Route::get('manager/ads/promotions/create', ['as'=>'promotions.create','uses'=>'AdsController@createPromotion']);
 Route::post('ads/promotions', 'AdsController@storePromotion');
 Route::get('manager/ads/{ads}/edit', 'AdsController@edit');
