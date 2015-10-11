@@ -1,5 +1,4 @@
 <script src="{{asset('/js/select2.min.js')}}"></script>
-<script src="{{asset('/js/jquery.validate.min.js')}}"></script>
 <script>
     templateFunc = function (item) {
         if (typeof item.name === "undefined") {
@@ -115,20 +114,22 @@
             return $('#date-error').html();
         }
     });
-    $('.promotion-form').submit(function (e){
+    $('.promotion-form').submit(function (e) {
         e.preventDefault();
-        var start_date=$('#start_date').val(),end_date=$('#end_date').val();
-        var ts=Date.parse(start_date),te=Date.parse(end_date);
-        var cancel=false;
-        if (!isNaN(ts)&&!isNaN(te))
-        {
-            if (new Date(start_date)>new Date(end_date)){
+        var start_date = $('#start_date').val(), end_date = $('#end_date').val();
+        var ts = Date.parse(start_date), te = Date.parse(end_date);
+        var cancel = false;
+        if (!isNaN(ts) && !isNaN(te)) {
+            if (new Date(start_date) > new Date(end_date)) {
                 $('#end_date').popover('show');
                 $('#end_date').focus();
-                cancel=true;
+                setTimeout(function () {
+                    $('#end_date').popover('hide');
+                }, 5000);
+                cancel = true;
             }
         }
-        if (!cancel){
+        if (!cancel) {
             this.submit();
         }
     });

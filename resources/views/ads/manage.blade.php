@@ -3,4 +3,5 @@
 @section('title','Ads Management')
 
 @section('content')
+
 @endsection
