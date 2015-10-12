@@ -1,0 +1,18 @@
+#manage-ads .dt-right {
+  text-align: right; }
+
+#manage-ads .my-edit-btn {
+  color: #333333;
+  background-color: #E5E5E5;
+  padding: 1px 4px;
+  font-size: 13px;
+  font-weight: 400;
+  white-space: nowrap;
+  vertical-align: middle;
+  border: solid transparent;
+  text-decoration: none; }
+
+#manage-ads .my-edit-btn:hover {
+  background-color: lightgray; }
+
+/*# sourceMappingURL=manage.css.map */

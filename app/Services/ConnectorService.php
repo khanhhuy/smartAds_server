@@ -39,8 +39,8 @@ class ConnectorService
         }
     }
 
-    private static function decodeResponse($response){
-        $result=json_decode($response->getBody());
+    private static function decodeResponse($response,$toArray=false){
+        $result=json_decode($response->getBody(),$toArray);
         if (Utils::emptyObject($result)){
             return null;
         }
@@ -139,4 +139,14 @@ class ConnectorService
         $name=(string)$r->getBody();
         return $name;
     }
+
+
+    public function getItemNamesByIDs($item_ids)
+    {
+        $r= $this->client->get('items/names',[
+            'query'=>compact('item_ids')
+        ]);
+        return self::decodeResponse($r,true);
+    }
+
 }

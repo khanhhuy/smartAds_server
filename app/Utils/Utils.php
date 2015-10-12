@@ -20,4 +20,20 @@ class Utils
         $condition='manager/'.$condition;
         return Request::is($condition)? 'class="active"':'';
     }
+
+    public static function formatItem($name, $id)
+    {
+        return  $name . " [" . $id . "]";
+    }
+
+    public static function formatTargets($targets)
+    {
+        if (empty($targets)){
+            return ['All'];
+        }
+        else {
+            return $targets;
+        }
+
+    }
 }

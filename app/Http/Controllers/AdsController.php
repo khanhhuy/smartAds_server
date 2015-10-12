@@ -6,7 +6,10 @@ use App\Area;
 use App\Http\Requests\PromotionRequest;
 use App\Item;
 use App\Repositories\ItemRepositoryInterface;
+use Carbon\Carbon;
+use DB;
 use Illuminate\Http\Request;
+use Utils;
 
 
 class AdsController extends Controller
@@ -138,7 +141,7 @@ class AdsController extends Controller
         if ($ads->is_promotion) {
             $items1 = $ads->items;
             foreach ($items1 as $item) {
-                $items[$item->id] = $this->itemRepo->getItemNameByID($item->id) . " [" . $item->id . "]";
+                $items[$item->id] = Utils::formatItem($this->itemRepo->getItemNameByID($item->id), $item->id);
             }
             return view('ads.promotions.edit')->with(compact(['items', 'ads']));
         } else {
@@ -208,19 +211,24 @@ class AdsController extends Controller
 
     public function table(Request $request)
     {
-        $promotions = Ads::promotion();
+        $allPromotions = Ads::promotion();
         $r['draw'] = (int)$request->input('draw');
-        $r['recordsTotal'] = $promotions->count();
-        $r['recordsFiltered'] = $r['recordsTotal'] - 10;
-        $r['data'] = $promotions->take(10)->get()->map(function ($ads) {
+        $r['recordsTotal'] = $allPromotions->count();
+        $r['recordsFiltered'] = $r['recordsTotal'];
+        $displayPromotions = $allPromotions->take($request->input('length'))->orderBy('updated_at','asc')->get();
+        $itemIDs = DB::table('ads_item')->whereIn('ads_id', $displayPromotions->lists('id'))->distinct()->lists('item_id');
+        $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
+        $r['data'] = $displayPromotions->map(function ($ads) use ($itemNames) {
             return [
                 $ads->id,
-                $this->itemRepo->getItemsNameByIDs($ads->items()->lists('id')),
-                $ads->targets,
-                $ads->start_date,
-                $ads->end_date,
-                $ads->discount_rate,
-                $ads->discount_value,
+                $ads->items->map(function ($item) use ($itemNames) {
+                    return Utils::formatItem($itemNames[$item->id], $item->id);
+                }),
+                Utils::formatTargets($ads->targets),
+                Carbon::parse($ads->getOriginal('start_date'))->format('m-d-Y'),
+                Carbon::parse($ads->getOriginal('end_date'))->format('m-d-Y'),
+                ((float)$ads->discount_rate) . ' %',
+                (float)$ads->discount_value,
                 $ads->updated_at->format('m-d-Y'),
             ];
         });
