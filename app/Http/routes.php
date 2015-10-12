@@ -22,7 +22,6 @@ Route::group(['prefix'=>'api/v1'],function(){
 	Route::get('customers/{customers}/update-request', 'AccountController@update');
 	Route::controller('auth','Auth\APIAuthController');
 });
-Route::get('ads/{ads}/','AdsController@show');
 
 
 Route::get('process-trans/category', 'ProcessTransactionController@getListCategories');
@@ -44,7 +43,8 @@ Route::get('manager', function () {
     return redirect('manager/ads');
 });
 Route::get('manager/ads', 'AdsController@manage');
-Route::get('ads/manage-processing', 'AdsController@manage');
+Route::get('ads/table', 'AdsController@table');
+Route::get('ads/{ads}/','AdsController@show');
 Route::get('manager/ads/promotions/create', ['as'=>'promotions.create','uses'=>'AdsController@createPromotion']);
 Route::post('ads/promotions', 'AdsController@storePromotion');
 Route::get('manager/ads/{ads}/edit', 'AdsController@edit');

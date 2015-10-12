@@ -9,4 +9,6 @@ namespace App\Repositories;
 
 interface ItemRepositoryInterface {
     public function getItemNameByID($id);
+
+    public function getItemsNameByIDs($ids);
 }

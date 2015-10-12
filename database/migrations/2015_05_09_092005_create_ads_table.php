@@ -18,10 +18,10 @@ class CreateAdsTable extends Migration {
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date');
             $table->string('title');
-            $table->boolean('is_promotion')->default(false);
+            $table->boolean('is_promotion')->default(true);
             $table->boolean('is_whole_system')->default(false);
             $table->decimal('discount_value',20,2)->nullable();
-            $table->decimal('discount_rate',5,4)->nullable();
+            $table->decimal('discount_rate',5,2)->nullable();
             $table->boolean('image_display')->default(true);
             $table->boolean('provide_image_link')->nullable();
             $table->string('image_url',2083)->nullable();

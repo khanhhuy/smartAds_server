@@ -135,6 +135,8 @@ class ConnectorService
 
     public function getItemNameByID($itemID)
     {
-        return $this->client->get('items/'.$itemID.'/name')->getBody();
+        $r= $this->client->get('items/'.$itemID.'/name');
+        $name=(string)$r->getBody();
+        return $name;
     }
 }

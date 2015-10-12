@@ -18,4 +18,13 @@ class ItemRepository implements ItemRepositoryInterface
     {
         return Connector::getItemNameByID($id);
     }
+
+    public function getItemsNameByIDs($ids)
+    {
+        $names=[];
+        foreach ($ids as $id) {
+            $names[] = Connector::getItemNameByID($id);
+        }
+        return $names;
+    }
 }

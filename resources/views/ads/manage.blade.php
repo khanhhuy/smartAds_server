@@ -7,21 +7,22 @@
 @endsection
 
 @section('content')
-    <table id="manage-ads" class="display" cellspacing="0" width="100%">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Areas</th>
-            <th>Items</th>
-            <th>From</th>
-            <th>To</th>
-            <th>D. Rate</th>
-            <th>D. Value</th>
-            <th>Added/Updated</th>
-        </tr>
-        </thead>
-    </table>
+    <div class="row">
+            <table id="manage-ads" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Items</th>
+                    <th>Areas</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>D. Rate</th>
+                    <th>D. Value</th>
+                    <th>Last Modified</th>
+                </tr>
+                </thead>
+            </table>
+    </div>
 @endsection
 
 @section('body-footer')
@@ -31,7 +32,7 @@
             $('#manage-ads').DataTable({
                 "processing": true,
                 "serverSide": true,
-{{--                "ajax": "{{url('/tar'}}}"--}}
+                "ajax": "{{url('/ads/table')}}"
             });
         });
     </script>

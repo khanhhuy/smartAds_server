@@ -39,6 +39,11 @@ class Ads extends Model
         })->where('end_date', '>=', new Carbon());
     }
 
+    public function scopePromotion($query)
+    {
+        return $query->where('is_promotion',true);
+    }
+
     public function scopeForCustomer($query, ActiveCustomer $customer)
     {
         $minValue = $customer->getMinDiscountValue();
@@ -67,14 +72,14 @@ class Ads extends Model
         return array_merge($storesID, $areasID);
     }
 
+    public function getTargetsAttribute()
+    {
+        return array_merge($this->areas()->lists('name'),$this->stores()->lists('name'));
+    }
+
     public function getItemsIDAttribute()
     {
         return $this->items()->lists('id');
-    }
-
-    public function getDiscountRateAttribute($value)
-    {
-        return $value * 100;
     }
 
     public function getStartDateAttribute($date)
@@ -95,10 +100,5 @@ class Ads extends Model
         else {
             return Carbon::now()->addWeek(1)->format('Y-m-d');
         }
-    }
-
-    public function setDiscountRateAttribute($rate)
-    {
-        $this->attributes['discount_rate']=$rate/100;
     }
 }

@@ -185,20 +185,18 @@ class AdsController extends Controller
         //image
         if ($request->input('image_display')) {
             if (!$request->input('provide_image_link')) {
-                $ads->provide_image_link=false;
+                $ads->provide_image_link = false;
                 $image = $request->file('image_file');
                 $fullSaveFileName = $ads->id . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('/img/ads'), $fullSaveFileName);
                 $ads->image_url = ('/img/ads/' . $fullSaveFileName);
-            }
-            else{
-                if ($ads->provide_image_link){
-                    $ads->image_url=$request->input('image_url');
-                }
-                else{
-                    if ($ads->image_url!==$request->input('image_url')){
-                        $ads->provide_image_link=true;
-                        $ads->image_url=$request->input('image_url');
+            } else {
+                if ($ads->provide_image_link) {
+                    $ads->image_url = $request->input('image_url');
+                } else {
+                    if ($ads->image_url !== $request->input('image_url')) {
+                        $ads->provide_image_link = true;
+                        $ads->image_url = $request->input('image_url');
                     }
                 }
             }
@@ -206,5 +204,26 @@ class AdsController extends Controller
 
         $ads->save();
         return 'success';
+    }
+
+    public function table(Request $request)
+    {
+        $promotions = Ads::promotion();
+        $r['draw'] = (int)$request->input('draw');
+        $r['recordsTotal'] = $promotions->count();
+        $r['recordsFiltered'] = $r['recordsTotal'] - 10;
+        $r['data'] = $promotions->take(10)->get()->map(function ($ads) {
+            return [
+                $ads->id,
+                $this->itemRepo->getItemsNameByIDs($ads->items()->lists('id')),
+                $ads->targets,
+                $ads->start_date,
+                $ads->end_date,
+                $ads->discount_rate,
+                $ads->discount_value,
+                $ads->updated_at->format('m-d-Y'),
+            ];
+        });
+        return response()->json($r);
     }
 }

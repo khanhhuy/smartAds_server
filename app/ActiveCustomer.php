@@ -43,7 +43,7 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
             return $this->min_entrance_rate;
         } else {
             //TODO Huy: implement save default rate;
-            return 0.2;
+            return 20;
         }
     }
 
@@ -63,7 +63,7 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
             return $this->min_aisle_rate;
         } else {
             //TODO Huy: implement save default rate;
-            return 0.1;
+            return 10;
         }
     }
 
