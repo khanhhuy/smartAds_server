@@ -15,4 +15,10 @@
 #manage-ads .my-edit-btn:hover {
   background-color: lightgray; }
 
+#manage-ads #manage-table_length {
+  display: inline-block; }
+
+#manage-ads .del-container {
+  margin-left: 25px; }
+
 /*# sourceMappingURL=manage.css.map */
