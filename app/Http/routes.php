@@ -45,6 +45,7 @@ Route::get('manager', function () {
 Route::get('manager/ads', 'AdsController@manage');
 Route::get('ads/table', 'AdsController@table');
 Route::get('ads/{ads}/','AdsController@show');
+Route::delete('ads/',['as'=>'ads.deleteMulti','uses'=>'AdsController@deleteMulti']);
 Route::get('manager/ads/promotions/create', ['as'=>'promotions.create','uses'=>'AdsController@createPromotion']);
 Route::post('ads/promotions', 'AdsController@storePromotion');
 Route::get('manager/ads/{ads}/edit', 'AdsController@edit');

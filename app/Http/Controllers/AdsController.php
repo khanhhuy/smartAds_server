@@ -234,4 +234,13 @@ class AdsController extends Controller
         });
         return response()->json($r);
     }
+
+    public function deleteMulti(Request $request)
+    {
+        $ids=$request->input('ids');
+        if (empty($ids)){
+            return abort('400');
+        }
+        Ads::destroy($ids);
+    }
 }

@@ -13,7 +13,7 @@
         <table id="manage-table" class="table table-striped table-bordered table-hover" cellspacing="0" width="100%">
             <thead>
             <tr>
-                <th></th>
+                <th id="select-all-chkbox"></th>
                 <th>ID</th>
                 <th>Items</th>
                 <th>Areas</th>
@@ -32,7 +32,7 @@
 @section('body-footer')
     <script type="text/javascript" src="{{asset('/datatables/datatables.min.js')}}"></script>
     <script>
-        $('#manage-table').DataTable({
+        var table = $('#manage-table').DataTable({
             "processing": true,
             "serverSide": true,
             "ajax": "{{url('/ads/table')}}",
@@ -97,21 +97,48 @@
                         extend: 'selected',
                         text: '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete',
                         action: function (e, dt, button, config) {
-                            var anSelected = fnGetSelected( dt );
-                            $(anSelected).remove();
-//                            dt.row('.selected').remove().draw( false );
+                            var ids = dt.rows('.selected').data().pluck(0).toArray();
+                            var message = "Delete " + ids.length + (ids.length>1?" rows?":" row?");
+                            bootbox.confirm(message, function (result) {
+                                if (result && ids.length > 0) {
+                                    $.ajax({
+                                        url: '{{route('ads.deleteMulti')}}',
+                                        method: 'DELETE',
+                                        data: {ids: ids},
+                                        success: function (result) {
+                                            dt.rows('.selected').remove().draw(false);
+                                        },
+                                        error: function (jqXHR, type, errorThrown) {
+                                            if (errorThrown != null) {
+                                                alert(errorThrown);
+                                            }
+                                        }
+                                    })
+                                }
+                            });
                         },
                     }
                 ],
-                dom:{
-                    container:{
-                        className:'dt-buttons btn-group del-container'
+                dom: {
+                    container: {
+                        className: 'dt-buttons btn-group del-container'
                     },
-                    button:{
-                        className:'btn btn-default'
+                    button: {
+                        className: 'btn btn-default'
                     }
                 }
             }
         });
+        $('#select-all-chkbox').click(function () {
+            if (!$(this).hasClass("checked")) {
+                $(this).addClass("checked");
+                table.rows().select();
+            }
+            else {
+                $(this).removeClass('checked');
+                table.rows().deselect();
+            }
+        });
     </script>
+    <script src="{{asset('/js/bootbox.min.js')}}"></script>
 @endsection

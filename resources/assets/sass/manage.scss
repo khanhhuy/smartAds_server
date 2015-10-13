@@ -19,10 +19,34 @@
   .my-edit-btn:hover {
     background-color: lightgray;
   }
-  #manage-table_length{
+  #manage-table_length {
     display: inline-block;
   }
-  .del-container{
-    margin-left:25px;
+  .del-container {
+    margin-left: 25px;
   }
+  #select-all-chkbox {
+    vertical-align: middle;
+  }
+  #select-all-chkbox:before {
+    content: ' ';
+    border: 1px solid black;
+    border-radius: 3px;
+    display: block;
+    position: absolute;
+    top: 19px;
+    width: 12px;
+    height: 12px;
+  }
+  #select-all-chkbox.checked:after {
+    content: '\2714';
+    margin-top: -12px;
+    margin-left:2px;
+    text-align: center;
+    text-shadow: 1px 1px #B0BED9, -1px -1px #B0BED9, 1px -1px #B0BED9, -1px 1px #B0BED9;
+    display: block;
+    width: 12px;
+    height: 12px;
+  }
+
 }
