@@ -34,6 +34,10 @@ class PromotionRequest extends Request
             'image_file'=>'image',
             'image_url' => 'url',
             'web_url' => 'required_if:image_display,false|url',
+            'auto_thumbnail'=>'boolean',
+            'provide_thumbnail_link'=>'required_without:auto_thumbnail|boolean',
+            'thumbnail_file'=>'image',
+            'thumbnail_url' => 'url',
         ];
         return $rules;
     }

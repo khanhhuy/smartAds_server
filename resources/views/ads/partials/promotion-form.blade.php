@@ -105,6 +105,38 @@
             {!! Form::url('web_url',null,['class'=>'form-control','placeholder'=>'eg. http://example.com/ads/a100.html']) !!}
         </div>
     </div>
+    <div class="form-group">
+        {!! Form::label('auto_thumbnail','Auto generate thumbnail?',['class'=>'col-sm-3 control-label']) !!}
+        <div class="col-sm-9 ">
+            <div class="checkbox-inline">
+                {!! Form::checkbox('auto_thumbnail',1,true) !!}
+            </div>
+        </div>
+    </div>
+    <div class="form-group " id="thumbnailInputGroup">
+        {!! Form::label(null,'Thumbnail Image',['class'=>'col-sm-3 control-label']) !!}
+        <div class="col-sm-8 col-md-6">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#tab-thumbnail-link" aria-controls="thumbnail-link" role="tab"
+                                                          data-toggle="tab">Link</a></li>
+                <li role="presentation"><a href="#tab-thumbnail-upload" aria-controls="thumbnail-upload"
+                                           role="tab"
+                                           data-toggle="tab">Upload</a></li>
+            </ul>
+            <input type="hidden" id="provide_thumbnail_link" name="provide_thumbnail_link" value="1"/>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="tab-thumbnail-link">
+                    <br/>
+                    {!! Form::url('thumbnail_url',null,['class'=>'form-control','placeholder'=>'Thumbnail URL']) !!}
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="tab-thumbnail-upload">
+                    <br/>
+                    {!! Form::file('thumbnail_file',['id'=>'thumbnail_file','accept'=>'image/*']) !!}
+                </div>
+            </div>
+        </div>
+    </div>
 </fieldset>
 <div class="form-group">
     <div class="col-sm-offset-3 col-sm-9">

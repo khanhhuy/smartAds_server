@@ -8,7 +8,8 @@ class Ads extends Model
 
     protected $visible = ['id', 'title', 'start_date', 'end_date', 'minors'];
     protected $fillable = ['title', 'start_date', 'end_date', 'is_whole_system', 'is_promotion',
-        'discount_value', 'discount_rate', 'image_display', 'provide_image_link', 'image_url', 'web_url'];
+        'discount_value', 'discount_rate', 'image_display', 'provide_image_link', 'image_url', 'web_url',
+    'auto_thumbnail','provide_thumbnail_link','thumbnail_url'];
     protected $dates = ['start_date', 'end_date'];
 
 

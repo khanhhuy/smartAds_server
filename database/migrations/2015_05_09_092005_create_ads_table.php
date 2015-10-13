@@ -26,6 +26,9 @@ class CreateAdsTable extends Migration {
             $table->boolean('provide_image_link')->nullable();
             $table->string('image_url',2083)->nullable();
             $table->string('web_url',2083)->nullable();
+            $table->boolean('auto_thumbnail')->default(false);
+            $table->boolean('provide_thumbnail_link')->nullable();
+            $table->string('thumbnail_url',2083)->nullable();
 			$table->timestamps();
 		});
         Schema::create('ads_item', function(Blueprint $table)

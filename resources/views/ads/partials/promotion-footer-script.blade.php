@@ -8,14 +8,7 @@
             return item.name + " [" + item.id + "]";
         }
     };
-    $('#targetsID').select2();
-    var wholeSystemCheckbox = $("#is_whole_system")[0];
-    if (wholeSystemCheckbox.checked) {
-        $('#target-group').hide();
-    }
-    else {
-        $('#target-group select').attr('required', 'required');
-    }
+
     $('#itemsID').select2({
         ajax: {
             delay: 250,
@@ -39,6 +32,15 @@
         templateResult: templateFunc,
         templateSelection: templateFunc
     });
+    $('#targetsID').select2();
+
+    var wholeSystemCheckbox = $("#is_whole_system")[0];
+    if (wholeSystemCheckbox.checked) {
+        $('#target-group').hide();
+    }
+    else {
+        $('#target-group select').attr('required', 'required');
+    }
     $("#is_whole_system").change(function () {
         if (!this.checked) {
             $('#target-group').show('fast');
@@ -49,6 +51,20 @@
             $('#target-group select').removeAttr('required');
         }
     });
+    var auto_thumbnail = $("#auto_thumbnail")[0];
+    if (auto_thumbnail.checked) {
+        $('#thumbnailInputGroup').hide();
+    }
+    $("#auto_thumbnail").change(function () {
+        if (!this.checked) {
+            $('#thumbnailInputGroup').show('fast');
+        }
+        else {
+            $('#thumbnailInputGroup').hide('fast');
+        }
+    });
+
+
     function setRequiredImageGroup(required) {
         if (!required) {
             $('#imageInputGroup input').removeAttr('required');
@@ -73,6 +89,9 @@
 
             setRequiredImageGroup(true);
             setRequiredWebGroup(false);
+            $('#auto_thumbnail').prop('checked', true);
+            $('#auto_thumbnail').trigger('change');
+            $('#auto_thumbnail').prop('disabled',false);
         }
         else {
             $('#imageInputGroup').hide('fast');
@@ -80,6 +99,9 @@
 
             setRequiredWebGroup(true);
             setRequiredImageGroup(false);
+            $('#auto_thumbnail').prop('checked', false);
+            $('#auto_thumbnail').trigger('change');
+            $('#auto_thumbnail').prop('disabled',true);
         }
     });
     if ($('input[name=image_display]:radio:checked').val() == 0) {
@@ -105,6 +127,16 @@
         updateRequiredInImageGroup();
         $('#provide_image_link').val(0);
     });
+
+    var tabThumbnailLink = $('a[data-toggle="tab"][aria-controls="thumbnail-link"]');
+    tabThumbnailLink.on('shown.bs.tab', function () {
+        $('#provide_thumbnail_link').val(1);
+    });
+    tabThumbnailLink.on('hidden.bs.tab', function () {
+        $('#provide_thumbnail_link').val(0);
+    });
+
+
 
     //validate
     $('#end_date').popover({

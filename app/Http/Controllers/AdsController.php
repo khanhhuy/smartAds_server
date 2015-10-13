@@ -79,6 +79,8 @@ class AdsController extends Controller
         }
 
         $ads = self::createPromotionFromRequest($request);
+
+        //image upload
         if ($request->input('image_display')) {
             if (!$request->input('provide_image_link')) {
                 $image = $request->file('image_file');
@@ -88,11 +90,40 @@ class AdsController extends Controller
             }
         }
 
+        //thumbnail
+        if (!$request->has('auto_thumbnail')) {
+            if (!$request->input('provide_thumbnail_link')) {
+                if ($request->hasFile('thumbnail_file')){
+                    $thumbnail=$request->file('thumbnail_file');
+                    $fullSaveFileName = $ads->id . '.' . $thumbnail->getClientOriginalExtension();
+                    $thumbnail->move(public_path('/img/thumbnails'), $fullSaveFileName);
+                    $ads->thumbnail_url = ('/img/thumbnails/' . $fullSaveFileName);
+                }
+            }
+        } elseif ($request->input('auto_thumbnail')&&$request->input('image_display')) {
+            $ext='png';
+            if (!$request->input('provide_image_link')){
+                $ext=$image->getClientOriginalExtension();
+                Utils::createThumbnail($ads->id,$ext,public_path('img/ads')."/$fullSaveFileName");
+            }
+            else {
+                $url = $request->input('image_url');
+                $temp = Utils::getAdsImagePath($ads->id,'png');
+                file_put_contents($temp, file_get_contents($url));
+                Utils::createThumbnail($ads->id,null,$temp);
+                unlink($temp);
+            }
+            $ads->thumbnail_url = ('/img/thumbnails/' . $ads->id.'.'.$ext);
+        }
+
+        //items
         $itemsID = $request->input('itemsID');
         foreach ($itemsID as $itemID) {
             Item::firstOrCreate(['id' => $itemID]);
         }
         $ads->items()->attach($itemsID);
+
+        //targets
         if (!$request->has('is_whole_system') || !$request->input('is_whole_system')) {
             $targetsID = $request->input('targetsID');
             if (!empty($targetsID)) {
@@ -215,7 +246,7 @@ class AdsController extends Controller
         $r['draw'] = (int)$request->input('draw');
         $r['recordsTotal'] = $allPromotions->count();
         $r['recordsFiltered'] = $r['recordsTotal'];
-        $displayPromotions = $allPromotions->take($request->input('length'))->orderBy('updated_at','asc')->get();
+        $displayPromotions = $allPromotions->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
         $itemIDs = DB::table('ads_item')->whereIn('ads_id', $displayPromotions->lists('id'))->distinct()->lists('item_id');
         $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
         $r['data'] = $displayPromotions->map(function ($ads) use ($itemNames) {
@@ -237,14 +268,15 @@ class AdsController extends Controller
 
     public function deleteMulti(Request $request)
     {
-        $ids=$request->input('ids');
-        if (empty($ids)){
+        $ids = $request->input('ids');
+        if (empty($ids)) {
             return abort('400');
         }
         Ads::destroy($ids);
     }
 
-    public function thumbnail($ads) {
-        return redirect('img/thumbnails/'.$ads->id.'.png');
+    public function thumbnail($ads)
+    {
+        return redirect('img/thumbnails/' . $ads->id . '.png');
     }
 }

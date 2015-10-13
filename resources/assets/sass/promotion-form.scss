@@ -27,10 +27,10 @@
   .my-inline-input-group .input-group-addon {
     width: initial;
   }
-  #is_whole_system {
+  #is_whole_system,#auto_thumbnail {
     position: initial;
   }
-  input#image_file {
+  input#image_file,input#thumbnail_file {
     margin-bottom: 12px;
   }
   input[type=submit].btn {

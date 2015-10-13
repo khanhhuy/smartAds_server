@@ -22,10 +22,10 @@
 .promotion-form .my-inline-input-group .input-group-addon {
   width: initial; }
 
-.promotion-form #is_whole_system {
+.promotion-form #is_whole_system, .promotion-form #auto_thumbnail {
   position: initial; }
 
-.promotion-form input#image_file {
+.promotion-form input#image_file, .promotion-form input#thumbnail_file {
   margin-bottom: 12px; }
 
 .promotion-form input[type=submit].btn {
