@@ -10,6 +10,7 @@ use App\ActiveCustomer;
 use App\Facades\ProcessTransaction;
 use Carbon\Carbon;
 use App\Facades\Connector;
+use Redirect;
 
 class ProcessTransactionController extends Controller {
 

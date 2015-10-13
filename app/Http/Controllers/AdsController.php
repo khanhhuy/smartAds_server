@@ -117,4 +117,8 @@ class AdsController extends Controller
 
         return Ads::create($inputs);
     }
+
+    public function thumbnail($ads) {
+        return redirect('img/thumbnails/'.$ads->id.'.png');
+    }
 }

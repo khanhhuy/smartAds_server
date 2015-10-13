@@ -23,6 +23,7 @@ Route::post('process-trans/category', 'ProcessTransactionController@selectCatego
 Route::post('customers/{customers}/update-request', 'AccountController@update');
 
 //for testing
+Route::get('ads/thumbnail/{ads}', 'AdsController@thumbnail');
 Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
 Route::get('customers/{customers}/update-request', 'AccountController@update');
 
