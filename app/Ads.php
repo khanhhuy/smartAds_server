@@ -7,8 +7,10 @@ class Ads extends Model
 {
 
     protected $visible = ['id', 'title', 'start_date', 'end_date', 'minors'];
-    protected $fillable = ['title', 'start_date', 'end_date', 'is_whole_system','is_promotion',
+    protected $fillable = ['title', 'start_date', 'end_date', 'is_whole_system', 'is_promotion',
         'discount_value', 'discount_rate', 'image_display', 'provide_image_link', 'image_url', 'web_url'];
+    protected $dates = ['start_date', 'end_date'];
+
 
     public function items()
     {
@@ -37,6 +39,11 @@ class Ads extends Model
         })->where('end_date', '>=', new Carbon());
     }
 
+    public function scopePromotion($query)
+    {
+        return $query->where('is_promotion',true);
+    }
+
     public function scopeForCustomer($query, ActiveCustomer $customer)
     {
         $minValue = $customer->getMinDiscountValue();
@@ -48,11 +55,50 @@ class Ads extends Model
 
     public function getImageUrlAttribute($value)
     {
-        if ($this->provide_image_link){
+        if (empty($value)){
             return $value;
         }
-        else{
+        if ($this->provide_image_link) {
+            return $value;
+        } else {
             return asset($value);
+        }
+    }
+
+    public function getTargetsIDAttribute()
+    {
+        $storesID = $this->stores()->lists('id');
+        $areasID = $this->areas()->lists('id');
+        return array_merge($storesID, $areasID);
+    }
+
+    public function getTargetsAttribute()
+    {
+        return array_merge($this->areas()->lists('name'),$this->stores()->lists('name'));
+    }
+
+    public function getItemsIDAttribute()
+    {
+        return $this->items()->lists('id');
+    }
+
+    public function getStartDateAttribute($date)
+    {
+        if (!empty($date)) {
+            return Carbon::parse($date)->format('Y-m-d');
+        }
+        else {
+            return Carbon::now()->format('Y-m-d');
+        }
+    }
+
+    public function getEndDateAttribute($date)
+    {
+        if (!empty($date)) {
+            return Carbon::parse($date)->format('Y-m-d');
+        }
+        else {
+            return Carbon::now()->addWeek(1)->format('Y-m-d');
         }
     }
 }

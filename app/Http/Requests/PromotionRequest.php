@@ -23,7 +23,7 @@ class PromotionRequest extends Request
         $rules = [
             'itemsID' => 'required|array',
             'is_whole_system' => 'boolean',
-            'targetsID'=>'required_with:is_whole_system|array',
+            'targetsID'=>'required_without:is_whole_system|array',
             'start_date' => 'required|date',
             'end_date' => 'required|date',
             'discount_value' => 'required|numeric|min:0.001',

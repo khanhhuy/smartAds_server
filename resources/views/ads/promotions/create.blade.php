@@ -1,9 +1,12 @@
 @extends('manager-master')
 
 @section('title','Add Promotion')
+
 @section('head-footer')
     <link href="{{asset('/css/select2.min.css')}}" rel="stylesheet"/>
+    <link href="{{asset('/css/promotion-form.css')}}" rel="stylesheet"/>
 @endsection
+
 @section('content')
     <br/>
     <div class="row">

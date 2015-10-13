@@ -1,0 +1,47 @@
+#manage-ads .dt-right {
+  text-align: right; }
+
+#manage-ads .my-edit-btn {
+  color: #333333;
+  background-color: #E5E5E5;
+  padding: 1px 4px;
+  font-size: 13px;
+  font-weight: 400;
+  white-space: nowrap;
+  vertical-align: middle;
+  border: solid transparent;
+  text-decoration: none; }
+
+#manage-ads .my-edit-btn:hover {
+  background-color: lightgray; }
+
+#manage-ads #manage-table_length {
+  display: inline-block; }
+
+#manage-ads .del-container {
+  margin-left: 25px; }
+
+#manage-ads #select-all-chkbox {
+  vertical-align: middle; }
+
+#manage-ads #select-all-chkbox:before {
+  content: ' ';
+  border: 1px solid black;
+  border-radius: 3px;
+  display: block;
+  position: absolute;
+  top: 19px;
+  width: 12px;
+  height: 12px; }
+
+#manage-ads #select-all-chkbox.checked:after {
+  content: '\2714';
+  margin-top: -12px;
+  margin-left: 2px;
+  text-align: center;
+  text-shadow: 1px 1px #B0BED9, -1px -1px #B0BED9, 1px -1px #B0BED9, -1px 1px #B0BED9;
+  display: block;
+  width: 12px;
+  height: 12px; }
+
+/*# sourceMappingURL=manage.css.map */

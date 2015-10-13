@@ -5,11 +5,21 @@ use App\Ads;
 use App\Area;
 use App\Http\Requests\PromotionRequest;
 use App\Item;
-use Request;
+use App\Repositories\ItemRepositoryInterface;
+use Carbon\Carbon;
+use DB;
+use Illuminate\Http\Request;
+use Utils;
 
 
 class AdsController extends Controller
 {
+    protected $itemRepo;
+
+    public function __construct(ItemRepositoryInterface $itemRepo)
+    {
+        $this->itemRepo = $itemRepo;
+    }
 
     public function show(Ads $ads)
     {
@@ -56,43 +66,34 @@ class AdsController extends Controller
 
     public function createPromotion()
     {
-        return view('ads.promotions.create')->with(['items' => []]);
+        $ads = new Ads;
+        $items = [];
+        return view('ads.promotions.create')->with(compact(['ads', 'items']));
     }
 
     public function storePromotion(PromotionRequest $request)
     {
-        if ($request->input('start_date') > $request->input('end_date')) {
-            return redirect()->back()->withInput()->withErrors('Start Date must be before End Date');
-        }
-        if ($request->input('image_display')) {
-            if ($request->input('provide_image_link')) {
-                if (empty($request->input('image_url'))) {
-                    return redirect()->back()->withInput()->withErrors('Image URL is required');
-                } else {
-                    $ads = self::createAdsFromRequest($request);
-                }
-            } else {
-                if (!($request->hasFile('image_file'))) {
-                    return redirect()->back()->withInput()->withErrors('Image File is required');
-                } else {
-                    $ads = self::createAdsFromRequest($request);
-                    $image = $request->file('image_file');
-                    $fullSaveFileName = $ads->id . '.' . $image->getClientOriginalExtension();
-                    $image->move(public_path('/img/ads'), $fullSaveFileName);
-                    $ads->image_url = ('/img/ads/' . $fullSaveFileName);
-                }
-            }
-        } else {
-            $ads = self::createAdsFromRequest($request);
+        $errors = self::customValidatePromotionRequest($request);
+        if (!empty($errors)) {
+            return redirect()->back()->withInput()->withErrors($errors);
         }
 
+        $ads = self::createPromotionFromRequest($request);
+        if ($request->input('image_display')) {
+            if (!$request->input('provide_image_link')) {
+                $image = $request->file('image_file');
+                $fullSaveFileName = $ads->id . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('/img/ads'), $fullSaveFileName);
+                $ads->image_url = ('/img/ads/' . $fullSaveFileName);
+            }
+        }
 
         $itemsID = $request->input('itemsID');
         foreach ($itemsID as $itemID) {
             Item::firstOrCreate(['id' => $itemID]);
         }
         $ads->items()->attach($itemsID);
-        if (!$request->has('is_whole_system')||!$request->input('is_whole_system')) {
+        if (!$request->has('is_whole_system') || !$request->input('is_whole_system')) {
             $targetsID = $request->input('targetsID');
             if (!empty($targetsID)) {
                 foreach ($targetsID as $targetID) {
@@ -106,16 +107,141 @@ class AdsController extends Controller
             }
         }
         $ads->save();
-        return 'success';
+        return redirect()->route('promotions.create');
     }
 
-    private static function createAdsFromRequest($request)
+    private static function customValidatePromotionRequest($request)
     {
-        $inputs = $request->except(['_token', 'itemsID', 'targetsID']);
-        $inputs['discount_rate'] /= 100;
+        $errors = [];
+        if ($request->input('start_date') > $request->input('end_date')) {
+            $errors[] = 'Start Date must be before End Date';
+        }
+        if ($request->input('image_display')) {
+            if ($request->input('provide_image_link')) {
+                if (empty($request->input('image_url'))) {
+                    $errors[] = 'Image URL is required';
+                }
+            } elseif (!($request->hasFile('image_file'))) {
+                $errors[] = 'Image File is required';
+            }
+        }
+        return $errors;
+    }
+
+    private static function createPromotionFromRequest($request)
+    {
+        $inputs = $request->except(['_token', '_method', 'itemsID', 'targetsID']);
         $inputs['is_promotion'] = true;
 
         return Ads::create($inputs);
+    }
+
+    public function edit(Ads $ads)
+    {
+        if ($ads->is_promotion) {
+            $items1 = $ads->items;
+            foreach ($items1 as $item) {
+                $items[$item->id] = Utils::formatItem($this->itemRepo->getItemNameByID($item->id), $item->id);
+            }
+            return view('ads.promotions.edit')->with(compact(['items', 'ads']));
+        } else {
+            return 'TODO Khanh Huy: Edit Targeted Ads';
+        }
+    }
+
+    public function updatePromotion(Ads $ads, PromotionRequest $request)
+    {
+        $errors = self::customValidatePromotionRequest($request);
+        if (!empty($errors)) {
+            return redirect()->back()->withInput()->withErrors($errors);
+        }
+        $inputs = $request->except(['_token', '_method', 'itemsID', 'targetsID', 'provide_image_link', 'image_url']);
+        if (!$request->has('is_whole_system')) {
+            $inputs['is_whole_system'] = false;
+        }
+        $ads->update($inputs);
+        $ads->areas()->detach();
+        $ads->stores()->detach();
+
+        //items
+        $itemsID = $request->input('itemsID');
+        foreach ($itemsID as $itemID) {
+            Item::firstOrCreate(['id' => $itemID]);
+        }
+        $ads->items()->sync($itemsID);
+
+        //targets
+        if (!$inputs['is_whole_system']) {
+            $targetsID = $request->input('targetsID');
+            if (!empty($targetsID)) {
+                foreach ($targetsID as $targetID) {
+                    $a = Area::find($targetID);
+                    if (!empty($a)) {
+                        $ads->areas()->attach($targetID);
+                    } else {
+                        $ads->stores()->attach($targetID);
+                    }
+                }
+            }
+        }
+
+        //image
+        if ($request->input('image_display')) {
+            if (!$request->input('provide_image_link')) {
+                $ads->provide_image_link = false;
+                $image = $request->file('image_file');
+                $fullSaveFileName = $ads->id . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('/img/ads'), $fullSaveFileName);
+                $ads->image_url = ('/img/ads/' . $fullSaveFileName);
+            } else {
+                if ($ads->provide_image_link) {
+                    $ads->image_url = $request->input('image_url');
+                } else {
+                    if ($ads->image_url !== $request->input('image_url')) {
+                        $ads->provide_image_link = true;
+                        $ads->image_url = $request->input('image_url');
+                    }
+                }
+            }
+        }
+
+        $ads->save();
+        return 'success';
+    }
+
+    public function table(Request $request)
+    {
+        $allPromotions = Ads::promotion();
+        $r['draw'] = (int)$request->input('draw');
+        $r['recordsTotal'] = $allPromotions->count();
+        $r['recordsFiltered'] = $r['recordsTotal'];
+        $displayPromotions = $allPromotions->take($request->input('length'))->orderBy('updated_at','asc')->get();
+        $itemIDs = DB::table('ads_item')->whereIn('ads_id', $displayPromotions->lists('id'))->distinct()->lists('item_id');
+        $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
+        $r['data'] = $displayPromotions->map(function ($ads) use ($itemNames) {
+            return [
+                $ads->id,
+                $ads->items->map(function ($item) use ($itemNames) {
+                    return Utils::formatItem($itemNames[$item->id], $item->id);
+                }),
+                Utils::formatTargets($ads->targets),
+                Carbon::parse($ads->getOriginal('start_date'))->format('m-d-Y'),
+                Carbon::parse($ads->getOriginal('end_date'))->format('m-d-Y'),
+                ((float)$ads->discount_rate) . ' %',
+                (float)$ads->discount_value,
+                $ads->updated_at->format('m-d-Y'),
+            ];
+        });
+        return response()->json($r);
+    }
+
+    public function deleteMulti(Request $request)
+    {
+        $ids=$request->input('ids');
+        if (empty($ids)){
+            return abort('400');
+        }
+        Ads::destroy($ids);
     }
 
     public function thumbnail($ads) {

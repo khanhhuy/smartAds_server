@@ -19,6 +19,6 @@ class DatabaseSeeder extends Seeder {
 		$this->call('StoreSeeder');
         $this->call('BeaconSeeder');
         $this->call('CategorySeeder');
-
+		$this->call('AdsFaker');
 	}
 }

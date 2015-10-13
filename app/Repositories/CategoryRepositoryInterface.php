@@ -8,7 +8,6 @@
 namespace App\Repositories;
 
 interface CategoryRepositoryInterface {
-    public function getItemIDsFromCategories($categories);
     public function getTaxonomy($convertToArray);
     public function getAllCategoryNodesOfItems($items);
 }
