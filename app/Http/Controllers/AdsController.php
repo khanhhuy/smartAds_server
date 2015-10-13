@@ -59,7 +59,7 @@ class AdsController extends Controller
 
     }
 
-    public function manage()
+    public function managePromotions()
     {
         return view('ads.manage');
     }
@@ -107,7 +107,7 @@ class AdsController extends Controller
             }
         }
         $ads->save();
-        return redirect()->route('promotions.create');
+        return redirect()->route('promotions.manager-manage');
     }
 
     private static function customValidatePromotionRequest($request)
@@ -206,7 +206,7 @@ class AdsController extends Controller
         }
 
         $ads->save();
-        return 'success';
+        return redirect()->route('promotions.manager-manage');
     }
 
     public function table(Request $request)

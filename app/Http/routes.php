@@ -43,7 +43,7 @@ Route::get('home', 'HomeController@index');
 Route::get('manager', function () {
     return redirect('manager/ads');
 });
-Route::get('manager/ads', 'AdsController@manage');
+Route::get('manager/ads', ['as'=>'promotions.manager-manage','uses'=>'AdsController@managePromotions']);
 Route::get('ads/table', 'AdsController@table');
 Route::get('ads/{ads}/','AdsController@show');
 Route::delete('ads/',['as'=>'ads.deleteMulti','uses'=>'AdsController@deleteMulti']);
