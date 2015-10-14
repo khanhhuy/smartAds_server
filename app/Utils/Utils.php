@@ -39,8 +39,8 @@ class Utils
 
     public static function createThumbnail($id, $ext, $path)
     {
-        $thumbnail_width = 110;
-        $thumbnail_height = 129;
+        $thumbnail_width = 85;
+        $thumbnail_height = 100;
         $arr_image_details = getimagesize($path);
         $original_width = $arr_image_details[0];
         $original_height = $arr_image_details[1];
@@ -79,17 +79,35 @@ class Utils
         if ($imgt) {
             $old_image = $imgcreatefrom($path);
             $new_image = imagecreatetruecolor($thumbnail_width, $thumbnail_height);
-            imagecopyresized($new_image, $old_image, $dest_x, $dest_y, 0, 0, $new_width, $new_height, $original_width, $original_height);
+            if ($ext == 'png' || $ext == 'gif') {
+                imagealphablending($new_image, false);
+                imagesavealpha($new_image, true);
+            }
+            imagecopyresampled($new_image, $old_image, $dest_x, $dest_y, 0, 0, $new_width, $new_height, $original_width, $original_height);
             $imgt($new_image, public_path('/img/thumbnails') . "/$id." . $ext);
+
+            imagedestroy($old_image);
+            imagedestroy($new_image);
         }
+        return $ext;
     }
 
-    public static function getAdsImagePath($id,$ext)
+    public static function createThumbnailFromURL($url, $adsID)
     {
-        return public_path('img/ads')."/$id." . $ext;
+        $temp = Utils::getAdsImagePath($adsID, 'tmp');
+        file_put_contents($temp, file_get_contents($url));
+        $ext = Utils::createThumbnail($adsID, null, $temp);
+        unlink($temp);
+        return $ext;
     }
-    public static function getThumbnailPath($id,$ext)
+
+    public static function getAdsImagePath($id, $ext)
     {
-        return public_path('img/thumbnails')."/$id." . $ext;
+        return public_path('img/ads') . "/$id." . $ext;
+    }
+
+    public static function getThumbnailPath($id, $ext)
+    {
+        return public_path('img/thumbnails') . "/$id." . $ext;
     }
 }

@@ -9,7 +9,7 @@ class Ads extends Model
     protected $visible = ['id', 'title', 'start_date', 'end_date', 'minors'];
     protected $fillable = ['title', 'start_date', 'end_date', 'is_whole_system', 'is_promotion',
         'discount_value', 'discount_rate', 'image_display', 'provide_image_link', 'image_url', 'web_url',
-    'auto_thumbnail','provide_thumbnail_link','thumbnail_url'];
+        'auto_thumbnail', 'provide_thumbnail_link', 'thumbnail_url'];
     protected $dates = ['start_date', 'end_date'];
 
 
@@ -42,7 +42,7 @@ class Ads extends Model
 
     public function scopePromotion($query)
     {
-        return $query->where('is_promotion',true);
+        return $query->where('is_promotion', true);
     }
 
     public function scopeForCustomer($query, ActiveCustomer $customer)
@@ -56,13 +56,25 @@ class Ads extends Model
 
     public function getImageUrlAttribute($value)
     {
-        if (empty($value)){
+        if (empty($value)) {
             return $value;
         }
         if ($this->provide_image_link) {
             return $value;
         } else {
             return asset($value);
+        }
+    }
+
+    public function getThumbnailUrlAttribute($value)
+    {
+        if (empty($value)) {
+            return $value;
+        }
+        if ($this->auto_thumbnail || !$this->provide_thumbnail_link) {
+            return asset($value);
+        } else {
+            return $value;
         }
     }
 
@@ -75,7 +87,7 @@ class Ads extends Model
 
     public function getTargetsAttribute()
     {
-        return array_merge($this->areas()->lists('name'),$this->stores()->lists('name'));
+        return array_merge($this->areas()->lists('name'), $this->stores()->lists('name'));
     }
 
     public function getItemsIDAttribute()
@@ -87,8 +99,7 @@ class Ads extends Model
     {
         if (!empty($date)) {
             return Carbon::parse($date)->format('Y-m-d');
-        }
-        else {
+        } else {
             return Carbon::now()->format('Y-m-d');
         }
     }
@@ -97,8 +108,7 @@ class Ads extends Model
     {
         if (!empty($date)) {
             return Carbon::parse($date)->format('Y-m-d');
-        }
-        else {
+        } else {
             return Carbon::now()->addWeek(1)->format('Y-m-d');
         }
     }

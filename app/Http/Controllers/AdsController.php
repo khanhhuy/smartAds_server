@@ -9,6 +9,7 @@ use App\Repositories\ItemRepositoryInterface;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
+use Queue;
 use Utils;
 
 
@@ -71,6 +72,20 @@ class AdsController extends Controller
         return view('ads.promotions.create')->with(compact(['ads', 'items']));
     }
 
+
+    public function edit(Ads $ads)
+    {
+        if ($ads->is_promotion) {
+            $items1 = $ads->items;
+            foreach ($items1 as $item) {
+                $items[$item->id] = Utils::formatItem($this->itemRepo->getItemNameByID($item->id), $item->id);
+            }
+            return view('ads.promotions.edit')->with(compact(['items', 'ads']));
+        } else {
+            return 'TODO Khanh Huy: Edit Targeted Ads';
+        }
+    }
+
     public function storePromotion(PromotionRequest $request)
     {
         $errors = self::customValidatePromotionRequest($request);
@@ -93,27 +108,34 @@ class AdsController extends Controller
         //thumbnail
         if (!$request->has('auto_thumbnail')) {
             if (!$request->input('provide_thumbnail_link')) {
-                if ($request->hasFile('thumbnail_file')){
-                    $thumbnail=$request->file('thumbnail_file');
+                if ($request->hasFile('thumbnail_file')) {
+                    $thumbnail = $request->file('thumbnail_file');
                     $fullSaveFileName = $ads->id . '.' . $thumbnail->getClientOriginalExtension();
                     $thumbnail->move(public_path('/img/thumbnails'), $fullSaveFileName);
                     $ads->thumbnail_url = ('/img/thumbnails/' . $fullSaveFileName);
                 }
             }
-        } elseif ($request->input('auto_thumbnail')&&$request->input('image_display')) {
-            $ext='png';
-            if (!$request->input('provide_image_link')){
-                $ext=$image->getClientOriginalExtension();
-                Utils::createThumbnail($ads->id,$ext,public_path('img/ads')."/$fullSaveFileName");
+        } elseif ($request->input('auto_thumbnail') && $request->input('image_display')) {
+            $provide_image_link = $request->input('provide_image_link');
+            $adsID = $ads->id;
+            if (!$provide_image_link) {
+                $ext = $image->getClientOriginalExtension();
+            } else {
+                $image_url = $request->input('image_url');
             }
-            else {
-                $url = $request->input('image_url');
-                $temp = Utils::getAdsImagePath($ads->id,'png');
-                file_put_contents($temp, file_get_contents($url));
-                Utils::createThumbnail($ads->id,null,$temp);
-                unlink($temp);
-            }
-            $ads->thumbnail_url = ('/img/thumbnails/' . $ads->id.'.'.$ext);
+            Queue::push(function ($job) use ($provide_image_link, $adsID, $ext, $image_url) {
+                if (!$provide_image_link) {
+                    Utils::createThumbnail($adsID, $ext, public_path('img/ads') . "/$adsID" . ".$ext");
+                } else {
+                    $ext = Utils::createThumbnailFromURL($image_url, $adsID);
+                }
+                $ads = Ads::find($adsID);
+                $ads->thumbnail_url = ('/img/thumbnails/' . $adsID . '.' . $ext);
+                $ads->save();
+
+                $job->delete();
+            });
+            $ads->thumbnail_url = ('/img/thumbnails/' . $ads->id . '.png');
         }
 
         //items
@@ -141,45 +163,6 @@ class AdsController extends Controller
         return redirect()->route('promotions.manager-manage');
     }
 
-    private static function customValidatePromotionRequest($request)
-    {
-        $errors = [];
-        if ($request->input('start_date') > $request->input('end_date')) {
-            $errors[] = 'Start Date must be before End Date';
-        }
-        if ($request->input('image_display')) {
-            if ($request->input('provide_image_link')) {
-                if (empty($request->input('image_url'))) {
-                    $errors[] = 'Image URL is required';
-                }
-            } elseif (!($request->hasFile('image_file'))) {
-                $errors[] = 'Image File is required';
-            }
-        }
-        return $errors;
-    }
-
-    private static function createPromotionFromRequest($request)
-    {
-        $inputs = $request->except(['_token', '_method', 'itemsID', 'targetsID']);
-        $inputs['is_promotion'] = true;
-
-        return Ads::create($inputs);
-    }
-
-    public function edit(Ads $ads)
-    {
-        if ($ads->is_promotion) {
-            $items1 = $ads->items;
-            foreach ($items1 as $item) {
-                $items[$item->id] = Utils::formatItem($this->itemRepo->getItemNameByID($item->id), $item->id);
-            }
-            return view('ads.promotions.edit')->with(compact(['items', 'ads']));
-        } else {
-            return 'TODO Khanh Huy: Edit Targeted Ads';
-        }
-    }
-
     public function updatePromotion(Ads $ads, PromotionRequest $request)
     {
         $errors = self::customValidatePromotionRequest($request);
@@ -189,6 +172,9 @@ class AdsController extends Controller
         $inputs = $request->except(['_token', '_method', 'itemsID', 'targetsID', 'provide_image_link', 'image_url']);
         if (!$request->has('is_whole_system')) {
             $inputs['is_whole_system'] = false;
+        }
+        if (!$request->has('auto_thumbnail')) {
+            $inputs['auto_thumbnail'] = false;
         }
         $ads->update($inputs);
         $ads->areas()->detach();
@@ -236,8 +222,69 @@ class AdsController extends Controller
             }
         }
 
+        //thumbnail
+        if (!$request->has('auto_thumbnail')) {
+            if (!$request->input('provide_thumbnail_link')) {
+                if ($request->hasFile('thumbnail_file')) {
+                    $thumbnail = $request->file('thumbnail_file');
+                    $fullSaveFileName = $ads->id . '.' . $thumbnail->getClientOriginalExtension();
+                    $thumbnail->move(public_path('/img/thumbnails'), $fullSaveFileName);
+                    $ads->thumbnail_url = ('/img/thumbnails/' . $fullSaveFileName);
+                }
+            }
+        } elseif ($request->input('auto_thumbnail') && $request->input('image_display')) {
+            $ext = 'png';
+            $provide_image_link = $request->input('provide_image_link');
+            $adsID = $ads->id;
+            if (!$provide_image_link) {
+                $ext = $image->getClientOriginalExtension();
+            } else {
+                $image_url = $request->input('image_url');
+            }
+            Queue::push(function ($job) use ($provide_image_link, $adsID, $ext, $image_url) {
+                if (!$provide_image_link) {
+                    Utils::createThumbnail($adsID, $ext, public_path('img/ads') . "/$adsID" . ".$ext");
+                } else {
+                    $ext = Utils::createThumbnailFromURL($image_url, $adsID);
+                }
+                $ads = Ads::find($adsID);
+                $ads->thumbnail_url = ('/img/thumbnails/' . $adsID . '.' . $ext);
+                $ads->save();
+
+                $job->delete();
+            });
+
+            $ads->thumbnail_url = ('/img/thumbnails/' . $ads->id . '.' . $ext);
+        }
+
         $ads->save();
         return redirect()->route('promotions.manager-manage');
+    }
+
+    private static function customValidatePromotionRequest($request)
+    {
+        $errors = [];
+        if ($request->input('start_date') > $request->input('end_date')) {
+            $errors[] = 'Start Date must be before End Date';
+        }
+        if ($request->input('image_display')) {
+            if ($request->input('provide_image_link')) {
+                if (empty($request->input('image_url'))) {
+                    $errors[] = 'Image URL is required';
+                }
+            } elseif (!($request->hasFile('image_file'))) {
+                $errors[] = 'Image File is required';
+            }
+        }
+        return $errors;
+    }
+
+    private static function createPromotionFromRequest($request)
+    {
+        $inputs = $request->except(['_token', '_method', 'itemsID', 'targetsID']);
+        $inputs['is_promotion'] = true;
+
+        return Ads::create($inputs);
     }
 
     public function table(Request $request)
