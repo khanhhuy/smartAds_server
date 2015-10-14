@@ -5,10 +5,18 @@
 @section('navbar-content')
     <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav my-nav-pills navbar-nav">
-            <li class="active"><a href="#"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+            <li @if (Request::is('admin/minors')) class="active" @endif>
+                <a href="{{url('admin/minors')}}"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
                     Minors - Categories</a></li>
-            <li><a href="#about"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span> Majors -
+            <li @if (Request::is('admin/majors')) class="active" @endif>
+                <a href=""><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span> Majors -
                     Stores</a></li>
+            <li @if (Request::is('admin/category')) class="active" @endif>
+                <a href="{{url('admin/category')}}">
+                    <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
+                    Categories selection
+                </a>
+            </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li><a href="#contact"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> System Settings</a></li>

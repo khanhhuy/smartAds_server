@@ -21,7 +21,7 @@ class ProcessTransactionController extends Controller {
 	}
 
     public function getListCategories() {
-        return view('select-category', ['tree' => self::getCategoryTree()]);
+        return view('category.select', ['tree' => self::getCategoryTree()]);
     }
 
     public function getCategoryTree(){
@@ -97,6 +97,6 @@ class ProcessTransactionController extends Controller {
             }
         }
 
-        return view('select-category', ['tree' => self::getCategoryTree()]);
+        return view('category.select', ['tree' => self::getCategoryTree()]);
     }
 }
