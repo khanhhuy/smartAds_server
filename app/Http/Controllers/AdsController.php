@@ -118,6 +118,8 @@ class AdsController extends Controller
         } elseif ($request->input('auto_thumbnail') && $request->input('image_display')) {
             $provide_image_link = $request->input('provide_image_link');
             $adsID = $ads->id;
+            $ext='png';
+            $image_url='';
             if (!$provide_image_link) {
                 $ext = $image->getClientOriginalExtension();
             } else {

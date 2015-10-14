@@ -11,7 +11,7 @@
 
     $('#itemsID').select2({
         ajax: {
-            delay: 250,
+            delay: 100,
             dataType: 'jsonp',
             url: "{{Connector::getItemSearchURL()}}",
             data: function (params) {
@@ -28,9 +28,9 @@
             },
             cache: true
         },
-        minimumInputLength: 1,
+        minimumInputLength: 3,
         templateResult: templateFunc,
-        templateSelection: templateFunc
+        templateSelection: templateFunc,
     });
     $('#targetsID').select2();
 
@@ -91,7 +91,7 @@
             setRequiredWebGroup(false);
             $('#auto_thumbnail').prop('checked', true);
             $('#auto_thumbnail').trigger('change');
-            $('#auto_thumbnail').prop('disabled',false);
+            $('#auto_thumbnail').prop('disabled', false);
         }
         else {
             $('#imageInputGroup').hide('fast');
@@ -101,7 +101,7 @@
             setRequiredImageGroup(false);
             $('#auto_thumbnail').prop('checked', false);
             $('#auto_thumbnail').trigger('change');
-            $('#auto_thumbnail').prop('disabled',true);
+            $('#auto_thumbnail').prop('disabled', true);
         }
     });
     if ($('input[name=image_display]:radio:checked').val() == 0) {
@@ -135,7 +135,6 @@
     tabThumbnailLink.on('hidden.bs.tab', function () {
         $('#provide_thumbnail_link').val(0);
     });
-
 
 
     //validate

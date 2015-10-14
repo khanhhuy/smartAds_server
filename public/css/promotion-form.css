@@ -40,7 +40,7 @@
 .promotion-form .popover {
   max-width: 100%; }
 
-#select2-targetsID-results.select2-results__options {
+#select2-targetsID-results.select2-results__options, #select2-itemsID-results.select2-results__options {
   max-height: 400px; }
 
 /*# sourceMappingURL=promotion-form.css.map */

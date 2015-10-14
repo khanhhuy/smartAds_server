@@ -36,9 +36,6 @@
             "processing": true,
             "serverSide": true,
             "ajax": "{{url('/ads/table')}}",
-            "paging":   false,
-            "ordering": false,
-            searching:false,
             "columns": [
                 {
                     sortable: false,
@@ -89,7 +86,7 @@
                 style: 'os',
                 selector: 'td:first-child'
             },
-//            order: [[8, 'desc']],
+            order: [[8, 'desc']],
             dom: "<'row'<'col-sm-6'lB><'col-sm-6'f>>" +
             "<'row'<'col-sm-12'tr>>" +
             "<'row'<'col-sm-5'i><'col-sm-7'p>>",
