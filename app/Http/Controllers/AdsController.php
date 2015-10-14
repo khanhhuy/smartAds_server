@@ -333,4 +333,14 @@ class AdsController extends Controller
             return null;
         }
     }
+
+    public function manageTargeted()
+    {
+
+    }
+
+    public function createTargeted()
+    {
+        return 'TODO Huy';
+    }
 }

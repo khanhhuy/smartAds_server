@@ -13,7 +13,7 @@
         <div class="col-md-1"></div>
         <div class="col-md-11">
             @include('errors.list')
-            {!! Form::open(['url'=> 'ads/promotions','class'=>'form-horizontal promotion-form','enctype'=>'multipart/form-data']) !!}
+            {!! Form::open(['route'=> 'promotions.store','class'=>'form-horizontal promotion-form','enctype'=>'multipart/form-data']) !!}
             @include('ads.partials.promotion-form',['btnSubmitName'=>'Add'])
             {!! Form::close() !!}
         </div>

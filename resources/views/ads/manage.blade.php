@@ -77,7 +77,7 @@
                 {
                     orderable: false,
                     render: function (data, type, row, meta) {
-                        return '<a class="my-edit-btn" role="button" href="ads/' + row[0] + '/edit">' +
+                        return '<a class="my-edit-btn" role="button" href="' + row[0] + '/edit">' +
                                 '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</a>';
                     }
                 }
@@ -98,7 +98,7 @@
                         text: '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete',
                         action: function (e, dt, button, config) {
                             var ids = dt.rows('.selected').data().pluck(0).toArray();
-                            var message = "Delete " + ids.length + (ids.length>1?" rows?":" row?");
+                            var message = "Delete " + ids.length + (ids.length > 1 ? " rows?" : " row?");
                             bootbox.confirm(message, function (result) {
                                 if (result && ids.length > 0) {
                                     $.ajax({
@@ -131,13 +131,25 @@
         });
         $('#select-all-chkbox').click(function () {
             if (!$(this).hasClass("checked")) {
-                $(this).addClass("checked");
                 table.rows().select();
+                $(this).addClass("checked");
             }
             else {
                 $(this).removeClass('checked');
                 table.rows().deselect();
             }
+        });
+        var selectAllChkbox = $('#select-all-chkbox');
+        uncheckSelectAll = function () {
+            if (selectAllChkbox.hasClass('checked')){
+                selectAllChkbox.removeClass('checked');
+            }
+        }
+        table.on('select', function (e, dt, type, indexes) {
+            uncheckSelectAll();
+        });
+        table.on('deselect', function (e, dt, type, indexes) {
+            uncheckSelectAll();
         });
     </script>
     <script src="{{asset('/js/bootbox.min.js')}}"></script>

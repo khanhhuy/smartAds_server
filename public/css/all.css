@@ -36,6 +36,9 @@
 html {
   overflow-y: scroll; }
 
+.modal-open {
+  padding-right: 0 !important; }
+
 /*# sourceMappingURL=app.css.map */
 
 /*# sourceMappingURL=all.css.map */

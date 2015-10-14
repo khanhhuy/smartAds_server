@@ -25,30 +25,26 @@ Route::group(['prefix'=>'api/v1'],function(){
 
 
 Route::get('ads/thumbnail/{ads}', 'AdsController@thumbnail');
-
+Route::get('ads/table', 'AdsController@table');
+Route::get('ads/{ads}/','AdsController@show');
 //for testing
 Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
-
-
-Route::controllers([
-	'portal/auth' => 'Auth\PortalAuthController',
-	'portal/password' => 'Auth\PasswordController',
-]);
 
 //portal
 Route::get('/', 'WelcomeController@index');
 Route::get('home', 'HomeController@index');
 Route::get('manager', function () {
-    return redirect('manager/ads');
+    return redirect('manager/ads/promotions');
 });
-Route::get('manager/ads', ['as'=>'promotions.manager-manage','uses'=>'AdsController@managePromotions']);
-Route::get('ads/table', 'AdsController@table');
-Route::get('ads/{ads}/','AdsController@show');
-Route::delete('ads/',['as'=>'ads.deleteMulti','uses'=>'AdsController@deleteMulti']);
+Route::get('manager/ads/promotions', ['as'=>'promotions.manager-manage','uses'=>'AdsController@managePromotions']);
 Route::get('manager/ads/promotions/create', ['as'=>'promotions.create','uses'=>'AdsController@createPromotion']);
-Route::post('ads/promotions', 'AdsController@storePromotion');
-Route::get('manager/ads/{ads}/edit', 'AdsController@edit');
-Route::put('manager/ads/{ads}', ['as'=>'promotions.update','uses'=>'AdsController@updatePromotion']);
+Route::get('manager/ads/targeted', ['as'=>'targeted.manager-manage','uses'=>'AdsController@manageTargeted']);
+Route::get('manager/ads/targeted/create', ['as'=>'targeted.create','uses'=>'AdsController@createTargeted']);
+Route::get('manager/ads/{ads}/edit', ['as'=>'ads.edit','uses'=>'AdsController@edit']);
+
+Route::post('ads/promotions', ['as'=>'promotions.store','uses'=>'AdsController@storePromotion']);
+Route::put('ads/promotions/{ads}', ['as'=>'promotions.update','uses'=>'AdsController@updatePromotion']);
+Route::delete('ads',['as'=>'ads.deleteMulti','uses'=>'AdsController@deleteMulti']);
 
 Route::get('admin', function () {
 	return redirect('admin/minors');
@@ -56,3 +52,9 @@ Route::get('admin', function () {
 Route::get('admin/minors', 'MinorsController@manage');
 Route::get('admin/category', 'ProcessTransactionController@getListCategories');
 Route::post('admin/category', 'ProcessTransactionController@selectCategory');
+
+Route::controllers([
+    'portal/auth' => 'Auth\PortalAuthController',
+    'portal/password' => 'Auth\PasswordController',
+]);
+

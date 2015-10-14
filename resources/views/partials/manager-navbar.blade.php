@@ -5,16 +5,19 @@
 @section('navbar-content')
     <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav my-nav-pills navbar-nav">
-            <li @if (Request::is('manager/ads')||Request::is('manager/ads/*/edit')) class="active" @endif><a
-                        href="{{url('manager/ads')}}"><span class="glyphicon glyphicon-menu-hamburger"
-                                                            aria-hidden="true"></span> Manage Ads</a></li>
+            <li @if (Request::is('manager/ads/promotions')||(Request::is('manager/ads/*/edit')&&$ads->is_promotion)) class="active" @endif><a
+                        href="{{url('manager/ads/promotions')}}"><span class="glyphicon glyphicon-menu-hamburger"
+                                                            aria-hidden="true"></span> Manage Promotions</a></li>
             <li {!!Utils::setActiveClassManager('ads/promotions/create')!!}><a
                         href="{{url('manager/ads/promotions/create')}}"><span class="glyphicon glyphicon-plus"
-                                                                              aria-hidden="true"></span> Promotion</a>
+                                                                              aria-hidden="true"></span> Add Promotion</a>
             </li>
+            <li @if (Request::is('manager/ads/targeted')||(Request::is('manager/ads/*/edit')&&!$ads->is_promotion)) class="active" @endif><a
+                        href="{{url('manager/ads/targeted')}}"><span class="glyphicon glyphicon-menu-hamburger"
+                                                            aria-hidden="true"></span> Manage Targeted Ads</a></li>
             <li {!!Utils::setActiveClassManager('ads/targeted/create')!!}><a
                         href="{{url('manager/ads/targeted/create')}}"><span class="glyphicon glyphicon-plus"
-                                                                            aria-hidden="true"></span> Targeted Ads</a>
+                                                                            aria-hidden="true"></span> Add Targeted Ads</a>
             </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
