@@ -17,19 +17,17 @@ Route::group(['prefix'=>'api/v1'],function(){
 	Route::get('customers/{customers}/received-ads','AdsController@receivedIndex');
 	Route::get('account-status','CustomersController@accountStatus');
 
-
 	Route::post('customers/{customers}/update-request', 'AccountController@update');
+//for testing
 	Route::get('customers/{customers}/update-request', 'AccountController@update');
+	Route::get('ads/thumbnail/{ads}', 'AdsController@thumbnail');
 	Route::controller('auth','Auth\APIAuthController');
 });
 
 
-Route::get('process-trans/category', 'ProcessTransactionController@getListCategories');
-Route::post('process-trans/category', 'ProcessTransactionController@selectCategory');
 //for testing
-Route::get('ads/thumbnail/{ads}', 'AdsController@thumbnail');
-Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
 
+Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
 
 
 Route::controllers([
@@ -56,3 +54,5 @@ Route::get('admin', function () {
 	return redirect('admin/minors');
 });
 Route::get('admin/minors', 'MinorsController@manage');
+Route::get('admin/category', 'ProcessTransactionController@getListCategories');
+Route::post('admin/category', 'ProcessTransactionController@selectCategory');
