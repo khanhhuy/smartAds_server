@@ -39,8 +39,8 @@ class Utils
 
     public static function createThumbnail($id, $ext, $path)
     {
-        $thumbnail_width = 85;
-        $thumbnail_height = 100;
+        $thumbnail_width = 110;
+        $thumbnail_height = 129;
         $arr_image_details = getimagesize($path);
         $original_width = $arr_image_details[0];
         $original_height = $arr_image_details[1];

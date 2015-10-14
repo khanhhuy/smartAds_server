@@ -236,6 +236,7 @@ class AdsController extends Controller
             $ext = 'png';
             $provide_image_link = $request->input('provide_image_link');
             $adsID = $ads->id;
+            $image_url='';
             if (!$provide_image_link) {
                 $ext = $image->getClientOriginalExtension();
             } else {
@@ -324,6 +325,10 @@ class AdsController extends Controller
 
     public function thumbnail($ads)
     {
-        return redirect('img/thumbnails/' . $ads->id . '.png');
+        if (!empty($ads->thumbnail_url)) {
+            return redirect($ads->thumbnail_url);
+        } else {
+            return null;
+        }
     }
 }

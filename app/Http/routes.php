@@ -20,13 +20,13 @@ Route::group(['prefix'=>'api/v1'],function(){
 	Route::post('customers/{customers}/update-request', 'AccountController@update');
 //for testing
 	Route::get('customers/{customers}/update-request', 'AccountController@update');
-	Route::get('ads/thumbnail/{ads}', 'AdsController@thumbnail');
 	Route::controller('auth','Auth\APIAuthController');
 });
 
 
-//for testing
+Route::get('ads/thumbnail/{ads}', 'AdsController@thumbnail');
 
+//for testing
 Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
 
 
