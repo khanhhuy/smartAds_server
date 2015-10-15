@@ -35,6 +35,7 @@
         var table = $('#manage-table').DataTable({
             "processing": true,
             "serverSide": true,
+            paging:false,
             "ajax": "{{url('/ads/table')}}",
             "columns": [
                 {
