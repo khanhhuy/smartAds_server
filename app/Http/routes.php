@@ -33,7 +33,7 @@ Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
 //portal
 Route::get('/', 'WelcomeController@index');
 Route::get('home', 'HomeController@index');
-Route::get('manager', function () {
+Route::get('manager/', function () {
     return redirect('manager/ads/promotions');
 });
 Route::get('manager/ads/promotions', ['as'=>'promotions.manager-manage','uses'=>'AdsController@managePromotions']);

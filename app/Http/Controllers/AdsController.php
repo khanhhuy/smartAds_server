@@ -26,7 +26,12 @@ class AdsController extends Controller
     {
 //        return view('ads.show.' . $ads->id, compact('ads'));
         if ($ads->image_display) {
-            return view('ads.ads-master')->with(compact('ads'));
+            if ($ads->is_promotion) {
+                $start_date = Carbon::parse($ads->start_date)->format('d/m/Y');
+                $end_date = Carbon::parse($ads->end_date)->format('d/m/Y');
+                $itemName = $this->itemRepo->getItemNameByID($ads->items[0]->id);
+                return view('ads.ads-master')->with(compact('ads', 'start_date', 'end_date','itemName'));
+            }
         } else {
             return redirect($ads->web_url);
         }
@@ -118,8 +123,8 @@ class AdsController extends Controller
         } elseif ($request->input('auto_thumbnail') && $request->input('image_display')) {
             $provide_image_link = $request->input('provide_image_link');
             $adsID = $ads->id;
-            $ext='png';
-            $image_url='';
+            $ext = 'png';
+            $image_url = '';
             if (!$provide_image_link) {
                 $ext = $image->getClientOriginalExtension();
             } else {
@@ -238,7 +243,7 @@ class AdsController extends Controller
             $ext = 'png';
             $provide_image_link = $request->input('provide_image_link');
             $adsID = $ads->id;
-            $image_url='';
+            $image_url = '';
             if (!$provide_image_link) {
                 $ext = $image->getClientOriginalExtension();
             } else {
