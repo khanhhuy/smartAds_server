@@ -44,8 +44,5 @@
         <div id="name-container"><p id="name">{{$itemName}}</p></div>
     @show
 </div>
-<script>
-
-</script>
 </body>
 </html>

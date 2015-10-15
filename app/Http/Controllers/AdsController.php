@@ -30,7 +30,10 @@ class AdsController extends Controller
                 $start_date = Carbon::parse($ads->start_date)->format('d/m/Y');
                 $end_date = Carbon::parse($ads->end_date)->format('d/m/Y');
                 $itemName = $this->itemRepo->getItemNameByID($ads->items[0]->id);
-                return view('ads.ads-master')->with(compact('ads', 'start_date', 'end_date','itemName'));
+                return view('ads.show.promotion-master')->with(compact('ads', 'start_date', 'end_date','itemName'));
+            }
+            else {
+                return view('ads.show.targeted-master')->with(compact('ads'));
             }
         } else {
             return redirect($ads->web_url);
