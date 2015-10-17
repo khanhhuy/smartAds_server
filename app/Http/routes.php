@@ -20,6 +20,8 @@ Route::group(['prefix'=>'api/v1'],function(){
 	Route::post('customers/{customers}/update-request', 'AccountController@update');
 //for testing
 	Route::get('customers/{customers}/update-request', 'AccountController@update');
+
+	Route::get('customers/{customers}/config', 'CustomersController@settings');
 	Route::controller('auth','Auth\APIAuthController');
 });
 
