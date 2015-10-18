@@ -33,7 +33,7 @@ class CustomersController extends Controller
         return response()->json($r);
     }
 
-    public function settings(ActiveCustomer $customer)
+    public function getSettings(ActiveCustomer $customer)
     {
         return response()->json([
             'min_entrance_value' => $customer->getOriginal('min_entrance_value'),
@@ -43,4 +43,17 @@ class CustomersController extends Controller
         ]);
     }
 
+    public function storeSettings(Request $request, ActiveCustomer $customer)
+    {
+        $keys = ['min_entrance_value', 'min_entrance_rate', 'min_aisle_value', 'min_aisle_rate'];
+        foreach ($keys as $k) {
+            if ($request->has($k)) {
+                $customer->$k = $request->input($k);
+            }
+        }
+        $customer->save();
+        return response()->json([
+            'result' => true
+        ]);
+    }
 }
