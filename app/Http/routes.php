@@ -18,6 +18,7 @@ Route::group(['prefix'=>'api/v1'],function(){
 	Route::get('account-status','CustomersController@accountStatus');
 
 	Route::post('customers/{customers}/update-request', 'AccountController@update');
+    Route::post('customers/{customers}/feedback', 'AccountController@feedback');
 //for testing
 	Route::get('customers/{customers}/update-request', 'AccountController@update');
 	Route::controller('auth','Auth\APIAuthController');

@@ -27,6 +27,11 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
         return $this->belongsToMany('App\Item', 'watching_lists', 'customer_id');
     }
 
+    public function blackList()
+    {
+        return $this->belongsToMany('App\Item', 'black_lists', 'customer_id');
+    }
+
     public function getMinEntranceDiscountValue()
     {
         if ($this->min_entrance_value != null) {

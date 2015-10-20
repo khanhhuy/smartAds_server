@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Queue;
 use App\Commands\ProcessDelay;
 
 use Carbon\Carbon;
+use App\Item;
+use App\Ads;
 
 use Illuminate\Http\Request;
 
@@ -19,9 +21,32 @@ class AccountController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(ActiveCustomer $customer)
 	{
-		//
+		return $customer->watchingListWithBlackList()->get();
+	}
+
+	public function feedback(ActiveCustomer $customer, Request $request) {
+		$adsId = $request->input('adsId');
+		$ads = Ads::find($adsId);
+		if ($ads == null)
+			return;
+		$items = $ads->items()->lists('id');
+		$watchingList = $customer->watchingList()->lists('id');
+		$blackList = $customer->blackList()->lists('id');
+
+		foreach ($items as  $key => $item) {
+			if (!in_array($item, $watchingList))
+				unset($items[$key]);
+			if(in_array($item, $blackList))
+            	unset($items[$key]);
+		}
+
+        $customer->blackList()->attach($items);
+       	$customer->watchingList()->detach($items);
+		$customer->save();
+
+		return $items;
 	}
 
 	public function update(ActiveCustomer $customer) {
@@ -37,6 +62,7 @@ class AccountController extends Controller {
 		else {
 			//testing - 10 secs
 			$time = Carbon::now()->addSecond(10);
+			//Queue::push($time, new ProcessDelay($customer, $lastProcessDate->toDateString()));
 			Queue::later($time, new ProcessDelay($customer, $lastProcessDate->toDateString()));
 		}
 
