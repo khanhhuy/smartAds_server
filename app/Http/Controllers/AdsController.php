@@ -30,9 +30,8 @@ class AdsController extends Controller
                 $start_date = Carbon::parse($ads->start_date)->format('d/m/Y');
                 $end_date = Carbon::parse($ads->end_date)->format('d/m/Y');
                 $itemName = $this->itemRepo->getItemNameByID($ads->items[0]->id);
-                return view('ads.show.promotion-master')->with(compact('ads', 'start_date', 'end_date','itemName'));
-            }
-            else {
+                return view('ads.show.promotion-master')->with(compact('ads', 'start_date', 'end_date', 'itemName'));
+            } else {
                 return view('ads.show.targeted-master')->with(compact('ads'));
             }
         } else {
@@ -301,10 +300,11 @@ class AdsController extends Controller
     public function table(Request $request)
     {
         $allPromotions = Ads::promotion();
+//        sleep(2000);
         $r['draw'] = (int)$request->input('draw');
         $r['recordsTotal'] = $allPromotions->count();
         $r['recordsFiltered'] = $r['recordsTotal'];
-        $displayPromotions = $allPromotions->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
+        $displayPromotions = $allPromotions->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
         $itemIDs = DB::table('ads_item')->whereIn('ads_id', $displayPromotions->lists('id'))->distinct()->lists('item_id');
         $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
         $r['data'] = $displayPromotions->map(function ($ads) use ($itemNames) {
