@@ -40,9 +40,14 @@ class Ads extends Model
         })->where('end_date', '>=', new Carbon());
     }
 
-    public function scopePromotion($query)
+    public function scopePromotions($query)
     {
         return $query->where('is_promotion', true);
+    }
+
+    public function scopeTargeted($query)
+    {
+        return $query->where('is_promotion', false);
     }
 
     public function scopeForCustomer($query, ActiveCustomer $customer)

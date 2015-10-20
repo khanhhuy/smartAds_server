@@ -21,12 +21,17 @@ Route::group(['prefix'=>'api/v1'],function(){
     Route::post('customers/{customers}/feedback', 'AccountController@feedback');
 //for testing
 	Route::get('customers/{customers}/update-request', 'AccountController@update');
+
+	Route::get('customers/{customers}/config', 'CustomersController@getSettings');
+    Route::post('customers/{customers}/config', 'CustomersController@storeSettings');
+
 	Route::controller('auth','Auth\APIAuthController');
 });
 
 
 Route::get('ads/thumbnail/{ads}', 'AdsController@thumbnail');
-Route::get('ads/table', 'AdsController@table');
+Route::get('ads/promotions/table', 'AdsController@promotionsTable');
+Route::get('ads/targeted/table', 'AdsController@targetedTable');
 Route::get('ads/{ads}/','AdsController@show');
 //for testing
 Route::get('process-trans/{customers}', 'ProcessTransactionController@index');

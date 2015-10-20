@@ -70,4 +70,6 @@ class AccountController extends Controller {
 		return $customer->watchingList()->get();
 	}
 
+
+
 }

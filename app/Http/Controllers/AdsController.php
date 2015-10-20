@@ -30,9 +30,8 @@ class AdsController extends Controller
                 $start_date = Carbon::parse($ads->start_date)->format('d/m/Y');
                 $end_date = Carbon::parse($ads->end_date)->format('d/m/Y');
                 $itemName = $this->itemRepo->getItemNameByID($ads->items[0]->id);
-                return view('ads.show.promotion-master')->with(compact('ads', 'start_date', 'end_date','itemName'));
-            }
-            else {
+                return view('ads.show.promotion-master')->with(compact('ads', 'start_date', 'end_date', 'itemName'));
+            } else {
                 return view('ads.show.targeted-master')->with(compact('ads'));
             }
         } else {
@@ -70,7 +69,13 @@ class AdsController extends Controller
 
     public function managePromotions()
     {
-        return view('ads.manage');
+        return view('ads.promotions.manage');
+    }
+
+
+    public function manageTargeted(Request $request)
+    {
+        return view('ads.targeted.manage');
     }
 
     public function createPromotion()
@@ -298,13 +303,13 @@ class AdsController extends Controller
         return Ads::create($inputs);
     }
 
-    public function table(Request $request)
+    public function promotionsTable(Request $request)
     {
-        $allPromotions = Ads::promotion();
+        $allPromotions = Ads::promotions();
         $r['draw'] = (int)$request->input('draw');
         $r['recordsTotal'] = $allPromotions->count();
         $r['recordsFiltered'] = $r['recordsTotal'];
-        $displayPromotions = $allPromotions->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
+        $displayPromotions = $allPromotions->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
         $itemIDs = DB::table('ads_item')->whereIn('ads_id', $displayPromotions->lists('id'))->distinct()->lists('item_id');
         $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
         $r['data'] = $displayPromotions->map(function ($ads) use ($itemNames) {
@@ -318,6 +323,27 @@ class AdsController extends Controller
                 Carbon::parse($ads->getOriginal('end_date'))->format('m-d-Y'),
                 ((float)$ads->discount_rate) . ' %',
                 (float)$ads->discount_value,
+                $ads->updated_at->format('m-d-Y'),
+            ];
+        });
+        return response()->json($r);
+    }
+
+    public function targetedTable(Request $request)
+    {
+        $allTargeted = Ads::targeted();
+        $r['draw'] = (int)$request->input('draw');
+        $r['recordsTotal'] = $allTargeted->count();
+        $r['recordsFiltered'] = $r['recordsTotal'];
+        $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
+        $r['data'] = $displayPromotions->map(function ($ads) {
+            return [
+                $ads->id,
+                $ads->title,
+                Utils::formatTargets($ads->targets),
+                'TODO Huy',
+                Carbon::parse($ads->getOriginal('start_date'))->format('m-d-Y'),
+                Carbon::parse($ads->getOriginal('end_date'))->format('m-d-Y'),
                 $ads->updated_at->format('m-d-Y'),
             ];
         });
@@ -344,10 +370,6 @@ class AdsController extends Controller
         }
     }
 
-    public function manageTargeted()
-    {
-
-    }
 
     public function createTargeted()
     {
