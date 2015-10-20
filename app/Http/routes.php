@@ -29,7 +29,8 @@ Route::group(['prefix'=>'api/v1'],function(){
 
 
 Route::get('ads/thumbnail/{ads}', 'AdsController@thumbnail');
-Route::get('ads/table', 'AdsController@table');
+Route::get('ads/promotions/table', 'AdsController@promotionsTable');
+Route::get('ads/targeted/table', 'AdsController@targetedTable');
 Route::get('ads/{ads}/','AdsController@show');
 //for testing
 Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
