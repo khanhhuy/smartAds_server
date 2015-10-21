@@ -32,15 +32,9 @@
     <script>
         var myTableURL = "{{url('/ads/targeted/table')}}";
         var myOrder = [[7, 'desc']];
+        var myDeleteURL='{{route('ads.deleteMulti')}}';
         var myColumns =
                 [
-                    {
-                        sortable: false,
-                        className: 'select-checkbox',
-                        defaultContent: "",
-                        data: null,
-                        width: "15px"
-                    },
                     {
                         data: 0,
                     },
@@ -64,15 +58,8 @@
                     {
                         data: 6,
                     },
-                    {
-                        orderable: false,
-                        render: function (data, type, row, meta) {
-                            return '<a class="my-edit-btn" role="button" href="' + row[0] + '/edit">' +
-                                    '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</a>';
-                        }
-                    }
                 ];
     </script>
 
-    @include('ads.partials.manage-footer-script')
+    @include('partials.manage-footer-script')
 @endsection

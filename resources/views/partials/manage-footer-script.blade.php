@@ -1,11 +1,27 @@
 <script type="text/javascript" src="{{asset('/datatables/datatables.min.js')}}"></script>
 <script>
+    var selectChkboxColum=[{
+        sortable: false,
+        className: 'select-checkbox',
+        defaultContent: "",
+        data: null,
+        width: "15px"
+    }];
+    var editBtnColumn = [{
+        orderable: false,
+        render: function (data, type, row, meta) {
+            return '<a class="my-edit-btn" role="button" href="' + row[0] + '/edit">' +
+                    '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</a>';
+        }
+    }];
+
     var table = $('#manage-table').DataTable({
         "processing": true,
         "serverSide": true,
-        paging:true,
+        paging: true,
         "ajax": myTableURL,
-        "columns":myColumns,
+        "columns": selectChkboxColum.concat(myColumns,editBtnColumn),
+        pagingType: "full_numbers",
         select: {
             style: 'os',
             selector: 'td:first-child'
@@ -26,7 +42,7 @@
                         bootbox.confirm(message, function (result) {
                             if (result && ids.length > 0) {
                                 $.ajax({
-                                    url: '{{route('ads.deleteMulti')}}',
+                                    url: myDeleteURL,
                                     method: 'DELETE',
                                     data: {ids: ids},
                                     success: function (result) {
@@ -52,8 +68,8 @@
                 }
             }
         },
-        drawCallback:function(settings){
-            if (table.rows(':not(.selected)').count()>0){
+        drawCallback: function (settings) {
+            if (table.rows(':not(.selected)').count() > 0) {
                 uncheckSelectAll();
             }
         },
@@ -70,7 +86,7 @@
     });
     var selectAllChkbox = $('#select-all-chkbox');
     uncheckSelectAll = function () {
-        if (selectAllChkbox.hasClass('checked')){
+        if (selectAllChkbox.hasClass('checked')) {
             selectAllChkbox.removeClass('checked');
         }
     }

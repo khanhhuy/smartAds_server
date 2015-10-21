@@ -9,7 +9,7 @@
                 <a href="{{url('admin/minors')}}"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
                     Minors - Categories</a></li>
             <li @if (Request::is('admin/majors')) class="active" @endif>
-                <a href=""><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span> Majors -
+                <a href="{{url('admin/majors')}}"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span> Majors -
                     Stores</a></li>
             <li @if (Request::is('admin/category')) class="active" @endif>
                 <a href="{{url('admin/category')}}">

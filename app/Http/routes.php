@@ -55,6 +55,10 @@ Route::get('admin', function () {
 	return redirect('admin/minors');
 });
 Route::get('admin/minors', 'MinorsController@manage');
+Route::get('admin/majors', 'MajorsController@manage');
+Route::get('majors/table', 'MajorsController@table');
+Route::resource('majors', 'MajorsController',['only'=>['store']]);
+Route::delete('majors',['as'=>'majors.deleteMulti','uses'=>'MajorsController@deleteMulti']);
 Route::get('admin/category', 'ProcessTransactionController@getListCategories');
 Route::post('admin/category', 'ProcessTransactionController@selectCategory');
 
