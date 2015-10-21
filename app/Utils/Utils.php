@@ -110,4 +110,16 @@ class Utils
     {
         return public_path('img/thumbnails') . "/$id." . $ext;
     }
+
+    public static function formatStoreAreas($store)
+    {
+        $a=$store->area;
+        $r=$a->name;
+        $a=$a->parentArea;
+        while (!empty($a)){
+            $r.=' - '.$a->name;
+            $a=$a->parentArea;
+        }
+        return $r;
+    }
 }

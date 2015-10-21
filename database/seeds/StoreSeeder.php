@@ -41,7 +41,7 @@ class StoreSeeder extends Seeder {
             }
         }
         else{
-            Store::create(['id'=>'S_'.$as['id'],'area_id'=>$parentID,'name'=>$as['name']]);
+            Store::create(['id'=>'S_'.$as['id'],'area_id'=>$parentID,'name'=>$as['name'],'address'=>$as['address']]);
         }
     }
 }
