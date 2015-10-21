@@ -30,4 +30,10 @@ class CustomerRepository implements CustomerRepositoryInterface
         $customer=Connector::getCustomerFromEmail($email);
         return $customer;
     }
+
+    public function getCustomerInfo($id)
+    {
+        $info = Connector::getgetCustomerInfo($id);
+        return $info;
+    }
 }

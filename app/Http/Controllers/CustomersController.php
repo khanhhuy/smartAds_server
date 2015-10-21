@@ -56,4 +56,8 @@ class CustomersController extends Controller
             'result' => true
         ]);
     }
+
+    public function personalInfo(ActiveCustomer $customer) {
+        return $this->customerRepo->getCustomerInfo($customer->id);
+    }
 }
