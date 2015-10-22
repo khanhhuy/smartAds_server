@@ -84,6 +84,11 @@ class ConnectorService
         return json_decode($response->getBody(), true);
     }
 
+    public function getCustomerInfo($id) {
+        $response = $this->client->get('customer/'.$id.'/personal-info');
+        return json_decode($response->getBody(), true);
+    }
+
     public function getStores($convertToArray=false)
     {
         $response=$this->client->get('stores');

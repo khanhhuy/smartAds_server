@@ -36,14 +36,17 @@ class ProcessTransactionService
 
         $transactions = Connector::getShoppingHistoryFromCustomer($customer, $fromDate, $toDate);
         $watchingList = [];
+        $blackList = $customer->blackList()->lists('id');
 
         if (empty($transactions)) {
             return $watchingList;
         }
 
-        //remove duplicate
+        //remove duplicate & blacklist item
         foreach ($transactions as $key => $eachTrans) {
-            if(!in_array($eachTrans['item_id'], $watchingList)) {
+            if( (!in_array($eachTrans['item_id'], $watchingList)) &&
+                (!in_array($eachTrans['item_id'], $blacklist)) )
+            {
                 $watchingList[] = $eachTrans['item_id'];
             }
         }

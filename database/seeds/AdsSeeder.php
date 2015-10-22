@@ -15,6 +15,7 @@ class AdsSeeder extends Seeder {
 	public function run()
 	{
         DB::table('ads_item')->delete();
+        DB::table('ads_rules')->delete();
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         DB::table('ads')->truncate();
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');

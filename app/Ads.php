@@ -33,6 +33,10 @@ class Ads extends Model
         return $this->belongsToMany('App\Area');
     }
 
+    public function prefRules() {
+        return $this->belongsToMany('App\PreferenceRule', 'ads_rules', 'ads_id', 'rule_id');
+    }
+
     public function scopeAvailable($query)
     {
         return $query->where(function ($query) {
