@@ -48,6 +48,10 @@ Route::get('manager/ads/targeted', ['as'=>'targeted.manager-manage','uses'=>'Ads
 Route::get('manager/ads/targeted/create', ['as'=>'targeted.create','uses'=>'AdsController@createTargeted']);
 Route::get('manager/ads/{ads}/edit', ['as'=>'ads.edit','uses'=>'AdsController@edit']);
 
+//testing
+Route::get('manager/ads/targeted/showrules', 'TargetedAdsController@getRule');
+Route::get('ads/targeted/rules/table', 'TargetedAdsController@targetedTable');
+
 Route::post('ads/promotions', ['as'=>'promotions.store','uses'=>'AdsController@storePromotion']);
 Route::put('ads/promotions/{ads}', ['as'=>'promotions.update','uses'=>'AdsController@updatePromotion']);
 Route::delete('ads',['as'=>'ads.deleteMulti','uses'=>'AdsController@deleteMulti']);

@@ -19,6 +19,10 @@
                         href="{{url('manager/ads/targeted/create')}}"><span class="glyphicon glyphicon-plus"
                                                                             aria-hidden="true"></span> Add Targeted Ads</a>
             </li>
+            <li {!!Utils::setActiveClassManager('ads/targeted/rules/manage')!!}><a
+                        href="{{url('manager/ads/targeted/rules/manage')}}"><span class="glyphicon glyphicon-menu-hamburger"
+                                                                            aria-hidden="true"></span> Manage Targeted Rule</a>
+            </li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">

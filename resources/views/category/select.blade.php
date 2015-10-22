@@ -3,8 +3,8 @@
 @section('title', 'Category Management')
 
 @section('head-footer')
-    <link rel="stylesheet" type="text/css" href={!! URL::asset('js/jQuery-bonsai/bower_components/jquery-bonsai/jquery.bonsai.css') !!} >
-    <link rel="stylesheet" type="text/css" href={!! URL::asset('js/jQuery-bonsai/bower_components/jquery-bonsai/assets/svg-icons.css') !!} >
+    <link rel="stylesheet" type="text/css" href="{{asset('js/jQuery-bonsai/bower_components/jquery-bonsai/jquery.bonsai.css') }}" >
+    <link rel="stylesheet" type="text/css" href="{{asset('js/jQuery-bonsai/bower_components/jquery-bonsai/assets/svg-icons.css') }}" >
     <link rel="stylesheet" type="text/css" href={!! URL::asset('css/admin-select.css') !!}>
 
     <script type="text/javascript" src={!! URL::asset('js/jQuery-bonsai/bower_components/jquery/dist/jquery.min.js') !!} defer></script>
