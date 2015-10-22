@@ -2,19 +2,21 @@
 
 use App\BeaconMajor;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
 use App\Store;
 use Illuminate\Http\Request;
-use Utils;
 
-class MajorsController extends Controller {
+class MajorsController extends Controller
+{
 
     public function manage()
     {
-        $stores=Store::lists('name','id');
+        $allStores = Store::leftJoin('beacon_majors', 'stores.id', '=', 'beacon_majors.store_id')->whereNull('major')->get();
+        $stores = [];
+        foreach ($allStores as $s) {
+            $stores[$s->id] = $s->name . " <br/>(" . $s->display_area . ')';
+        }
         return view('majors.manage')->with(compact('stores'));
-	}
+    }
 
     public function table(Request $request)
     {
@@ -23,10 +25,10 @@ class MajorsController extends Controller {
         $r['recordsFiltered'] = $r['recordsTotal'];
         $displayPromotions = BeaconMajor::skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
         $r['data'] = $displayPromotions->map(function ($major) {
-            $store=$major->store;
+            $store = $major->store;
             return [
                 $store->name,
-                Utils::formatStoreAreas($store),
+                $store->display_area,
                 $major->major,
                 $major->updated_at->format('m-d-Y'),
             ];
@@ -37,6 +39,6 @@ class MajorsController extends Controller {
 
     public function deleteMulti()
     {
-        
+
     }
 }

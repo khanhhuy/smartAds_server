@@ -18,6 +18,7 @@ class CreateStoresTable extends Migration {
 			$table->primary('id');
 			$table->string('name');
 			$table->string('address');
+            $table->string('display_area')->nullable();
 			$table->timestamps();
 		});
 		Schema::create('ads_store', function(Blueprint $table)

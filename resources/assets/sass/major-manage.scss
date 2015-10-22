@@ -1,0 +1,13 @@
+.major-manage {
+  .select2-container--default .select2-selection--single {
+    height: initial;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: initial;
+    padding-top: 7px;
+    padding-bottom: 5px;
+  }
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 10%;
+  }
+}

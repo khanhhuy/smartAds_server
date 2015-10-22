@@ -5,11 +5,13 @@
 @section('head-footer')
     <link rel="stylesheet" type="text/css" href="{{asset('/datatables/datatables.min.css')}}"/>
     <link rel="stylesheet" type="text/css" href="{{asset('/css/manage.css')}}"/>
+    <link href="{{asset('/css/select2.min.css')}}" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="{{asset('/css/major-manage.css')}}"/>
 @endsection
 
 @section('content')
     <br/>
-    <div class="row" id="manage-ads">
+    <div class="row manage-page major-manage">
         <div class="col-sm-8">
             <div class="panel panel-default">
                 <div class="panel-body">
@@ -31,6 +33,7 @@
         </div>
         <div class="col-sm-4">
             <div class="panel panel-default">
+                <div class="panel-heading text-center"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add</div>
                 <div class="panel-body">
                     @include('errors.list')
                     {!! Form::open(['route'=> 'majors.store','class'=>'form-horizontal promotion-form']) !!}
@@ -64,7 +67,7 @@
     <script>
         var myTableURL = "{{url('/majors/table')}}";
         var myOrder = [[4, 'desc']];
-        var myDeleteURL='{{route('majors.deleteMulti')}}';
+        var myDeleteURL = '{{route('majors.deleteMulti')}}';
         var myColumns = [
             {
                 data: 0,
@@ -80,6 +83,11 @@
             }
         ];
     </script>
-
     @include('partials.manage-footer-script')
+    <script src="{{asset('/js/select2.min.js')}}"></script>
+    <script>
+        $('#store').select2({
+            escapeMarkup: function (markup) { return markup; },
+        });
+    </script>
 @endsection
