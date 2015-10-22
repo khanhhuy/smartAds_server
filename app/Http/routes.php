@@ -44,13 +44,14 @@ Route::get('manager/', function () {
 });
 Route::get('manager/ads/promotions', ['as'=>'promotions.manager-manage','uses'=>'AdsController@managePromotions']);
 Route::get('manager/ads/promotions/create', ['as'=>'promotions.create','uses'=>'AdsController@createPromotion']);
-Route::get('manager/ads/targeted', ['as'=>'targeted.manager-manage','uses'=>'AdsController@manageTargeted']);
-Route::get('manager/ads/targeted/create', ['as'=>'targeted.create','uses'=>'AdsController@createTargeted']);
+
 Route::get('manager/ads/{ads}/edit', ['as'=>'ads.edit','uses'=>'AdsController@edit']);
 
 //testing
 Route::get('manager/ads/targeted/showrules', 'TargetedAdsController@getRule');
 Route::get('ads/targeted/rules/table', 'TargetedAdsController@targetedTable');
+Route::get('manager/ads/targeted', ['as'=>'targeted.manager-manage','uses'=>'TargetedAdsController@manageTargeted']);
+Route::get('manager/ads/targeted/create', ['as'=>'targeted.create','uses'=>'TargetedAdsController@createTargeted']);
 
 Route::post('ads/promotions', ['as'=>'promotions.store','uses'=>'AdsController@storePromotion']);
 Route::put('ads/promotions/{ads}', ['as'=>'promotions.update','uses'=>'AdsController@updatePromotion']);

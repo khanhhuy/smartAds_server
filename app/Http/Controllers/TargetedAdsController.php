@@ -21,6 +21,18 @@ class TargetedAdsController extends AdsController {
         $this->customerRepo = $customerRepo;
     }
 
+    public function manageTargeted(Request $request)
+    {
+        return view('ads.targeted.manage');
+    }
+
+    public function createTargeted()
+    {
+        $ads = new Ads;
+        $items = [];
+        return view('ads.targeted.create')->with(compact(['ads', 'items']));
+    }
+
 	public function getRule() {
 		//return $this->customerRepo->getCustomerInfo('1');
 		//return Ads::find('1')->targetedRule()->get();
