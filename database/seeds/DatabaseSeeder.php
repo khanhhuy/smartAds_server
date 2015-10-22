@@ -20,6 +20,6 @@ class DatabaseSeeder extends Seeder {
         $this->call('BeaconSeeder');
         $this->call('CategorySeeder');
 		$this->call('AdsFaker');
-		$this->call('PreferenceRulesSeeder');
+//		$this->call('PreferenceRulesSeeder');
 	}
 }

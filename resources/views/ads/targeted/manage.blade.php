@@ -32,7 +32,7 @@
     <script>
         var myTableURL = "{{url('/ads/targeted/table')}}";
         var myOrder = [[7, 'desc']];
-        var myDeleteURL='{{route('ads.deleteMulti')}}';
+        var myDeleteURL = '{{route('ads.deleteMulti')}}';
         var myColumns =
                 [
                     {
@@ -58,6 +58,13 @@
                     {
                         data: 6,
                     },
+                    {
+                        orderable: false,
+                        render: function (data, type, row, meta) {
+                            return '<a class="my-manage-edit-btn" role="button" href="' + row[0] + '/edit">' +
+                                    '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</a>';
+                        }
+                    }
                 ];
     </script>
 

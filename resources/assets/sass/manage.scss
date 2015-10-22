@@ -1,9 +1,11 @@
-#manage-ads,.manage-page {
+#manage-ads, .manage-page {
   .dt-right {
     text-align: right;
   }
-  .my-edit-btn {
+  .my-manage-edit-btn {
     color: #333333;
+    height: 23px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     background-color: #E5E5E5;
     padding: 1px 4px;
     font-size: 13px;
@@ -14,9 +16,8 @@
     border: solid transparent;
 
     text-decoration: none;
-
   }
-  .my-edit-btn:hover {
+  .my-manage-edit-btn:hover {
     background-color: lightgray;
   }
   #manage-table_length {

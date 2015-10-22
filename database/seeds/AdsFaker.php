@@ -15,7 +15,7 @@ class AdsFaker extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 300) as $index) {
+        foreach (range(1, 100) as $index) {
             if ($index % 2 == 0) {
                 $start = $faker->dateTimeBetween('-3 month', '+1 week')->format('Y-m-d');
                 $whole = true;

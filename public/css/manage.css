@@ -1,8 +1,10 @@
 #manage-ads .dt-right, .manage-page .dt-right {
   text-align: right; }
 
-#manage-ads .my-edit-btn, .manage-page .my-edit-btn {
+#manage-ads .my-manage-edit-btn, .manage-page .my-manage-edit-btn {
   color: #333333;
+  height: 23px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: #E5E5E5;
   padding: 1px 4px;
   font-size: 13px;
@@ -12,7 +14,7 @@
   border: solid transparent;
   text-decoration: none; }
 
-#manage-ads .my-edit-btn:hover, .manage-page .my-edit-btn:hover {
+#manage-ads .my-manage-edit-btn:hover, .manage-page .my-manage-edit-btn:hover {
   background-color: lightgray; }
 
 #manage-ads #manage-table_length, .manage-page #manage-table_length {
