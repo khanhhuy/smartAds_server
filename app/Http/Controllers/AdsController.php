@@ -370,9 +370,4 @@ class AdsController extends Controller
         }
     }
 
-
-    public function createTargeted()
-    {
-        return 'TODO Huy';
-    }
 }

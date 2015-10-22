@@ -85,7 +85,12 @@ class ConnectorService
     }
 
     public function getCustomerInfo($id) {
-        $response = $this->client->get('customer/'.$id.'/personal-info');
+        $response = $this->client->get('customers/'.$id.'/personal-info');
+        return json_decode($response->getBody(), true);
+    }
+
+    public function getJobDesc() {
+        $response = $this->client->get('customers/jobs-desc');
         return json_decode($response->getBody(), true);
     }
 

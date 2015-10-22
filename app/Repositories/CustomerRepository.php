@@ -33,7 +33,7 @@ class CustomerRepository implements CustomerRepositoryInterface
 
     public function getCustomerInfo($id)
     {
-        $info = Connector::getgetCustomerInfo($id);
+        $info = Connector::getCustomerInfo($id);
         return $info;
     }
 }
