@@ -7,20 +7,16 @@
         data: null,
         width: "15px"
     }];
-    var editBtnColumn = [{
-        orderable: false,
-        render: function (data, type, row, meta) {
-            return '<a class="my-edit-btn" role="button" href="' + row[0] + '/edit">' +
-                    '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</a>';
-        }
-    }];
 
     var table = $('#manage-table').DataTable({
         "processing": true,
         "serverSide": true,
+        "language": {
+            "processing": "Loading..."
+        },
         paging: true,
         "ajax": myTableURL,
-        "columns": selectChkboxColum.concat(myColumns,editBtnColumn),
+        "columns": selectChkboxColum.concat(myColumns),
         pagingType: "full_numbers",
         select: {
             style: 'os',

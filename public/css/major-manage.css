@@ -1,0 +1,21 @@
+.major-manage .select2-container--default .select2-selection--single {
+  height: initial; }
+
+.major-manage .select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: initial;
+  padding-top: 7px;
+  padding-bottom: 5px; }
+
+.major-manage .select2-container--default .select2-selection--single .select2-selection__arrow {
+  top: 10%; }
+
+.major-manage input[type=submit].btn {
+  min-width: 70px; }
+
+.major-manage select.form-control {
+  height: 30px; }
+
+.major-manage .my-cancel-edit-btn {
+  margin-left: 10px; }
+
+/*# sourceMappingURL=major-manage.css.map */

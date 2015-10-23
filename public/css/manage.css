@@ -1,8 +1,10 @@
-#manage-ads .dt-right {
+#manage-ads .dt-right, .manage-page .dt-right {
   text-align: right; }
 
-#manage-ads .my-edit-btn {
+#manage-ads .my-manage-edit-btn, .manage-page .my-manage-edit-btn {
   color: #333333;
+  height: 23px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: #E5E5E5;
   padding: 1px 4px;
   font-size: 13px;
@@ -12,19 +14,19 @@
   border: solid transparent;
   text-decoration: none; }
 
-#manage-ads .my-edit-btn:hover {
+#manage-ads .my-manage-edit-btn:hover, .manage-page .my-manage-edit-btn:hover {
   background-color: lightgray; }
 
-#manage-ads #manage-table_length {
+#manage-ads #manage-table_length, .manage-page #manage-table_length {
   display: inline-block; }
 
-#manage-ads .del-container {
+#manage-ads .del-container, .manage-page .del-container {
   margin-left: 25px; }
 
-#manage-ads #select-all-chkbox {
+#manage-ads #select-all-chkbox, .manage-page #select-all-chkbox {
   vertical-align: middle; }
 
-#manage-ads #select-all-chkbox:before {
+#manage-ads #select-all-chkbox:before, .manage-page #select-all-chkbox:before {
   content: ' ';
   border: 1px solid black;
   border-radius: 3px;
@@ -32,7 +34,7 @@
   width: 12px;
   height: 12px; }
 
-#manage-ads #select-all-chkbox.checked:after {
+#manage-ads #select-all-chkbox.checked:after, .manage-page #select-all-chkbox.checked:after {
   content: '\2714';
   margin-top: -120%;
   margin-left: 2px;
@@ -42,7 +44,7 @@
   width: 12px;
   height: 15px; }
 
-#manage-ads .dataTables_processing {
+#manage-ads .dataTables_processing, .manage-page .dataTables_processing {
   position: absolute;
   width: 100%;
   padding: 20px 0;

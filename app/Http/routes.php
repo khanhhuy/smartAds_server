@@ -19,19 +19,20 @@ Route::group(['prefix'=>'api/v1'],function(){
 	Route::get('ads','AdsController@index');
 	Route::get('customers/{customers}/received-ads','AdsController@receivedIndex');
 	Route::get('account-status','CustomersController@accountStatus');
-
-	Route::post('customers/{customers}/update-request', 'AccountController@update');
+    Route::post('customers/{customers}/update-request', 'AccountController@update');
     Route::post('customers/{customers}/feedback', 'AccountController@feedback');
 	//for testing
 	Route::get('customers/{customers}/update-request', 'AccountController@update');
 
-	Route::get('customers/{customers}/config', 'CustomersController@getSettings');
+    Route::get('customers/{customers}/config', 'CustomersController@getSettings');
     Route::post('customers/{customers}/config', 'CustomersController@storeSettings');
 
-	Route::controller('auth','Auth\APIAuthController');
+    Route::controller('auth', 'Auth\APIAuthController');
 });
 Route::get('ads/thumbnail/{ads}', 'AdsController@thumbnail');
-//for testing
+Route::get('ads/promotions/table', 'AdsController@promotionsTable');
+Route::get('ads/targeted/table', 'AdsController@targetedTable');
+Route::get('ads/{ads}/', 'AdsController@show');
 Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
 
 /*
@@ -64,13 +65,13 @@ Route::delete('ads',['as'=>'ads.deleteMulti','uses'=>'AdsController@deleteMulti'
 |------------------------Admin Route---------------------|
 */
 Route::get('admin', function () {
-	return redirect('admin/minors');
+    return redirect('admin/minors');
 });
 Route::get('admin/minors', 'MinorsController@manage');
-Route::get('admin/majors', 'MajorsController@manage');
+Route::get('admin/majors', ['as' => 'majors.manage', 'uses' => 'MajorsController@manage']);
 Route::get('majors/table', 'MajorsController@table');
-Route::resource('majors', 'MajorsController',['only'=>['store']]);
-Route::delete('majors',['as'=>'majors.deleteMulti','uses'=>'MajorsController@deleteMulti']);
+Route::resource('majors', 'MajorsController', ['only' => ['store','create','edit','update']]);
+Route::delete('majors', ['as' => 'majors.deleteMulti', 'uses' => 'MajorsController@deleteMulti']);
 Route::get('admin/category', 'ProcessTransactionController@getListCategories');
 Route::post('admin/category', 'ProcessTransactionController@selectCategory');
 
