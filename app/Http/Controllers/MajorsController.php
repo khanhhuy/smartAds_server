@@ -32,9 +32,13 @@ class MajorsController extends Controller
         return response()->json($r);
     }
 
-    public function deleteMulti()
+    public function deleteMulti(Request $request)
     {
-
+        $ids = $request->input('ids');
+        if (empty($ids)) {
+            return abort('400');
+        }
+        BeaconMajor::destroy($ids);
     }
 
     public function create()

@@ -33,7 +33,14 @@
                     extend: 'selected',
                     text: '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete',
                     action: function (e, dt, button, config) {
-                        var ids = dt.rows('.selected').data().pluck(0).toArray();
+                        var datas=dt.rows('.selected').data();
+                        var ids;
+                        if (typeof myIDIndex !== 'undefined') {
+                            ids= datas.pluck(myIDIndex).toArray();
+                        }
+                        else {
+                            ids =datas.pluck(0).toArray();
+                        }
                         var message = "Delete " + ids.length + (ids.length > 1 ? " rows?" : " row?");
                         bootbox.confirm(message, function (result) {
                             if (result && ids.length > 0) {
@@ -43,6 +50,10 @@
                                     data: {ids: ids},
                                     success: function (result) {
                                         dt.rows('.selected').remove().draw(false);
+
+                                        if (typeof myDelSuccessFunc !== 'undefined') {
+                                            myDelSuccessFunc();
+                                        }
                                     },
                                     error: function (jqXHR, type, errorThrown) {
                                         if (errorThrown != null) {

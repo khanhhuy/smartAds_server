@@ -17,7 +17,7 @@ class CreateStoresTable extends Migration {
 			$table->string('id');
 			$table->primary('id');
 			$table->string('name');
-			$table->string('address');
+			$table->string('address')->nullable();
             $table->string('display_area')->nullable();
 			$table->timestamps();
 		});

@@ -66,6 +66,11 @@
                 }
             }
         ];
+
+        var myIDIndex=2;
+        var myDelSuccessFunc=function (){
+            loadCreateForm();
+        }
     </script>
     @include('partials.manage-footer-script')
     <script src="{{asset('/js/select2.min.js')}}"></script>
