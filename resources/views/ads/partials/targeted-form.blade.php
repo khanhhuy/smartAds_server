@@ -1,5 +1,5 @@
 <fieldset>
-    <legend>Promotion Info</legend>
+    <legend>Targeted Ads Info</legend>
     <div class="form-group">
         {!! Form::label('itemsID','Items',['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-7 col-lg-6">
@@ -28,9 +28,7 @@
         </div>
         <div class="col-sm-5 col-lg-6">
             {!! Form::label('end_date','To',['class'=>'control-label my-between-label','required'=>'required']) !!}
-            {!! Form::input('date','end_date',$ads->end_date,['class'=>'form-control my-inline-control','required'=>'required'
-           ]) !!}
-
+            {!! Form::input('date','end_date',$ads->end_date,['class'=>'form-control my-inline-control','required'=>'required']) !!}
             <div id="date-error" style="display: none">
                 <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                 End Date must not before Start Date
@@ -38,21 +36,39 @@
         </div>
     </div>
     <div class="form-group">
-        {!! Form::label('discount_value','Discount Amount',['class'=>'col-sm-3 control-label']) !!}
-        <div class="col-sm-4 col-lg-3">
-            <div class="input-group my-inline-input-group">
-                {!! Form::input('number','discount_value',null,['class'=>'form-control my-inline-control','required'=>'required',
-                 'min'=>'0.001','step'=>'0.001','placeholder'=>'e.g. 10500']) !!}
-                <div class="input-group-addon">VND</div>
-            </div>
+        {!! Form::label('age','Customers\' Age',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
+        <div class="col-sm-2 col-lg-1">
+            {!! Form::input('number','from_age', null, ['class'=>'form-control inline-width','required'=>'required', 'placeholder'=>'0']) !!}
         </div>
-        <div class="col-sm-5 col-lg-6">
-            {!! Form::label('discount_rate','Rate',['class'=>'control-label my-between-label']) !!}
-            <div class="input-group my-inline-input-group">
-                {!! Form::input('number','discount_rate',null,['class'=>'form-control my-inline-control', 'min'=>'0.01','step'=>'0.01','max'=>'100',
-                'required'=>'required','placeholder'=>'e.g. 20']) !!}
-                <div class="input-group-addon">%</div>
-            </div>
+        <span class="seperator control-label">-</span>
+        <div class="col-sm-2 col-lg-1">
+            {!! Form::input('number','to_age', null, ['class'=>'form-control inline-width','required'=>'required', 'placeholder'=>'18']) !!}
+        </div>
+    </div>
+    <div class="form-group">
+        {!! Form::label('gender','Customers\' Gender',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
+        <div class="col-sm-3 col-lg-2">
+            {!! Form::select('gender', ['Male', 'Femal', 'Male & Female'], 2, ['class' => 'form-control'])!!}
+        </div>
+    </div>
+    <div class="form-group">
+        {!! Form::label('family','Customers\' Family Member',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
+        <div class="col-sm-2 col-lg-1">
+            {!! Form::input('number','from_member', null, ['class'=>'form-control inline-width','required'=>'required', 'placeholder'=>'0']) !!}
+        </div>
+        <span class="seperator control-label">-</span>
+        <div class="col-sm-2 col-lg-1">
+            {!! Form::input('number','to_member', null, ['class'=>'form-control inline-width','required'=>'required', 'placeholder'=>'2']) !!}
+        </div>
+    </div>
+    <div class="form-group">
+        {!! Form::label('jobs','Customers\' Jobs',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
+        <div class="col-sm-6 col-lg-6">
+                @foreach ($jobs as $job)
+                    <div class="jobs">
+                        {!! Form::checkbox('jobs', $job["name"], false) !!} {{ $job["name"] }}
+                    </div>
+                @endforeach
         </div>
     </div>
 </fieldset>

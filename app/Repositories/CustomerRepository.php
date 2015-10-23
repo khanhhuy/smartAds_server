@@ -36,4 +36,9 @@ class CustomerRepository implements CustomerRepositoryInterface
         $info = Connector::getCustomerInfo($id);
         return $info;
     }
+
+    public function getAllJobDesc() {
+        $jobsDesc = Connector::getJobDesc();
+        return $jobsDesc;
+    }
 }

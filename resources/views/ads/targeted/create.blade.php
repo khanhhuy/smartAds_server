@@ -5,6 +5,7 @@
 @section('head-footer')
     <link href="{{asset('/css/select2.min.css')}}" rel="stylesheet"/>
     <link href="{{asset('/css/promotion-form.css')}}" rel="stylesheet"/>
+    <link href="{{asset('/css/targeted-form.css')}}" rel="stylesheet"/>
 @endsection
 
 @section('content')

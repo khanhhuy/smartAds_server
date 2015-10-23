@@ -30,7 +30,8 @@ class TargetedAdsController extends AdsController {
     {
         $ads = new Ads;
         $items = [];
-        return view('ads.targeted.create')->with(compact(['ads', 'items']));
+        $jobs = $this->customerRepo->getAllJobDesc();
+        return view('ads.targeted.create')->with(compact(['ads', 'items', 'jobs']));
     }
 
 	public function getRule() {

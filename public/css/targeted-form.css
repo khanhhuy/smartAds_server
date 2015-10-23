@@ -1,0 +1,12 @@
+.seperator {
+	float: left;
+}
+
+div.jobs {
+	display: inline-block;
+	min-width: 7em;
+}
+
+input.inline-width {
+	max-width: 5em;
+}
