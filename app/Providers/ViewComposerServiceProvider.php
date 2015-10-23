@@ -35,7 +35,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
             $allStores = Store::leftJoin('beacon_majors', 'stores.id', '=', 'beacon_majors.store_id')->whereNull('major')->get();
             $stores = [];
             foreach ($allStores as $s) {
-                $stores[$s->id] = $s->name . " <br/>(" . $s->display_area . ')';
+                $stores[$s->id] = $s->name . " <br/><small>(" . $s->display_area . ')</small>';
             }
             $r=DB::select("SHOW TABLE STATUS LIKE 'beacon_majors'");
             $nextID=$r[0]->Auto_increment;

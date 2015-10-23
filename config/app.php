@@ -149,6 +149,7 @@ return [
         'App\Providers\ContextAdsServiceProvider',
         'App\Providers\ProcessTransactionProvider',
         'App\Providers\ViewComposerServiceProvider',
+		'Laracasts\Flash\FlashServiceProvider',
 
         /**
          * IDE Helper Service Providers....
@@ -207,6 +208,7 @@ return [
         'Html'      => 'Illuminate\Html\HtmlFacade',
     	'Form'      => 'Illuminate\Html\FormFacade',
 		'Utils' => 'App\Utils\Utils',
+		'Flash' => 'Laracasts\Flash\Flash',
 	],
 
 ];

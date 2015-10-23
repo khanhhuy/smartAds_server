@@ -5,7 +5,6 @@
 @section('head-footer')
     <link rel="stylesheet" type="text/css" href="{{asset('/datatables/datatables.min.css')}}"
           xmlns="http://www.w3.org/1999/html"/>
-    <link rel="stylesheet" type="text/css" href="{{asset('/css/manage.css')}}"/>
     <link href="{{asset('/css/select2.min.css')}}" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="{{asset('/css/major-manage.css')}}"/>
 @endsection
@@ -94,6 +93,7 @@
                     $('#my-submit-btn').prop('disabled', false);
                     if ($('#form-container .alert-danger').length === 0) {
                         table.draw(false);
+                        @include('partials.autohide-alert')
                     }
 
                     initForm();
