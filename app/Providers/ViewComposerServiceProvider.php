@@ -20,6 +20,13 @@ class ViewComposerServiceProvider extends ServiceProvider {
             $targets=['Stores'=>$stores,'Areas'=>$areas];
             $view->with(compact('targets'));
 		});
+
+		View::composer('ads.partials.targeted-form',function($view){
+            $stores=Store::lists('name','id');
+            $areas=Area::lists('name','id');
+            $targets=['Stores'=>$stores,'Areas'=>$areas];
+            $view->with(compact('targets'));
+		});
 	}
 
 	/**
