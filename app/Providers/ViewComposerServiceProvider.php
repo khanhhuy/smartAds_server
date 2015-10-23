@@ -25,6 +25,12 @@ class ViewComposerServiceProvider extends ServiceProvider {
             $view->with(compact('targets'));
 		});
 
+		View::composer('ads.partials.targeted-form',function($view){
+            $stores=Store::lists('name','id');
+            $areas=Area::lists('name','id');
+            $targets=['Stores'=>$stores,'Areas'=>$areas];
+            $view->with(compact('targets'));
+		});
 		View::composer('majors.partials.create',function ($view){
             $allStores = Store::leftJoin('beacon_majors', 'stores.id', '=', 'beacon_majors.store_id')->whereNull('major')->get();
             $stores = [];

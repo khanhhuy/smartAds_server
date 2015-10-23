@@ -13,13 +13,12 @@
         <div class="col-md-1"></div>
         <div class="col-md-11">
             @include('errors.list')
-            {!! Form::open(['route'=> 'promotions.store','class'=>'form-horizontal promotion-form','enctype'=>'multipart/form-data']) !!}
-            @include('ads.partials.promotion-form',['btnSubmitName'=>'Add'])
+            {!! Form::open(['route'=> 'targeted.store','class'=>'form-horizontal promotion-form','enctype'=>'multipart/form-data']) !!}
+            @include('ads.partials.targeted-form',['btnSubmitName'=>'Add'])
             {!! Form::close() !!}
         </div>
     </div>
 @endsection
-
 @section('body-footer')
     @include('ads.partials.promotion-footer-script')
 @endsection
