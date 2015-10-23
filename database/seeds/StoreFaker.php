@@ -16,16 +16,23 @@ class StoreFaker extends Seeder
     {
         $faker = Faker::create();
 
-        foreach (range(1, 100) as $index) {
-            $store=Store::create([
-                'id' => 'S_' . $faker->idNumber,
+        foreach (range(1, 100) as $i) {
+            $id='S_' . $faker->userName;
+            Store::create([
+                'id' =>$id,
                 'area_id' => $faker->randomElement(Store::distinct()->lists('area_id')),
                 'name' => $faker->name,
                 'address' =>  $faker->address
             ]);
-            $major=BeaconMajor::create([
-                'store_id'=>$store->id
+            BeaconMajor::create([
+                'store_id'=>$id
             ]);
+        }
+
+        $all = Store::all();
+        foreach ($all as $s) {
+            $s->display_area=Utils::formatStoreAreas($s);
+            $s->save();
         }
     }
 

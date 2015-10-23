@@ -23,9 +23,9 @@
             selector: 'td:first-child'
         },
         order: myOrder,
-        dom: "<'row'<'col-sm-6'lB><'col-sm-6'f>>" +
+        dom: "<'row'<'col-sm-7'lB><'col-sm-5'f>>" +
         "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        "<'row'<'col-sm-4 col-lg-3'i><'col-sm-8 col-lg-9'p>>",
         lengthChange: true,
         buttons: {
             buttons: [

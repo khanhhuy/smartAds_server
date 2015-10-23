@@ -33,8 +33,10 @@
             </div>
         </div>
         <div class="col-sm-8 col-md-4">
-            <div class="panel panel-default" id="form-container">
-                @include('majors.partials.create')
+            <div id="affix-form"  data-spy="affix" data-offset-top="30" data-offset-bottom="200">
+                <div class="panel panel-default" id="form-container">
+                    @include('majors.partials.create')
+                </div>
             </div>
         </div>
     </div>
@@ -67,8 +69,8 @@
             }
         ];
 
-        var myIDIndex=2;
-        var myDelSuccessFunc=function (){
+        var myIDIndex = 2;
+        var myDelSuccessFunc = function () {
             loadCreateForm();
         }
     </script>
@@ -103,6 +105,7 @@
                     $('#my-submit-btn').prop('disabled', false);
                 })
             });
+
         }
         initForm();
 
@@ -125,7 +128,7 @@
 
         function loadEditForm(major) {
             var url = "{{url('/majors')}}/" + major + "/edit";
-            loadForm(url,function(){
+            loadForm(url, function () {
                 $('#major').focus();
             });
         }
@@ -134,5 +137,9 @@
             var url = "{{route('majors.create')}}";
             loadForm(url);
         }
+        $(document).ready(function () {
+            var style = $('<style>.affix { width: ' + $('#affix-form').width() + 'px; }</style>');
+            $('html > head').append(style);
+        });
     </script>
 @endsection
