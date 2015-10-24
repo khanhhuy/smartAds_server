@@ -1,25 +1,15 @@
-@extends('manager-master')
+@extends('ads.promotions.partials.create-edit-master')
 
-@section('title','Edit Promotion')
+@section('title','Add Promotion')
 
-@section('head-footer')
-    <link href="{{asset('/css/select2.min.css')}}" rel="stylesheet"/>
-    <link href="{{asset('/css/promotion-form.css')}}" rel="stylesheet"/>
+@section('page-title','Edit Promotion')
+@section('form')
+    {!! Form::model($ads,['route'=> ['promotions.update',$ads->id],'method'=>'PUT','class'=>'form-horizontal promotion-form','enctype'=>'multipart/form-data']) !!}
+    @include('ads.partials.promotion-form',['btnSubmitName'=>'Update'])
+    {!! Form::close() !!}
 @endsection
 
-@section('content')
-    <br/>
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-11">
-            @include('errors.list')
-            {!! Form::model($ads,['route'=> ['promotions.update',$ads->id],'method'=>'PUT','class'=>'form-horizontal promotion-form','enctype'=>'multipart/form-data']) !!}
-            @include('ads.partials.promotion-form',['btnSubmitName'=>'Update'])
-            {!! Form::close() !!}
-        </div>
-    </div>
-@endsection
-
-@section('body-footer')
-    @include('ads.partials.promotion-footer-script')
+@section('breadcrumb')
+    <li><a href="{{route('promotions.manager-manage')}}">Manage Promotions</a></li>
+    <li class="active">Edit Promotion</li>
 @endsection

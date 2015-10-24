@@ -1,7 +1,40 @@
 @import 'nav';
+
 html {
   overflow-y: scroll;
 }
-.modal-open{
-  padding-right:0 !important;
+
+.modal-open {
+  padding-right: 0 !important;
 }
+
+.my-padding-panel {
+  padding: 20px;
+}
+
+.page-heading {
+  background-color: white;
+  vertical-align: middle;
+  .page-title {
+    padding: 18px 0;
+    float: left;
+  }
+  .page-title h1 {
+    font-size: 22px;
+    font-weight: 300;
+    margin: 0;
+    color: #697882;
+  }
+  .breadcrumb {
+    float: right;
+    display: inline-block;
+    background: transparent;
+    margin: auto 0;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}
+//.my-padding-container-fluid{
+//  padding-left:40px;
+//  padding-right:40px;
+//}
