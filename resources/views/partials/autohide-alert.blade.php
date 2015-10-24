@@ -1,0 +1,1 @@
+$('div.alert').not('.alert-important').not('.alert-danger').delay(3000).slideUp('fast');

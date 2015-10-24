@@ -5,7 +5,6 @@
 @section('head-footer')
     <link rel="stylesheet" type="text/css" href="{{asset('/datatables/datatables.min.css')}}"
           xmlns="http://www.w3.org/1999/html"/>
-    <link rel="stylesheet" type="text/css" href="{{asset('/css/manage.css')}}"/>
     <link href="{{asset('/css/select2.min.css')}}" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="{{asset('/css/major-manage.css')}}"/>
 @endsection
@@ -33,8 +32,10 @@
             </div>
         </div>
         <div class="col-sm-8 col-md-4">
-            <div class="panel panel-default" id="form-container">
-                @include('majors.partials.create')
+            <div id="affix-form" data-spy="affix" data-offset-top="30" data-offset-bottom="200">
+                <div class="panel panel-default" id="form-container">
+                    @include('majors.partials.create')
+                </div>
             </div>
         </div>
     </div>
@@ -61,11 +62,16 @@
             {
                 orderable: false,
                 render: function (data, type, row, meta) {
-                    return '<button class="my-manage-edit-btn" role="button" onclick="loadEditForm(' + row[2] + ')">' +
+                    return '<button class="my-manage-edit-btn" role="button" onclick="loadEditForm(this)">' +
                             '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>';
                 }
             }
         ];
+
+        var myIDIndex = 2;
+        var myDelSuccessFunc = function () {
+            loadCreateForm();
+        }
     </script>
     @include('partials.manage-footer-script')
     <script src="{{asset('/js/select2.min.js')}}"></script>
@@ -85,7 +91,11 @@
                 var posting = $.post(url, form.serialize(), function (data) {
                     $('#form-container').html(data);
                     $('#my-submit-btn').prop('disabled', false);
-                    table.draw(false);
+                    if ($('#form-container .alert-danger').length === 0) {
+                        table.draw(false);
+                        @include('partials.autohide-alert')
+                    }
+
                     initForm();
                 })
                         .fail(function (jqXHR, type, errorThrown) {
@@ -98,9 +108,11 @@
                     $('#my-submit-btn').prop('disabled', false);
                 })
             });
+
         }
         initForm();
 
+        var editingRow = -1;
         function loadForm(url, alwaysFunc) {
             $('#my-submit-btn').prop('disabled', true);
             $('#form-container').load(url, function (response, status, xhr) {
@@ -118,16 +130,34 @@
             });
         }
 
-        function loadEditForm(major) {
+        function loadEditForm(btn) {
+            var row = table.row($(btn).closest('tr'));
+            var major = row.data()[2];
             var url = "{{url('/majors')}}/" + major + "/edit";
-            loadForm(url,function(){
+            loadForm(url, function () {
                 $('#major').focus();
             });
+            updateEditingRow(major);
         }
 
         function loadCreateForm() {
             var url = "{{route('majors.create')}}";
             loadForm(url);
+            updateEditingRow(-1);
+        }
+        $(document).ready(function () {
+            var style = $('<style>.affix { width: ' + $('#affix-form').width() + 'px; }</style>');
+            $('html > head').append(style);
+        });
+
+        function updateEditingRow(newMajor) {
+            if (editingRow >= 0) {
+                $('tr#' + editingRow).removeClass('editing-row');
+            }
+            editingRow = newMajor;
+            if (editingRow >= 0) {
+                $('tr#' + editingRow).addClass('editing-row');
+            }
         }
     </script>
 @endsection

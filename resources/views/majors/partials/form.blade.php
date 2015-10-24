@@ -2,7 +2,8 @@
     {!! Form::label('store_id','Store',['class'=>'col-sm-2 control-label']) !!}
     <div class="col-sm-10">
         {!! Form::select('store_id',$stores,null,['id'=>'store_id',
-        'class'=>'form-control','data-placeholder'=>' e.g. Co.opmart Bình Dương','required'=>'required']) !!}
+        'class'=>'form-control','data-placeholder'=>' e.g. Co.opmart Bình Dương','required'=>'required',
+        'style'=>'width:100%']) !!}
     </div>
 </div>
 <div class="form-group">

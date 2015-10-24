@@ -1,7 +1,6 @@
 <?php namespace App\Http\Requests;
 
 use Route;
-use App\Http\Requests\Request;
 
 class MajorRequest extends Request
 {
@@ -23,17 +22,17 @@ class MajorRequest extends Request
      */
     public function rules()
     {
-        if (Request::isMethod('POST')) {
+        if ($this->isStoreRequest()) {
             return [
                 'major' => 'required|unique:beacon_majors,major',
                 'store_id' => 'required|unique:beacon_majors,store_id'
             ];
-        } elseif (Request::isMethod('PUT') || Request::isMethod('PATCH')) {
+        } else {
             $major = Route::input('majors');
 
             return [
-                'major' => 'required|unique:beacon_majors,major,' . $major->major.',major',
-                'store_id' => 'required|unique:beacon_majors,store_id,' . $major->store_id.',store_id'
+                'major' => 'required|unique:beacon_majors,major,' . $major->major . ',major',
+                'store_id' => 'required|unique:beacon_majors,store_id,' . $major->store_id . ',store_id'
             ];
         }
     }
@@ -46,9 +45,22 @@ class MajorRequest extends Request
      */
     public function response(array $errors)
     {
-        return redirect()->route('majors.create')
-            ->withInput($this->except($this->dontFlash))
-            ->withErrors($errors, $this->errorBag);
+        if ($this->isStoreRequest()) {
+            return redirect()->route('majors.create')
+                ->withInput($this->except($this->dontFlash))
+                ->withErrors($errors, $this->errorBag);
+        } else {
+            $major = Route::input('majors');
+            return redirect()->route('majors.edit',$major->major)
+                ->withInput($this->except($this->dontFlash))
+                ->withErrors($errors, $this->errorBag);
+        }
+
+    }
+
+    private function isStoreRequest()
+    {
+        return Request::isMethod('POST');
     }
 
 }

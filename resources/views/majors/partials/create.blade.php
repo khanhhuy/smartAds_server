@@ -3,6 +3,7 @@
 </div>
 <div class="panel-body">
     @include('errors.list')
+    @include('flash::message')
     {!! Form::open(['route'=> 'majors.store','class'=>'form-horizontal promotion-form']) !!}
     @include('majors.partials.form')
     <div class="form-group">

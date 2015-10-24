@@ -4,6 +4,7 @@ use App\BeaconMajor;
 use App\Http\Requests;
 use App\Http\Requests\MajorRequest;
 use Illuminate\Http\Request;
+use Laracasts\Flash\Flash;
 
 class MajorsController extends Controller
 {
@@ -32,9 +33,13 @@ class MajorsController extends Controller
         return response()->json($r);
     }
 
-    public function deleteMulti()
+    public function deleteMulti(Request $request)
     {
-
+        $ids = $request->input('ids');
+        if (empty($ids)) {
+            return abort('400');
+        }
+        BeaconMajor::destroy($ids);
     }
 
     public function create()
@@ -45,8 +50,9 @@ class MajorsController extends Controller
     public function store(MajorRequest $request)
     {
         BeaconMajor::create($request->only(['major', 'store_id']));
+        Flash::success('Added Successfully');
 
-        return view('majors.partials.create');
+        return redirect()->route('majors.create');
     }
 
     public function edit(BeaconMajor $major)
@@ -64,6 +70,7 @@ class MajorsController extends Controller
             $major->delete();
             BeaconMajor::create($request->only(['major', 'store_id']));
         }
+        Flash::success('Updated Successfully');
         return redirect()->route('majors.create');
     }
 }

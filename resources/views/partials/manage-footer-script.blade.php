@@ -1,12 +1,15 @@
 <script type="text/javascript" src="{{asset('/datatables/datatables.min.js')}}"></script>
 <script>
-    var selectChkboxColum=[{
+    var selectChkboxColum = [{
         sortable: false,
         className: 'select-checkbox',
         defaultContent: "",
         data: null,
         width: "15px"
     }];
+    if (typeof myIDIndex === 'undefined') {
+        var myIDIndex = 0;
+    }
 
     var table = $('#manage-table').DataTable({
         "processing": true,
@@ -23,17 +26,20 @@
             selector: 'td:first-child'
         },
         order: myOrder,
-        dom: "<'row'<'col-sm-6'lB><'col-sm-6'f>>" +
+        dom: "<'row'<'col-sm-7'lB><'col-sm-5'f>>" +
         "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        "<'row'<'col-sm-4 col-lg-3'i><'col-sm-8 col-lg-9'p>>",
         lengthChange: true,
+        rowId: myIDIndex,
         buttons: {
             buttons: [
                 {
                     extend: 'selected',
                     text: '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete',
                     action: function (e, dt, button, config) {
-                        var ids = dt.rows('.selected').data().pluck(0).toArray();
+                        var datas = dt.rows('.selected').data();
+                        var ids;
+                        ids = datas.pluck(myIDIndex).toArray();
                         var message = "Delete " + ids.length + (ids.length > 1 ? " rows?" : " row?");
                         bootbox.confirm(message, function (result) {
                             if (result && ids.length > 0) {
@@ -43,6 +49,10 @@
                                     data: {ids: ids},
                                     success: function (result) {
                                         dt.rows('.selected').remove().draw(false);
+
+                                        if (typeof myDelSuccessFunc !== 'undefined') {
+                                            myDelSuccessFunc();
+                                        }
                                     },
                                     error: function (jqXHR, type, errorThrown) {
                                         if (errorThrown != null) {
