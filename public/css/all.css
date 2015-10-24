@@ -68,6 +68,17 @@ body {
     background: transparent;
     margin: 0; }
 
+.my-fixed-pos-alert {
+  position: fixed;
+  padding: 10px 15px;
+  opacity: 0.9;
+  top: 60px;
+  left: 50%;
+  margin-left: -150px;
+  z-index: 100;
+  width: 300px;
+  text-align: center; }
+
 /*# sourceMappingURL=app.css.map */
 
 /*# sourceMappingURL=all.css.map */

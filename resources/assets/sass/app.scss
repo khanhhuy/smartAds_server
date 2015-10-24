@@ -3,9 +3,11 @@
 html {
   overflow-y: scroll;
 }
-body{
+
+body {
   background: #eff3f8;
 }
+
 .modal-open {
   padding-right: 0 !important;
 }
@@ -15,13 +17,13 @@ body{
 }
 
 .page-heading {
-  >.container{
+  > .container {
     display: table;
-    height:60px;
+    height: 60px;
   }
   .page-title {
     display: table-cell;
-    vertical-align:middle;
+    vertical-align: middle;
   }
   .page-title h1 {
     font-size: 22px;
@@ -32,10 +34,22 @@ body{
   .my-breadcrumb {
     display: table-cell;
     vertical-align: middle;
-    text-align:right;
-    .breadcrumb{
+    text-align: right;
+    .breadcrumb {
       background: transparent;
-      margin:0;
+      margin: 0;
     }
   }
+}
+
+.my-fixed-pos-alert {
+  position: fixed;
+  padding: 10px 15px;
+  opacity: 0.9;
+  top: 60px;
+  left: 50%;
+  margin-left: -150px;
+  z-index: 100;
+  width: 300px;
+  text-align: center;
 }

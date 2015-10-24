@@ -6,6 +6,7 @@
 @endsection
 @section('content')
     <div class="panel panel-default my-padding-panel">
+        @include('partials.fixed-pos-message')
         <div id="manage-ads">
             <table id="manage-table" class="table table-striped table-bordered table-hover" cellspacing="0"
                    width="100%">
@@ -15,4 +16,5 @@
             </table>
         </div>
     </div>
+    @include('partials.delete-success')
 @endsection

@@ -58,7 +58,7 @@ Route::get('manager/ads/{ads}/edit', ['as'=>'ads.edit','uses'=>'AdsController@ed
 Route::post('ads/promotions', ['as'=>'promotions.store','uses'=>'AdsController@storePromotion']);
 Route::post('ads/targeted', ['as'=>'targeted.store','uses'=>'TargetedAdsController@storeTargeted']);
 Route::put('ads/promotions/{ads}', ['as'=>'promotions.update','uses'=>'AdsController@updatePromotion']);
-Route::put('ads/promotions/{ads}', ['as'=>'targeted.update','uses'=>'TargetedAdsController@updateTargeted']);
+Route::put('ads/targeted/{ads}', ['as'=>'targeted.update','uses'=>'TargetedAdsController@updateTargeted']);
 Route::delete('ads',['as'=>'ads.deleteMulti','uses'=>'AdsController@deleteMulti']);
 
 /*
