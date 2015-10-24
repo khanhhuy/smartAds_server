@@ -8,9 +8,8 @@
     <link href="{{asset('/css/select2.min.css')}}" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="{{asset('/css/major-manage.css')}}"/>
 @endsection
-
+@section('page-title','Manage Majors - Stores')
 @section('content')
-    <br/>
     <div class="row manage-page major-manage">
         <div class="col-sm-12 col-md-8">
             <div class="panel panel-default">
@@ -32,13 +31,17 @@
             </div>
         </div>
         <div class="col-sm-8 col-md-4">
-            <div id="affix-form" data-spy="affix" data-offset-top="30" data-offset-bottom="200">
+            <div id="affix-form" data-spy="affix" data-offset-top="50" data-offset-bottom="200">
                 <div class="panel panel-default" id="form-container">
                     @include('majors.partials.create')
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('breadcrumb')
+    <li class="active">Manage Majors - Store</li>
 @endsection
 
 @section('body-footer')
@@ -94,6 +97,7 @@
                     if ($('#form-container .alert-danger').length === 0) {
                         table.draw(false);
                         @include('partials.autohide-alert')
+
                     }
 
                     initForm();

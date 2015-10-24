@@ -1,5 +1,6 @@
 .mynavbar {
-  background-color: #FFF; }
+  background-color: #FFF;
+  margin-bottom: 0; }
   .mynavbar .navbar-header {
     margin-right: 15px; }
   .mynavbar .navbar-brand, .mynavbar .navbar-brand:hover, .mynavbar .navbar-brand:focus {
@@ -33,5 +34,27 @@ html {
 
 .modal-open {
   padding-right: 0 !important; }
+
+.my-padding-panel {
+  padding: 20px; }
+
+.page-heading {
+  background-color: white;
+  vertical-align: middle; }
+  .page-heading .page-title {
+    padding: 18px 0;
+    float: left; }
+  .page-heading .page-title h1 {
+    font-size: 22px;
+    font-weight: 300;
+    margin: 0;
+    color: #697882; }
+  .page-heading .breadcrumb {
+    float: right;
+    display: inline-block;
+    background: transparent;
+    margin: auto 0;
+    padding-top: 20px;
+    padding-bottom: 20px; }
 
 /*# sourceMappingURL=app.css.map */
