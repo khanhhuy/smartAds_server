@@ -1,7 +1,8 @@
 <script type="text/javascript" src="{{asset('/datatables/datatables.min.js')}}"></script>
 <script>
     var selectChkboxColum = [{
-        sortable: false,
+        orderable: false,
+        searchable:false,
         className: 'select-checkbox',
         defaultContent: "",
         data: null,
@@ -23,7 +24,8 @@
         pagingType: "full_numbers",
         select: {
             style: 'os',
-            selector: 'td:first-child'
+            selector: 'td:first-child',
+            info:false,
         },
         order: myOrder,
         dom: "<'row'<'col-sm-7'lB><'col-sm-5'f>>" +
@@ -49,9 +51,9 @@
                                     data: {ids: ids},
                                     success: function (result) {
                                         dt.rows('.selected').remove().draw(false);
-                                        setTimeout(function(){
+                                        setTimeout(function () {
                                             $('.alert#my-delete-success-message').show().delay(3000).fadeOut('slow');
-                                        },600);
+                                        }, 600);
                                         if (typeof myDelSuccessFunc !== 'undefined') {
                                             myDelSuccessFunc();
                                         }

@@ -67,6 +67,7 @@
             },
             {
                 orderable: false,
+                searchable:false,
                 render: function (data, type, row, meta) {
                     return '<button class="my-manage-edit-btn" role="button" onclick="loadEditForm(this)">' +
                             '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>';

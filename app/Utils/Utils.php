@@ -1,6 +1,7 @@
 <?php
 namespace App\Utils;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
 
 /**
@@ -113,13 +114,22 @@ class Utils
 
     public static function formatStoreAreas($store)
     {
-        $a=$store->area;
-        $r=$a->name;
-        $a=$a->parentArea;
-        while (!empty($a)){
-            $r.=' - '.$a->name;
-            $a=$a->parentArea;
+        $a = $store->area;
+        $r = $a->name;
+        $a = $a->parentArea;
+        while (!empty($a)) {
+            $r .= ' - ' . $a->name;
+            $a = $a->parentArea;
         }
         return $r;
+    }
+
+    public static function formatDisplayDate($date)
+    {
+        if (empty($date)) {
+            return null;
+        } else {
+            return Carbon::parse($date)->format('m-d-Y');
+        }
     }
 }

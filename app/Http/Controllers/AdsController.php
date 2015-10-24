@@ -310,11 +310,20 @@ class AdsController extends Controller
 
     public function promotionsTable(Request $request)
     {
+        $PROMOTIONS_COLUMNS = ['id', 'items', 'areas', 'start_date', 'end_date', 'discount_rate', 'discount_value', 'updated_at'];
         $allPromotions = Ads::promotions();
         $r['draw'] = (int)$request->input('draw');
         $r['recordsTotal'] = $allPromotions->count();
         $r['recordsFiltered'] = $r['recordsTotal'];
-        $displayPromotions = $allPromotions->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
+        $order = $request->input('order');
+        $orderColumn = $PROMOTIONS_COLUMNS[$order[0]['column'] - 1];
+        $displayPromotions = $allPromotions->skip($request->input('start'))->take($request->input('length'));
+        if ($orderColumn != 'items' && $orderColumn != 'areas') {
+            $displayPromotions = $displayPromotions->orderBy($orderColumn, $order[0]['dir'])->get();
+        } else {
+
+        }
+
         $itemIDs = DB::table('ads_item')->whereIn('ads_id', $displayPromotions->lists('id'))->distinct()->lists('item_id');
         $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
         $r['data'] = $displayPromotions->map(function ($ads) use ($itemNames) {
@@ -324,8 +333,8 @@ class AdsController extends Controller
                     return Utils::formatItem($itemNames[$item->id], $item->id);
                 }),
                 Utils::formatTargets($ads->targets),
-                Carbon::parse($ads->getOriginal('start_date'))->format('m-d-Y'),
-                Carbon::parse($ads->getOriginal('end_date'))->format('m-d-Y'),
+                Utils::formatDisplayDate($ads->getOriginal('start_date')),
+                Utils::formatDisplayDate($ads->getOriginal('end_date')),
                 ((float)$ads->discount_rate) . ' %',
                 (float)$ads->discount_value,
                 $ads->updated_at->format('m-d-Y'),
