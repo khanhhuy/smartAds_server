@@ -1,0 +1,1 @@
+$('div.alert.my-fixed-pos-alert').not('.alert-important').not('.alert-danger').delay(3000).fadeOut('slow');

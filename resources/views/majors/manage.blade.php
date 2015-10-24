@@ -31,13 +31,14 @@
             </div>
         </div>
         <div class="col-sm-8 col-md-4">
-            <div id="affix-form" data-spy="affix" data-offset-top="50" data-offset-bottom="200">
+            <div id="affix-form" data-spy="affix" data-offset-top="100" data-offset-bottom="200">
                 <div class="panel panel-default" id="form-container">
                     @include('majors.partials.create')
                 </div>
             </div>
         </div>
     </div>
+    @include('partials.delete-success')
 @endsection
 
 @section('breadcrumb')
@@ -96,7 +97,7 @@
                     $('#my-submit-btn').prop('disabled', false);
                     if ($('#form-container .alert-danger').length === 0) {
                         table.draw(false);
-                        @include('partials.autohide-alert')
+                        @include('partials.fixed-pos-message-script')
 
                     }
 

@@ -4,6 +4,7 @@ use App\BeaconMajor;
 use App\Http\Requests;
 use App\Http\Requests\MajorRequest;
 use Illuminate\Http\Request;
+use Lang;
 use Laracasts\Flash\Flash;
 
 class MajorsController extends Controller
@@ -50,7 +51,7 @@ class MajorsController extends Controller
     public function store(MajorRequest $request)
     {
         BeaconMajor::create($request->only(['major', 'store_id']));
-        Flash::success('Added Successfully');
+        Flash::success(Lang::get('flash.add_success'));
 
         return redirect()->route('majors.create');
     }
@@ -70,7 +71,7 @@ class MajorsController extends Controller
             $major->delete();
             BeaconMajor::create($request->only(['major', 'store_id']));
         }
-        Flash::success('Updated Successfully');
+        Flash::success(Lang::get('flash.edit_success'));
         return redirect()->route('majors.create');
     }
 }

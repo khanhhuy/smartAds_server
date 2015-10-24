@@ -4,6 +4,10 @@ html {
   overflow-y: scroll;
 }
 
+body {
+  background: #eff3f8;
+}
+
 .modal-open {
   padding-right: 0 !important;
 }
@@ -13,28 +17,39 @@ html {
 }
 
 .page-heading {
-  background-color: white;
-  vertical-align: middle;
+  > .container {
+    display: table;
+    height: 60px;
+  }
   .page-title {
-    padding: 18px 0;
-    float: left;
+    display: table-cell;
+    vertical-align: middle;
   }
   .page-title h1 {
     font-size: 22px;
-    font-weight: 300;
+    font-weight: normal;
     margin: 0;
     color: #697882;
   }
-  .breadcrumb {
-    float: right;
-    display: inline-block;
-    background: transparent;
-    margin: auto 0;
-    padding-top: 20px;
-    padding-bottom: 20px;
+  .my-breadcrumb {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: right;
+    .breadcrumb {
+      background: transparent;
+      margin: 0;
+    }
   }
 }
-//.my-padding-container-fluid{
-//  padding-left:40px;
-//  padding-right:40px;
-//}
+
+.my-fixed-pos-alert {
+  position: fixed;
+  padding: 10px 15px;
+  opacity: 0.9;
+  top: 60px;
+  left: 50%;
+  margin-left: -150px;
+  z-index: 100;
+  width: 300px;
+  text-align: center;
+}

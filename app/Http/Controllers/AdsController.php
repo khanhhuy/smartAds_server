@@ -9,6 +9,8 @@ use App\Repositories\ItemRepositoryInterface;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
+use Lang;
+use Laracasts\Flash\Flash;
 use Queue;
 use Utils;
 
@@ -175,6 +177,7 @@ class AdsController extends Controller
             }
         }
         $ads->save();
+        Flash::success(Lang::get('flash.add_success'));
         return redirect()->route('promotions.manager-manage');
     }
 
@@ -274,6 +277,8 @@ class AdsController extends Controller
         }
 
         $ads->save();
+
+        Flash::success(Lang::get('flash.edit_success'));
         return redirect()->route('promotions.manager-manage');
     }
 

@@ -2,7 +2,6 @@
 
 @section('title','Add Promotion')
 
-@section('page-title','Add Promotion')
 @section('form')
     {!! Form::open(['route'=> 'promotions.store','class'=>'form-horizontal promotion-form','enctype'=>'multipart/form-data']) !!}
     @include('ads.partials.promotion-form')
@@ -14,8 +13,4 @@
         </div>
     </div>
     {!! Form::close() !!}
-@endsection
-
-@section('breadcrumb')
-    <li class="active">Add Promotion</li>
 @endsection

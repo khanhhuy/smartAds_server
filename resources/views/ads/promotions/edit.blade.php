@@ -1,8 +1,7 @@
 @extends('ads.promotions.partials.create-edit-master')
-<?php $title="Edit Promotion \"$ads->id\""; ?>
-@section('title',$title)
 
-@section('page-title',$title)
+@section('title',"Edit Promotion \"$ads->id\"")
+
 @section('form')
     {!! Form::model($ads,['route'=> ['promotions.update',$ads->id],'method'=>'PUT','class'=>'form-horizontal promotion-form','enctype'=>'multipart/form-data']) !!}
     @include('ads.partials.edit-promotion-form',['btnSubmitName'=>'Update'])

@@ -49,7 +49,9 @@
                                     data: {ids: ids},
                                     success: function (result) {
                                         dt.rows('.selected').remove().draw(false);
-
+                                        setTimeout(function(){
+                                            $('.alert#my-delete-success-message').show().delay(3000).fadeOut('slow');
+                                        },600);
                                         if (typeof myDelSuccessFunc !== 'undefined') {
                                             myDelSuccessFunc();
                                         }
