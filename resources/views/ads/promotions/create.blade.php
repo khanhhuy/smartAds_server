@@ -1,25 +1,21 @@
-@extends('manager-master')
+@extends('ads.promotions.partials.create-edit-master')
 
 @section('title','Add Promotion')
 
-@section('head-footer')
-    <link href="{{asset('/css/select2.min.css')}}" rel="stylesheet"/>
-    <link href="{{asset('/css/promotion-form.css')}}" rel="stylesheet"/>
-@endsection
-
-@section('content')
-    <br/>
-    <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-11">
-            @include('errors.list')
-            {!! Form::open(['route'=> 'promotions.store','class'=>'form-horizontal promotion-form','enctype'=>'multipart/form-data']) !!}
-            @include('ads.partials.promotion-form',['btnSubmitName'=>'Add'])
-            {!! Form::close() !!}
+@section('page-title','Add Promotion')
+@section('form')
+    {!! Form::open(['route'=> 'promotions.store','class'=>'form-horizontal promotion-form','enctype'=>'multipart/form-data']) !!}
+    @include('ads.partials.promotion-form')
+    <div class="form-group">
+        <div class="col-sm-offset-3 col-sm-9">
+            <button type="submit" class="btn btn-primary">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add
+            </button>
         </div>
     </div>
+    {!! Form::close() !!}
 @endsection
 
-@section('body-footer')
-    @include('ads.partials.promotion-footer-script')
+@section('breadcrumb')
+    <li class="active">Add Promotion</li>
 @endsection

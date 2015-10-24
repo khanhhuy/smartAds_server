@@ -21,13 +21,24 @@
     @yield('head-footer')
 </head>
 <body>
-    @yield('navbar')
-    @section('container')
-        <div class="container">
-            @yield('content')
+@yield('navbar')
+<div class="page-heading">
+    <div class="container">
+        <div class="page-title">
+            <h1>@yield('page-title')</h1>
         </div>
-    @show
-    <script src="{{asset('/js/all.js')}}"></script>
-    @yield('body-footer')
+        <ol class="breadcrumb">
+            <li><a href="@yield('home')">Home</a></li>
+            @yield('breadcrumb')
+        </ol>
+    </div>
+</div>
+@section('container')
+    <div class="container">
+        @yield('content')
+    </div>
+@show
+<script src="{{asset('/js/all.js')}}"></script>
+@yield('body-footer')
 </body>
 </html>
