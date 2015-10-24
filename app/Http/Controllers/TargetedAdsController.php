@@ -4,6 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\AdsController;
 use Utils;
 use App\Facades\Connector;
+use App\Http\Requests\TargetedRequest;
 use App\Repositories\CustomerRepositoryInterface;
 use App\TargetedRule;
 use App\ActiveCustomer;
@@ -60,4 +61,104 @@ class TargetedAdsController extends AdsController {
         });
         return response()->json($r);
     }
+
+    public function storeTargeted(TargetedRequest $request)
+    {   
+        dd($request);
+        $promotionErrors = parent::customValidatePromotionRequest($request);
+        $targetedErrors = self::customValidateTargetedRequest($request);
+        $errors = array_merge($promotionErrors, $targetedErrors);
+        if (!empty($errors)) {
+            return redirect()->back()->withInput()->withErrors($errors);
+        }
+
+        return redirect()->route('targeted.create');
+
+        $ads = self::createPromotionFromRequest($request);
+
+        //image upload
+        if ($request->input('image_display')) {
+            if (!$request->input('provide_image_link')) {
+                $image = $request->file('image_file');
+                $fullSaveFileName = $ads->id . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('/img/ads'), $fullSaveFileName);
+                $ads->image_url = ('/img/ads/' . $fullSaveFileName);
+            }
+        }
+
+        //thumbnail
+        if (!$request->has('auto_thumbnail')) {
+            if (!$request->input('provide_thumbnail_link')) {
+                if ($request->hasFile('thumbnail_file')) {
+                    $thumbnail = $request->file('thumbnail_file');
+                    $fullSaveFileName = $ads->id . '.' . $thumbnail->getClientOriginalExtension();
+                    $thumbnail->move(public_path('/img/thumbnails'), $fullSaveFileName);
+                    $ads->thumbnail_url = ('/img/thumbnails/' . $fullSaveFileName);
+                }
+            }
+        } elseif ($request->input('auto_thumbnail') && $request->input('image_display')) {
+            $provide_image_link = $request->input('provide_image_link');
+            $adsID = $ads->id;
+            $ext = 'png';
+            $image_url = '';
+            if (!$provide_image_link) {
+                $ext = $image->getClientOriginalExtension();
+            } else {
+                $image_url = $request->input('image_url');
+            }
+            Queue::push(function ($job) use ($provide_image_link, $adsID, $ext, $image_url) {
+                if (!$provide_image_link) {
+                    Utils::createThumbnail($adsID, $ext, public_path('img/ads') . "/$adsID" . ".$ext");
+                } else {
+                    $ext = Utils::createThumbnailFromURL($image_url, $adsID);
+                }
+                $ads = Ads::find($adsID);
+                $ads->thumbnail_url = ('/img/thumbnails/' . $adsID . '.' . $ext);
+                $ads->save();
+
+                $job->delete();
+            });
+            $ads->thumbnail_url = ('/img/thumbnails/' . $ads->id . '.png');
+        }
+
+        //items
+        $itemsID = $request->input('itemsID');
+        foreach ($itemsID as $itemID) {
+            Item::firstOrCreate(['id' => $itemID]);
+        }
+        $ads->items()->attach($itemsID);
+
+        //targets
+        if (!$request->has('is_whole_system') || !$request->input('is_whole_system')) {
+            $targetsID = $request->input('targetsID');
+            if (!empty($targetsID)) {
+                foreach ($targetsID as $targetID) {
+                    $a = Area::find($targetID);
+                    if (!empty($a)) {
+                        $ads->areas()->attach($targetID);
+                    } else {
+                        $ads->stores()->attach($targetID);
+                    }
+                }
+            }
+        }
+        $ads->save();
+        return redirect()->route('promotions.manager-manage');
+    }
+
+    private static function customValidateTargetedRequest($request)
+    {
+        $errors = [];
+        if (!empty($request->input('from_age')) && !empty($request->input('to_age'))) {
+            if ($request->input('from_age') > $request->input('to_age'))
+                $errors[] = 'From age must be equal to or less than to age';
+        }
+        if (!empty($request->input('from_member')) && !empty($request->input('to_member'))) {
+            if ($request->input('from_member') > $request->input('to_member'))
+                $errors[] = 'From family member must be equal to or less than to family member';
+        }
+        return $errors;
+    }
+
+
 }

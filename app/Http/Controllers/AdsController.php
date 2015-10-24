@@ -277,7 +277,7 @@ class AdsController extends Controller
         return redirect()->route('promotions.manager-manage');
     }
 
-    private static function customValidatePromotionRequest($request)
+    protected static function customValidatePromotionRequest($request)
     {
         $errors = [];
         if ($request->input('start_date') > $request->input('end_date')) {

@@ -10,3 +10,16 @@ div.jobs {
 input.inline-width {
 	max-width: 5em;
 }
+
+input.jobs-input {
+	vertical-align: middle;
+	margin-top: 0;
+}
+
+label.jobs-label {
+	font-weight: normal;
+}
+
+label.jobs-label span {
+	vertical-align: middle;
+}
