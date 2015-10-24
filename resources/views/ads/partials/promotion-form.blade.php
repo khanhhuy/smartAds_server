@@ -2,14 +2,11 @@
 $labelClass = "col-sm-3 control-label";
 $fromValueGroup = "col-sm-4 col-md-3";
 $toRateGroup = "col-sm-5 col-md-6";
-$urlGroupClass="col-sm-8 col-md-7";
+$urlGroupClass = "col-sm-8 col-md-7";
 ?>
 <fieldset>
     <legend>Promotion Info</legend>
-    <div class="form-group">
-        <div class="col-sm-3 text-right"><b>ID</b></div>
-        <div class="col-sm-9">5</div>
-    </div>
+    @yield('id-group')
     <div class="form-group">
         {!! Form::label('itemsID','Items',['class'=>"$labelClass"]) !!}
         <div class="col-sm-8">
@@ -148,8 +145,3 @@ $urlGroupClass="col-sm-8 col-md-7";
         </div>
     </div>
 </fieldset>
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
-        <input type="submit" class="btn btn-primary" value="{{$btnSubmitName}}"/>
-    </div>
-</div>
