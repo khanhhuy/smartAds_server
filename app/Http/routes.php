@@ -72,8 +72,16 @@ Route::get('admin/majors', ['as' => 'majors.manage', 'uses' => 'MajorsController
 Route::get('majors/table', 'MajorsController@table');
 Route::resource('majors', 'MajorsController', ['only' => ['store','create','edit','update']]);
 Route::delete('majors', ['as' => 'majors.deleteMulti', 'uses' => 'MajorsController@deleteMulti']);
-Route::get('admin/category', 'ProcessTransactionController@getListCategories');
-Route::post('admin/category', 'ProcessTransactionController@selectCategory');
+
+Route::get('admin/settings', function() {
+    return redirect('admin/settings/category');
+});
+Route::get('admin/settings/category', 
+            ['as' => 'settings.category', 'uses' => 'ProcessTransactionController@getListCategories']);
+Route::get('admin/settings/process-config', function() {
+    //TODO: Replace this testing function
+    return view('settings.process-config');
+});
 
 /*
 |------------------------Others Route---------------------|

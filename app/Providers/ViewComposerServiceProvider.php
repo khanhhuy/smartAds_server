@@ -18,14 +18,7 @@ class ViewComposerServiceProvider extends ServiceProvider {
      */
 	public function boot()
 	{
-		View::composer('ads.partials.promotion-form',function($view){
-            $stores=Store::lists('name','id');
-            $areas=Area::lists('name','id');
-            $targets=['Stores'=>$stores,'Areas'=>$areas];
-            $view->with(compact('targets'));
-		});
-
-		View::composer('ads.partials.targeted-form',function($view){
+		View::composer(['ads.partials.promotion-form', 'ads.partials.targeted-form'],function($view){
             $stores=Store::lists('name','id');
             $areas=Area::lists('name','id');
             $targets=['Stores'=>$stores,'Areas'=>$areas];

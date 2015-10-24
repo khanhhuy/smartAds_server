@@ -11,6 +11,7 @@
 
     <!-- Fonts -->
     <link href="{{asset('/fonts/googlefonts.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{asset('fonts/font-awesome-4.4.0/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -22,6 +23,7 @@
 </head>
 <body>
 @yield('navbar')
+@yield('menubar')
 <div class="page-heading">
     <div class="container">
         <div class="my-table-display">
