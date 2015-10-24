@@ -43,12 +43,10 @@ body {
 .modal-open {
   padding-right: 0 !important; }
 
-.my-padding-panel {
-  padding: 20px; }
-
-.page-heading > .container {
+.page-heading .my-table-display {
   display: table;
-  height: 60px; }
+  height: 60px;
+  width: 100%; }
 
 .page-heading .page-title {
   display: table-cell;

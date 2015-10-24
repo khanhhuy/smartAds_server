@@ -24,16 +24,18 @@
 @yield('navbar')
 <div class="page-heading">
     <div class="container">
-        <div class="page-title">
-            <h1>@section('page-title')@yield('title')@show</h1>
-        </div>
-        <div class="my-breadcrumb">
-            <ol class="breadcrumb">
-                <li><a href="@yield('home')">Home</a></li>
-                @section('breadcrumb')
-                    <li class="active">@yield('title')</li>
-                @show
-            </ol>
+        <div class="my-table-display">
+            <div class="page-title">
+                <h1>@section('page-title')@yield('title')@show</h1>
+            </div>
+            <div class="my-breadcrumb">
+                <ol class="breadcrumb">
+                    <li><a href="@yield('home')">Home</a></li>
+                    @section('breadcrumb')
+                        <li class="active">@yield('title')</li>
+                    @show
+                </ol>
+            </div>
         </div>
     </div>
 </div>

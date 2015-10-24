@@ -32,3 +32,13 @@
 .select2-container--default .select2-results>.select2-results__options{
   max-height: 400px;
 }
+@media (max-width: 992px) {
+  .affix {
+    position: static;
+  }
+}
+@media (min-width: 768px) {
+  .table-responsive {
+    overflow: hidden;
+  }
+}

@@ -12,14 +12,11 @@ body {
   padding-right: 0 !important;
 }
 
-.my-padding-panel {
-  padding: 20px;
-}
-
 .page-heading {
-  > .container {
+  .my-table-display {
     display: table;
     height: 60px;
+    width: 100%;
   }
   .page-title {
     display: table-cell;

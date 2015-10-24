@@ -14,24 +14,26 @@
         <div class="col-sm-12 col-md-8">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table id="manage-table" class="table table-striped table-bordered table-hover" cellspacing="0"
-                           width="100%">
-                        <thead>
-                        <tr>
-                            <th id="select-all-chkbox"></th>
-                            <th>Store</th>
-                            <th>Area</th>
-                            <th>Major</th>
-                            <th>Updated At</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                    </table>
+                    <div class="table-responsive">
+                        <table id="manage-table" class="table table-striped table-bordered table-hover" cellspacing="0"
+                               width="100%">
+                            <thead>
+                            <tr>
+                                <th id="select-all-chkbox"></th>
+                                <th>Store</th>
+                                <th>Area</th>
+                                <th>Major</th>
+                                <th>Updated At</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="col-sm-8 col-md-4">
-            <div id="affix-form" data-spy="affix" data-offset-top="100" data-offset-bottom="200">
+            <div id="affix-form" data-spy="affix" data-offset-top="100">
                 <div class="panel panel-default" id="form-container">
                     @include('majors.partials.create')
                 </div>
@@ -98,6 +100,7 @@
                     if ($('#form-container .alert-danger').length === 0) {
                         table.draw(false);
                         @include('partials.fixed-pos-message-script')
+
 
                     }
 

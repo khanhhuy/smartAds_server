@@ -38,9 +38,11 @@
             },
             {
                 data: 3,
+                width: "55px",
             },
             {
                 data: 4,
+                width: "55px",
             },
             {
                 "className": "dt-right",

@@ -57,4 +57,8 @@
   background-color: white;
   background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.9) 25%, rgba(255, 255, 255, 0.9) 75%, rgba(255, 255, 255, 0) 100%); }
 
+@media (min-width: 992px) {
+  #manage-ads .table-responsive {
+    overflow: hidden; } }
+
 /*# sourceMappingURL=manage.css.map */

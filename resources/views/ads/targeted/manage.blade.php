@@ -37,11 +37,9 @@
                         data: 3,
                     },
                     {
-                        "className": "dt-right",
                         data: 4,
                     },
                     {
-                        "className": "dt-right",
                         data: 5,
                     },
                     {
