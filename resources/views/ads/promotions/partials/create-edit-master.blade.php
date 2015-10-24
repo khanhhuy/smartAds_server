@@ -4,7 +4,7 @@
     <link href="{{asset('/css/select2.min.css')}}" rel="stylesheet"/>
     <link href="{{asset('/css/promotion-form.css')}}" rel="stylesheet"/>
 @endsection
-@section('page-title','Create Promotion')
+
 @section('content')
     <div class="row">
         <div class="col-lg-offset-1 col-lg-10">
