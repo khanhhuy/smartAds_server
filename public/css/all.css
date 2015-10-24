@@ -32,10 +32,13 @@
   .mynavbar .navbar-nav .dropdown a, .mynavbar .navbar-nav .dropdown a:hover, .mynavbar .navbar-nav .dropdown a:focus {
     color: #337ab7; }
   .mynavbar .navbar-brand {
-    font-size: 25px; }
+    font-size: 28px; }
 
 html {
   overflow-y: scroll; }
+
+body {
+  background: #eff3f8; }
 
 .modal-open {
   padding-right: 0 !important; }
@@ -43,24 +46,27 @@ html {
 .my-padding-panel {
   padding: 20px; }
 
-.page-heading {
-  background-color: white;
+.page-heading > .container {
+  display: table;
+  height: 60px; }
+
+.page-heading .page-title {
+  display: table-cell;
   vertical-align: middle; }
-  .page-heading .page-title {
-    padding: 18px 0;
-    float: left; }
-  .page-heading .page-title h1 {
-    font-size: 22px;
-    font-weight: 300;
-    margin: 0;
-    color: #697882; }
-  .page-heading .breadcrumb {
-    float: right;
-    display: inline-block;
+
+.page-heading .page-title h1 {
+  font-size: 22px;
+  font-weight: normal;
+  margin: 0;
+  color: #697882; }
+
+.page-heading .my-breadcrumb {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: right; }
+  .page-heading .my-breadcrumb .breadcrumb {
     background: transparent;
-    margin: auto 0;
-    padding-top: 20px;
-    padding-bottom: 20px; }
+    margin: 0; }
 
 /*# sourceMappingURL=app.css.map */
 

@@ -27,12 +27,14 @@
         <div class="page-title">
             <h1>@section('page-title')@yield('title')@show</h1>
         </div>
-        <ol class="breadcrumb">
-            <li><a href="@yield('home')">Home</a></li>
-            @section('breadcrumb')
-                <li class="active">@yield('title')</li>
-            @show
-        </ol>
+        <div class="my-breadcrumb">
+            <ol class="breadcrumb">
+                <li><a href="@yield('home')">Home</a></li>
+                @section('breadcrumb')
+                    <li class="active">@yield('title')</li>
+                @show
+            </ol>
+        </div>
     </div>
 </div>
 @section('container')
