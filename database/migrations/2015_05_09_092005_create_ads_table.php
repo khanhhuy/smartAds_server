@@ -14,7 +14,7 @@ class CreateAdsTable extends Migration {
 	{
 		Schema::create('ads', function(Blueprint $table)
 		{
-			$table->increments('id');
+			$table->increments('id')->index();
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date');
             $table->string('title');

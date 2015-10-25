@@ -317,15 +317,47 @@ class AdsController extends Controller
         $r['recordsFiltered'] = $r['recordsTotal'];
         $order = $request->input('order');
         $orderColumn = $PROMOTIONS_COLUMNS[$order[0]['column'] - 1];
-        $displayPromotions = $allPromotions->skip($request->input('start'))->take($request->input('length'));
+
         if ($orderColumn != 'items' && $orderColumn != 'areas') {
-            $displayPromotions = $displayPromotions->orderBy($orderColumn, $order[0]['dir'])->get();
-        } else {
+            $displayPromotions = $allPromotions->skip($request->input('start'))->take($request->input('length'))
+                ->orderBy($orderColumn, $order[0]['dir'])->get();
+
+            $itemIDs = DB::table('ads_item')->whereIn('ads_id', $displayPromotions->lists('id'))->distinct()->lists('item_id');
+            $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
+        } elseif ($orderColumn=='items') {
+            $itemIDs = DB::table('ads_item')->distinct()->lists('item_id');
+            $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
+            $allPromotions = $allPromotions->get();
+            foreach ($allPromotions as $p) {
+                $pItemIDs = $p->items()->lists('id');
+                if (count($pItemIDs) === 1) {
+                    $p->minItemName = $itemNames[$pItemIDs[0]];
+                } elseif (empty($pItemIDs)) {
+                    $p->minItemName = null;
+                } else {
+                    $pItemNames = array_map(function ($id) use ($itemNames) {
+                        return $itemNames[$id];
+                    }, $pItemIDs);
+                    $p->minItemName = min($pItemNames);
+                }
+            }
+            if ($order[0]['dir']=='asc') {
+                $allPromotions->sort(function ($p1, $p2) {
+                    return strcmp($p1->minItemName, $p2->minItemName);
+                });
+            }
+            else {
+                $allPromotions->sort(function ($p1, $p2) {
+                    return -strcmp($p1->minItemName, $p2->minItemName);
+                });
+            }
+            $displayPromotions = $allPromotions->slice($request->input('start'), $request->input('length'));
+        }
+        else {
 
         }
 
-        $itemIDs = DB::table('ads_item')->whereIn('ads_id', $displayPromotions->lists('id'))->distinct()->lists('item_id');
-        $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
+
         $r['data'] = $displayPromotions->map(function ($ads) use ($itemNames) {
             return [
                 $ads->id,

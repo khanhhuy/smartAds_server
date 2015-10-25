@@ -153,8 +153,8 @@ class ConnectorService
 
     public function getItemNamesByIDs($item_ids)
     {
-        $r= $this->client->get('items/names',[
-            'query'=>compact('item_ids')
+        $r= $this->client->post('items/names',[
+            'form_params'=>compact('item_ids')
         ]);
         return self::decodeResponse($r,true);
     }
