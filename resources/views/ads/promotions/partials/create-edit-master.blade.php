@@ -8,9 +8,11 @@
 @section('content')
     <div class="row">
         <div class="col-lg-offset-1 col-lg-10">
-            <div class="panel panel-default my-padding-panel">
-                @include('errors.list')
-                @yield('form')
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @include('errors.list')
+                    @yield('form')
+                </div>
             </div>
         </div>
     </div>
