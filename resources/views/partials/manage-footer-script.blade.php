@@ -15,6 +15,8 @@
     var table = $('#manage-table').DataTable({
         "processing": true,
         "serverSide": true,
+        searching: false,
+        ordering: false,
         "language": {
             "processing": "Loading..."
         },
@@ -27,7 +29,7 @@
             selector: 'td:first-child',
             info:false,
         },
-        order: myOrder,
+//        order: myOrder,
         dom: "<'row'<'col-sm-7'lB><'col-sm-5'f>>" +
         "<'row'<'col-sm-12'tr>>" +
         "<'row'<'col-sm-4 col-lg-3'i><'col-sm-8 col-lg-9'p>>",
