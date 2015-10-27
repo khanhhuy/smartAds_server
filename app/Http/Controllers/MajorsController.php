@@ -20,7 +20,7 @@ class MajorsController extends Controller
         $r['draw'] = (int)$request->input('draw');
         $r['recordsTotal'] = BeaconMajor::count();
         $r['recordsFiltered'] = $r['recordsTotal'];
-        $displayPromotions = BeaconMajor::skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'desc')->get();
+        $displayPromotions = BeaconMajor::skip($request->input('start'))->take($request->input('length'))->orderBy('major', 'asc')->get();
         $r['data'] = $displayPromotions->map(function ($major) {
             $store = $major->store;
             return [
