@@ -14,25 +14,14 @@
 	display: inline-block;
 }
 
-.menubar .navbar-nav>.active>a {
+.menubar .navbar-nav>.active>a,
+.menubar .navbar-nav>.active>a:hover,
+.menubar .navbar-nav>.active>a:focus,
+.menubar .navbar-nav > li > a:hover 
+ {
 	background-color: #fff;
 	color: #22BAA0;
 }
-
-.menubar .navbar-nav>.active>a:hover {
-	background-color: #fff;
-	color: #22BAA0;
-}
-
-.menubar .navbar-nav>.active>a:focus {
-	background-color: #fff;
-	color: #22BAA0;
-}
-
-.menubar .navbar-nav > li > a:hover {
-	color: #22BAA0;
-}
-
 
 .menubar a {
 	font-size: 0.95em;

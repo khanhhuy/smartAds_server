@@ -375,9 +375,7 @@ class AdsController extends Controller
 
     public function thumbnail($ads)
     {
-        dd($ads);
         if (!empty($ads->thumbnail_url)) {
-
             return redirect($ads->thumbnail_url);
         } else {
             return null;
