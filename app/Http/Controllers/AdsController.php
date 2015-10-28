@@ -357,7 +357,7 @@ class AdsController extends Controller
             }
         } else {
             $displayPromotions = $allPromotions->skip($request->input('start'))->take($request->input('length'))
-                ->orderBy('updated_at', 'desc')->get();
+                ->orderBy('id', 'asc')->get();
             $itemIDs = DB::table('ads_item')->whereIn('ads_id', $displayPromotions->lists('id'))->distinct()->lists('item_id');
             $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
         }

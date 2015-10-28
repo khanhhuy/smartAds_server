@@ -27,12 +27,12 @@
                 data: 0,
             },
             {
-                "width": "270px",
+                "width": "300px",
                 render: "[, ]",
                 data: 1,
             },
             {
-                "width": "120px",
+                "width": "150px",
                 render: "[, ]",
                 data: 2,
             },
