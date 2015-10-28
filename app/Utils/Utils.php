@@ -132,4 +132,22 @@ class Utils
             return Carbon::parse($date)->format('m-d-Y');
         }
     }
+
+    public static function sortByAreasThenSlice($adsQuery, $dir, $start, $length)
+    {
+        $allAds = $adsQuery->get();
+        foreach ($allAds as $p) {
+            $p->cacheTargets = implode(' ', self::formatTargets($p->targets));
+        }
+        if ($dir == 'asc') {
+            $allAds->sort(function ($p1, $p2) {
+                return strcmp($p1->cacheTargets, $p2->cacheTargets);
+            });
+        } else {
+            $allAds->sort(function ($p1, $p2) {
+                return -strcmp($p1->cacheTargets, $p2->cacheTargets);
+            });
+        }
+        return $allAds->slice($start, $length);
+    }
 }

@@ -33,7 +33,8 @@ class Ads extends Model
         return $this->belongsToMany('App\Area');
     }
 
-    public function targetedRule() {
+    public function targetedRule()
+    {
         return $this->hasOne('App\TargetedRule', 'ads_id');
     }
 
@@ -91,7 +92,7 @@ class Ads extends Model
     {
         $storesID = $this->stores()->lists('id');
         $areasID = $this->areas()->lists('id');
-        return array_merge($storesID, $areasID);
+        return array_merge($areasID, $storesID);
     }
 
     public function getTargetsAttribute()
