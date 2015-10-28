@@ -78,6 +78,8 @@ Route::get('admin/settings', function() {
 });
 Route::get('admin/settings/category', 
             ['as' => 'settings.category', 'uses' => 'ProcessTransactionController@getListCategories']);
+Route::post('admin/settings/category', 
+            ['as' => 'settings.category', 'uses' => 'ProcessTransactionController@selectCategories']);
 Route::get('admin/settings/process-config', function() {
     //TODO: Replace this testing function
     return view('settings.process-config');

@@ -19,52 +19,56 @@
 @section('content')
 	<!--TODO: update taxanomy-->
 	<div class="sub-content">
-		{!! Form::open(array('url' => 'admin/category', 'class' => 'form-group')) !!}
-		{!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-		<div class="row">
-		    <ul class="bonsai category">
-		    @foreach ($tree as $lv1node)
-		        @if (count($lv1node['subcat'] > 0))
-		            <li class="has-children collapsed first-level">
-		            <div class="thumb"></div>
-		        @else
-		            <li class="first-level">
-		        @endif
-		        <input type="checkbox"  name="{{ $lv1node['id'] }}"
-		            data-suitable="{{ $lv1node['is_suitable']  }}" > {{ $lv1node['name'] }}
+			{!! Form::open(array('url' => 'admin/settings/category', 'class' => 'form-group')) !!}
+			{!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+			<button class='btn btn-warning' type='button'>Update Taxanomy</button>
+			<div class="panel panel-default">
+				<div class="row">
+			    <ul class="bonsai category">
+			    @foreach ($tree as $lv1node)
+			        @if (count($lv1node['subcat'] > 0))
+			            <li class="has-children collapsed first-level">
+			            <div class="thumb"></div>
+			        @else
+			            <li class="first-level">
+			        @endif
+			        <input type="checkbox"  name="{{ $lv1node['id'] }}"
+			            data-suitable="{{ $lv1node['is_suitable']  }}" > {{ $lv1node['name'] }}
 
-		        @if (count($lv1node['subcat'] > 0))
-		            <ul class="bonsai">
-		            @foreach ($lv1node['subcat'] as $lv2node)
-		                @if (count($lv2node['subcat'] > 0))
-		                    <li class="has-children collapsed">
-		                    <div class="thumb"></div>
-		                @else
-		                    <li>
-		                @endif
-		                <input type="checkbox"  name="{{ $lv2node['id'] }}"
-		                    data-suitable="{{ $lv2node['is_suitable']  }}" > {{ $lv2node['name'] }}
+			        @if (count($lv1node['subcat'] > 0))
+			            <ul class="bonsai">
+			            @foreach ($lv1node['subcat'] as $lv2node)
+			                @if (count($lv2node['subcat'] > 0))
+			                    <li class="has-children collapsed">
+			                    <div class="thumb"></div>
+			                @else
+			                    <li>
+			                @endif
+			                <input type="checkbox"  name="{{ $lv2node['id'] }}"
+			                    data-suitable="{{ $lv2node['is_suitable']  }}" > {{ $lv2node['name'] }}
 
-		                @if (count($lv2node['subcat'] > 0))
-		                    <ul class="bonsai">
-		                    @foreach ($lv2node['subcat'] as $lv3node)
-		                    <li>
-		                        <input type="checkbox" name="{{ $lv3node['id'] }}"
-		                            data-suitable="{{ $lv3node['is_suitable']  }}" > {{ $lv3node['name'] }}
-		                    </li>
-		                    @endforeach
-		                    </ul>
-		                @endif
+			                @if (count($lv2node['subcat'] > 0))
+			                    <ul class="bonsai">
+			                    @foreach ($lv2node['subcat'] as $lv3node)
+			                    <li>
+			                        <input type="checkbox" name="{{ $lv3node['id'] }}"
+			                            data-suitable="{{ $lv3node['is_suitable']  }}" > {{ $lv3node['name'] }}
+			                    </li>
+			                    @endforeach
+			                    </ul>
+			                @endif
 
-		                </li>
-		            @endforeach
-		            </ul>
-		        @endif
-		        </li>
-		    @endforeach
-		    </ul>
-		</div>
-		{!! Form::close() !!}
+			                </li>
+			            @endforeach
+			            </ul>
+			        @endif
+			        </li>
+			    @endforeach
+			    </ul>
+				</div>
+			</div>
+			{!! Form::close() !!}
+		
 	</div>
 @endsection
 

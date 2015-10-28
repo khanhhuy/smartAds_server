@@ -31,7 +31,7 @@ class ProcessTransactionController extends Controller {
         return view('settings.category', ['tree' => $this->categoryRepo->getCategoryTree()]);
     }
 
-    public function selectCategory(Request $request){
+    public function selectCategories(Request $request){
         $inputs = $request->all();
         $this->categoryRepo->selectCategory($inputs);
         return view('settings.category', ['tree' => $this->categoryRepo->getCategoryTree()]);
