@@ -319,36 +319,43 @@ class AdsController extends Controller
         if ($request->has('order')) {
             $order = $request->input('order');
             $orderColumn = $PROMOTIONS_COLUMNS[$order[0]['column'] - 1];
-
-            if ($orderColumn != 'items' && $orderColumn != 'areas') {
-                $displayPromotions = $allPromotions->skip($request->input('start'))->take($request->input('length'))
-                    ->orderBy($orderColumn, $order[0]['dir'])->get();
-            } elseif ($orderColumn == 'items') {
-                //sort by items
-                $itemIDs = DB::table('ads_item')->distinct()->lists('item_id');
-                $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
-                $allPromotions = $allPromotions->get();
-                foreach ($allPromotions as $p) {
-                    $pItemIDs = $p->items()->lists('id');
-                    if (empty($pItemIDs)) {
-                        $p->minItemName = null;
-                    } else {
-                        $p->minItemName = $itemNames[$pItemIDs[0]];
+            switch ($orderColumn) {
+                case 'items':
+                    $itemIDs = DB::table('ads_item')->distinct()->lists('item_id');
+                    if (empty($itemIDs)) {
+                        $displayPromotions = $allPromotions->skip($request->input('start'))->take($request->input('length'))
+                            ->orderBy('updated_at', 'desc')->get();
+                        break;
                     }
-                }
-                if ($order[0]['dir'] == 'asc') {
-                    $allPromotions->sort(function ($p1, $p2) {
-                        return strcmp($p1->minItemName, $p2->minItemName);
-                    });
-                } else {
-                    $allPromotions->sort(function ($p1, $p2) {
-                        return -strcmp($p1->minItemName, $p2->minItemName);
-                    });
-                }
-                $displayPromotions = $allPromotions->slice($request->input('start'), $request->input('length'));
-            } else {
-                //sort by area
-                $displayPromotions = Utils::sortByAreasThenSlice($allPromotions, $order[0]['dir'], $request->input('start'), $request->input('length'));
+                    $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
+                    $allPromotions = $allPromotions->get();
+                    foreach ($allPromotions as $p) {
+                        $pItemIDs = $p->items()->lists('id');
+                        if (empty($pItemIDs)) {
+                            $p->minItemName = null;
+                        } else {
+                            $p->minItemName = $itemNames[$pItemIDs[0]];
+                        }
+                    }
+                    if ($order[0]['dir'] == 'asc') {
+                        $allPromotions->sort(function ($p1, $p2) {
+                            return strcmp($p1->minItemName, $p2->minItemName);
+                        });
+                    } else {
+                        $allPromotions->sort(function ($p1, $p2) {
+                            return -strcmp($p1->minItemName, $p2->minItemName);
+                        });
+                    }
+                    $displayPromotions = $allPromotions->slice($request->input('start'), $request->input('length'));
+                    break;
+                case 'areas':
+                    $displayPromotions = Utils::sortByAreasThenSlice($allPromotions, $order[0]['dir'],
+                        $request->input('start'), $request->input('length'));
+                    break;
+                default:
+                    $displayPromotions = $allPromotions->skip($request->input('start'))->take($request->input('length'))
+                        ->orderBy($orderColumn, $order[0]['dir'])->get();
+                    break;
             }
         } else {
             // no sort => sort by id
@@ -389,15 +396,18 @@ class AdsController extends Controller
         if ($request->has('order')) {
             $order = $request->input('order');
             $orderColumn = $TARGETED_ADS_COLUMNS[$order[0]['column'] - 1];
-            if ($orderColumn != 'areas' && $orderColumn != 'targeted_customers') {
-                $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))
-                    ->orderBy($orderColumn, $order[0]['dir'])->get();
-            } elseif ($orderColumn == 'targeted_customers') {
-                //TODO Huy: sort by targeted customers
-            } else {
-                //sort by areas
-                $displayPromotions = Utils::sortByAreasThenSlice($allTargeted, $order[0]['dir'],
-                    $request->input('start'), $request->input('length'));
+            switch ($orderColumn) {
+                case 'areas':
+                    $displayPromotions = Utils::sortByAreasThenSlice($allTargeted, $order[0]['dir'],
+                        $request->input('start'), $request->input('length'));
+                    break;
+                case 'targeted_customers':
+                    //TODO Huy: sort by targeted customers
+                    break;
+                default:
+                    $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))
+                        ->orderBy($orderColumn, $order[0]['dir'])->get();
+                    break;
             }
         } else {
             $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
