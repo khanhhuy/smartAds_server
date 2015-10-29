@@ -1,11 +1,5 @@
 <fieldset>
     <legend>Targeted Ads Info</legend>
-     <div class="form-group">
-        {!! Form::label('ads_name','Targeted Ads Name',['class'=>'col-sm-3 control-label']) !!}
-        <div class="col-sm-7 col-lg-6">
-            {!! Form::input('text','ads_name', null,['class'=>'form-control my-inline-control','required'=>'required']) !!}
-        </div>
-    </div>
     <div class="form-group">
         {!! Form::label('is_whole_system','Apply on whole system?',['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 ">
@@ -47,8 +41,8 @@
     </div>
     <div class="form-group">
         {!! Form::label('gender','Customers\' Gender',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
-        <div class="col-sm-3 col-lg-2">
-            {!! Form::select('gender', ['Male', 'Female', 'Male & Female'], 2, ['class' => 'form-control', 'required'=>'required'])!!}
+        <div class="col-sm-2 col-lg-2">
+            {!! Form::select('gender', ['Male', 'Female', 'All'], 2, ['class' => 'form-control', 'required'=>'required'])!!}
         </div>
     </div>
     <div class="form-group">
