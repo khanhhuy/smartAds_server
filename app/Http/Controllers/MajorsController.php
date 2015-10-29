@@ -17,11 +17,32 @@ class MajorsController extends Controller
 
     public function table(Request $request)
     {
+        $MAJOR_COLUMNS = ['store', 'area', 'major', 'updated_at'];
         $r['draw'] = (int)$request->input('draw');
         $r['recordsTotal'] = BeaconMajor::count();
         $r['recordsFiltered'] = $r['recordsTotal'];
-        $displayPromotions = BeaconMajor::skip($request->input('start'))->take($request->input('length'))->orderBy('major', 'asc')->get();
-        $r['data'] = $displayPromotions->map(function ($major) {
+        if ($request->has('order')) {
+            $order = $request->input('order');
+            $orderColumn = $MAJOR_COLUMNS[$order[0]['column'] - 1];
+            switch ($orderColumn) {
+                case 'store':
+                    $displays = BeaconMajor::join('stores', 'beacon_majors.store_id', '=', 'stores.id')->skip($request->input('start'))->take($request->input('length'))
+                        ->orderBy('stores.name', $order[0]['dir'])->get();
+                    break;
+                case 'area':
+                    $displays = BeaconMajor::join('stores', 'beacon_majors.store_id', '=', 'stores.id')->skip($request->input('start'))->take($request->input('length'))
+                        ->orderBy('stores.display_area', $order[0]['dir'])->get();
+                    break;
+                default:
+                    $displays = BeaconMajor::skip($request->input('start'))->take($request->input('length'))
+                        ->orderBy($orderColumn, $order[0]['dir'])->get();
+                    break;
+            }
+        } else {
+            $displays = BeaconMajor::skip($request->input('start'))->take($request->input('length'))->orderBy('major', 'asc')->get();
+        }
+
+        $r['data'] = $displays->map(function ($major) {
             $store = $major->store;
             return [
                 $store->name,
