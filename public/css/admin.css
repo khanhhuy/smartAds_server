@@ -1,0 +1,14 @@
+div.date {
+	margin-bottom: 5px;
+	font-size: 0.95em;
+	color: #7f8c8d;
+}
+
+div #related-item {
+	position: initial;
+}
+
+span.unit {
+	padding-top: 7px;
+	display: inline-block;
+}
