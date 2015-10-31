@@ -151,7 +151,7 @@ class Utils
         }
         return $allAds->slice($start, $length);
     }
-
+    
     public static function formatRules($rule) {
         if ($rule->isEmpty())
             return "All";
@@ -191,5 +191,13 @@ class Utils
 
         $displayedRule = trim($displayedRule, ', ');
         return empty($displayedRule) ? 'All' : $displayedRule;
+    }
+
+    public static function genSearchCell($name)
+    {
+        $fullName = "search_$name";
+        return '<td>
+                <input class="form-control table-search" type="text" name="' . $fullName . '" id="' . $fullName . '"/>
+        </td>';
     }
 }

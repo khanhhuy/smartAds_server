@@ -2,7 +2,7 @@
 <script>
     var selectChkboxColum = [{
         orderable: false,
-        searchable:false,
+        searchable: false,
         className: 'select-checkbox',
         defaultContent: "",
         data: null,
@@ -11,26 +11,36 @@
     if (typeof myIDIndex === 'undefined') {
         var myIDIndex = 0;
     }
+    if (typeof mySearching === 'undefined') {
+        var mySearching = true;
+    }
+
+    if (typeof myDom === 'undefined') {
+        var myDom = "<'row'<'col-sm-7'lB><'col-sm-5'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-4 col-lg-3'i><'col-sm-8 col-lg-9'p>>";
+    }
 
     var table = $('#manage-table').DataTable({
         "processing": true,
         "serverSide": true,
+        searching: mySearching,
         "language": {
             "processing": "Loading..."
         },
         paging: true,
+        orderCellsTop: true,
+        deferRender: true,
         "ajax": myTableURL,
         "columns": selectChkboxColum.concat(myColumns),
         pagingType: "full_numbers",
         select: {
             style: 'os',
             selector: 'td:first-child',
-            info:false,
+            info: false,
         },
         order: myOrder,
-        dom: "<'row'<'col-sm-7'lB><'col-sm-5'f>>" +
-        "<'row'<'col-sm-12'tr>>" +
-        "<'row'<'col-sm-4 col-lg-3'i><'col-sm-8 col-lg-9'p>>",
+        dom: myDom,
         lengthChange: true,
         rowId: myIDIndex,
         buttons: {
@@ -67,7 +77,7 @@
                             }
                         });
                     },
-                }
+                },
             ],
             dom: {
                 container: {
