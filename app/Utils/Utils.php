@@ -150,4 +150,12 @@ class Utils
         }
         return $allAds->slice($start, $length);
     }
+
+    public static function genSearchCell($name)
+    {
+        $fullName = "search_$name";
+        return '<td>
+                <input class="form-control table-search" type="text" name="' . $fullName . '" id="' . $fullName . '"/>
+        </td>';
+    }
 }

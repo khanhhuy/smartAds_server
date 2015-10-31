@@ -6,6 +6,7 @@ use App\Area;
 use App\Http\Requests\PromotionRequest;
 use App\Item;
 use App\Repositories\ItemRepositoryInterface;
+use App\Store;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -314,75 +315,176 @@ class AdsController extends Controller
         $allPromotions = Ads::promotions();
         $r['draw'] = (int)$request->input('draw');
         $r['recordsTotal'] = $allPromotions->count();
-        $r['recordsFiltered'] = $r['recordsTotal'];
-        $itemNames = [];
-        if ($request->has('order')) {
-            $order = $request->input('order');
-            $orderColumn = $PROMOTIONS_COLUMNS[$order[0]['column'] - 1];
-            switch ($orderColumn) {
-                case 'items':
-                    $itemIDs = DB::table('ads_item')->distinct()->lists('item_id');
-                    if (empty($itemIDs)) {
-                        $displayPromotions = $allPromotions->skip($request->input('start'))->take($request->input('length'))
-                            ->orderBy('updated_at', 'desc')->get();
-                        break;
-                    }
-                    $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
-                    $allPromotions = $allPromotions->get();
-                    foreach ($allPromotions as $p) {
-                        $pItemIDs = $p->items()->lists('id');
-                        if (empty($pItemIDs)) {
-                            $p->minItemName = null;
-                        } else {
-                            $p->minItemName = $itemNames[$pItemIDs[0]];
-                        }
-                    }
-                    if ($order[0]['dir'] == 'asc') {
-                        $allPromotions->sort(function ($p1, $p2) {
-                            return strcmp($p1->minItemName, $p2->minItemName);
-                        });
-                    } else {
-                        $allPromotions->sort(function ($p1, $p2) {
-                            return -strcmp($p1->minItemName, $p2->minItemName);
-                        });
-                    }
-                    $displayPromotions = $allPromotions->slice($request->input('start'), $request->input('length'));
-                    break;
-                case 'areas':
-                    $displayPromotions = Utils::sortByAreasThenSlice($allPromotions, $order[0]['dir'],
-                        $request->input('start'), $request->input('length'));
-                    break;
-                default:
-                    $displayPromotions = $allPromotions->skip($request->input('start'))->take($request->input('length'))
-                        ->orderBy($orderColumn, $order[0]['dir'])->get();
-                    break;
+        $filtered = $allPromotions;
+        $joinedAdsItem = false;
+
+        //search
+        $noResult = false;
+        $cols = $request->input("columns");
+
+        //filter item first
+        $val = $cols[2]['search']['value'];
+        if (!empty($val)) {
+            $rItems = $this->itemRepo->searchItemsGetIDs($val);
+            if (!empty($rItems)) {
+                $filtered = $filtered->join('ads_item', 'ads.id', '=', 'ads_item.ads_id')->whereIn('item_id', $rItems);
             }
+            $joinedAdsItem = true;
+        }
+        for ($c = 1; $c < 8; $c++) {
+            $val = $cols[$c]['search']['value'];
+            if (!empty($val)) {
+                switch ($PROMOTIONS_COLUMNS[$c - 1]) {
+                    case 'id':
+                        $filtered = $filtered->whereRaw("id LIKE ?", ["$val%"]);
+                        break;
+                    case 'items':
+                        //already done
+                        break;
+                    case 'areas':
+                        $val = trim($val);
+                        $includeWholeSystem = false;
+                        $filteredAreas = [];
+                        $filteredStores = [];
+                        $words = preg_split("/ ( |,) /", $val);
+                        if (empty($words)) {
+                            break;
+                        }
+
+                        for ($i = 0; $i < count($words); $i++) {
+                            $w = $words[$i];
+                            if (in_array(strtolower($w), ['a', 'l', 'al', 'll', 'all'])) {
+                                $includeWholeSystem = true;
+                            }
+                            $filteredAreas[$i] = Area::whereRaw('name LIKE ?', ["%$w%"])->lists('id');
+                            $filteredStores[$i] = Store::whereRaw('name LIKE ?', ["%$w%"])->lists('id');
+                            if (empty($filteredAreas[$i]) && empty($filteredStores[$i])) {
+                                $noResult = true;
+                                break;
+                            }
+                        }
+                        if ($noResult) {
+                            if (count($words) == 1 && $includeWholeSystem) {
+                                $filtered->where('is_whole_system', true);
+                                $noResult = false;
+                            }
+                            break;
+                        }
+                        $filtered->leftJoin('ads_store', 'ads.id', '=', 'ads_store.ads_id')
+                            ->leftJoin('ads_area', 'ads.id', '=', 'ads_area.ads_id');
+                        $filtered->where(function ($filtered) use ($words, $filteredStores, $filteredAreas, $includeWholeSystem) {
+                            for ($i = 0; $i < count($words); $i++) {
+                                $filtered->where(function ($query) use ($i, $filteredStores, $filteredAreas) {
+                                    if (!empty($filteredAreas[$i])) {
+                                        $query->whereIn('area_id', $filteredAreas[$i]);
+                                        if (!empty($filteredStores[$i])) {
+                                            $query->orwhereIn('store_id', $filteredStores[$i]);
+                                        }
+                                    } else {
+                                        $query->whereIn('store_id', $filteredStores[$i]);
+                                    }
+                                });
+                            }
+
+                            if ($includeWholeSystem) {
+                                $filtered->orWhere('is_whole_system', true);
+                            }
+                        });
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        if (!$noResult) {
+            $r['recordsFiltered'] = $filtered->count();
+            //order
+            $itemNames = [];
+            $useDefaultOrder = false;
+            if ($request->has('order')) {
+                $order = $request->input('order');
+                if ($order[0]['column'] <= 0) {
+                    $useDefaultOrder = true;
+                } else {
+                    $orderColumn = $PROMOTIONS_COLUMNS[$order[0]['column'] - 1];
+                    switch ($orderColumn) {
+                        case 'items':
+                            $temp = clone $filtered;
+                            if ($joinedAdsItem) {
+                                $itemIDs = $temp->distinct()->lists('item_id');
+                            } else {
+                                $itemIDs = $temp->join('ads_item', 'ads.id', '=', 'ads_item.ads_id')->distinct()->lists('item_id');
+                            }
+                            if (empty($itemIDs)) {
+                                $displayPromotions = $filtered->skip($request->input('start'))->take($request->input('length'))
+                                    ->orderBy('updated_at', 'desc')->get();
+                                break;
+                            }
+                            $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
+                            $filtered = $filtered->get();
+                            foreach ($filtered as $p) {
+                                $pItemIDs = $p->items()->lists('id');
+                                if (empty($pItemIDs)) {
+                                    $p->minItemName = null;
+                                } else {
+                                    $p->minItemName = $itemNames[$pItemIDs[0]];
+                                }
+                            }
+                            if ($order[0]['dir'] == 'asc') {
+                                $filtered->sort(function ($p1, $p2) {
+                                    return strcmp($p1->minItemName, $p2->minItemName);
+                                });
+                            } else {
+                                $filtered->sort(function ($p1, $p2) {
+                                    return -strcmp($p1->minItemName, $p2->minItemName);
+                                });
+                            }
+
+                            $displayPromotions = $filtered->slice($request->input('start'), $request->input('length'));
+                            break;
+                        case 'areas':
+                            $displayPromotions = Utils::sortByAreasThenSlice($filtered, $order[0]['dir'],
+                                $request->input('start'), $request->input('length'));
+                            break;
+                        default:
+                            $displayPromotions = $filtered->skip($request->input('start'))->take($request->input('length'))
+                                ->orderBy($orderColumn, $order[0]['dir'])->get();
+                            break;
+                    }
+                }
+            } else {
+                $useDefaultOrder = true;
+            }
+            if ($useDefaultOrder) {
+
+                $displayPromotions = $filtered->skip($request->input('start'))->take($request->input('length'))
+                    ->orderBy('updated_at', 'desc')->get();
+            }
+
+            if (empty($itemNames)) {
+                $itemIDs = DB::table('ads_item')->whereIn('ads_id', $displayPromotions->lists('id'))->distinct()->lists('item_id');
+                $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
+            }
+
+
+            $r['data'] = $displayPromotions->map(function ($ads) use ($itemNames) {
+                return [
+                    $ads->id,
+                    $ads->items->map(function ($item) use ($itemNames) {
+                        return Utils::formatItem($itemNames[$item->id], $item->id);
+                    }),
+                    Utils::formatTargets($ads->targets),
+                    Utils::formatDisplayDate($ads->getOriginal('start_date')),
+                    Utils::formatDisplayDate($ads->getOriginal('end_date')),
+                    ((float)$ads->discount_rate) . ' %',
+                    (float)$ads->discount_value,
+                ];
+            });
         } else {
-            // no sort => sort by id
-            $displayPromotions = $allPromotions->skip($request->input('start'))->take($request->input('length'))
-                ->orderBy('id', 'asc')->get();
+            $r['recordsFiltered'] = 0;
+            $r['data'] = [];
         }
 
-        if (empty($itemNames)) {
-            $itemIDs = DB::table('ads_item')->whereIn('ads_id', $displayPromotions->lists('id'))->distinct()->lists('item_id');
-            $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
-        }
-
-
-        $r['data'] = $displayPromotions->map(function ($ads) use ($itemNames) {
-            return [
-                $ads->id,
-                $ads->items->map(function ($item) use ($itemNames) {
-                    return Utils::formatItem($itemNames[$item->id], $item->id);
-                }),
-                Utils::formatTargets($ads->targets),
-                Utils::formatDisplayDate($ads->getOriginal('start_date')),
-                Utils::formatDisplayDate($ads->getOriginal('end_date')),
-                ((float)$ads->discount_rate) . ' %',
-                (float)$ads->discount_value,
-                $ads->updated_at->format('m-d-Y'),
-            ];
-        });
         return response()->json($r);
     }
 

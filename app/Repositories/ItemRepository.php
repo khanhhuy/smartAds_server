@@ -27,4 +27,9 @@ class ItemRepository implements ItemRepositoryInterface
             return Connector::getItemNamesByIDs($ids);
         }
     }
+
+    public function searchItemsGetIDs($query)
+    {
+        return Connector::searchItemsGetIDs($query);
+    }
 }

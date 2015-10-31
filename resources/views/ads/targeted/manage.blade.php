@@ -3,6 +3,7 @@
 @section('title','Manage Targeted Ads')
 
 @section('table-header')
+    <thead>
     <tr>
         <th id="select-all-chkbox"></th>
         <th>ID</th>
@@ -14,6 +15,7 @@
         <th>Updated At</th>
         <th>Action</th>
     </tr>
+    </thead>
 @endsection
 
 @section('body-footer')

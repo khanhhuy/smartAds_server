@@ -9,10 +9,10 @@
 namespace App\Services;
 
 
-use App\Category;
 use App\ActiveCustomer;
-use GuzzleHttp\Client;
+use App\Category;
 use App\Utils\Utils;
+use GuzzleHttp\Client;
 
 class ConnectorService
 {
@@ -157,6 +157,17 @@ class ConnectorService
             'form_params'=>compact('item_ids')
         ]);
         return self::decodeResponse($r,true);
+    }
+
+    public function searchItemsGetIDs($query)
+    {
+        $r = $this->client->get('search', [
+            'query' => [
+                'query' => $query,
+                'id_only' => true
+            ]
+        ]);
+        return self::decodeResponse($r, true)['items'];
     }
 
 }
