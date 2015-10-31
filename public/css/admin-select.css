@@ -5,3 +5,7 @@
 .bonsai label {
 	font-weight: normal;
 }
+
+form.taxonomy {
+	float: right;
+}

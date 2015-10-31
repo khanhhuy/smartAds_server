@@ -36,4 +36,18 @@ class ProcessTransactionController extends Controller {
         $this->categoryRepo->selectCategory($inputs);
         return view('settings.category', ['tree' => $this->categoryRepo->getCategoryTree()]);
     }
+
+    public function updateTaxonomy() {
+        //Todo: Update taxonomy
+        return redirect()->action('ProcessTransactionController@getListCategories');
+    }
+
+    public function getProcessConfig() {
+        //Todo: get config and show
+        return view('settings.process-config');
+    }
+
+    public function getAreaConfig() {
+        return view('settings.area-config');
+    }
 }

@@ -80,10 +80,18 @@ Route::get('admin/settings/category',
             ['as' => 'settings.category', 'uses' => 'ProcessTransactionController@getListCategories']);
 Route::post('admin/settings/category', 
             ['as' => 'settings.category', 'uses' => 'ProcessTransactionController@selectCategories']);
-Route::get('admin/settings/process-config', function() {
-    //TODO: Replace this testing function
-    return view('settings.process-config');
-});
+Route::post('admin/settings/category/update', 
+            ['as' => 'settings.category.update', 'uses' => 'ProcessTransactionController@updateTaxonomy']);
+
+Route::get('admin/settings/process-config',
+            ['as' => 'settings.process-config', 'uses' => 'ProcessTransactionController@getProcessConfig']);
+Route::post('admin/settings/process-config',
+            ['as' => 'settings.process-config', 'uses' => 'TODO']);
+Route::post('admin/settings/process-config/save',
+            ['as' => 'settings.process-config.save', 'uses' => 'TODO']);
+
+Route::get('admin/settings/area-config',
+            ['as' => 'settings.area-config', 'uses' => 'ProcessTransactionController@getAreaConfig']);
 
 /*
 |------------------------Others Route---------------------|

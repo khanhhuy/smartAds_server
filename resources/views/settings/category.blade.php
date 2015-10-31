@@ -19,9 +19,14 @@
 @section('content')
 	<!--TODO: update taxanomy-->
 	<div class="sub-content">
-			{!! Form::open(array('url' => 'admin/settings/category', 'class' => 'form-group')) !!}
-			{!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-			<button class='btn btn-warning' type='button'>Update Taxanomy</button>
+			<div class="date">Last updated taxonomy: TODO</div>
+			<button class="btn btn-primary" id="saveBtn">Save</button>
+			<button class="btn btn-warning" id="updateBtn">Update Taxonomy</button>
+			{!! Form::open(array('route' => 'settings.category.update', 'class' => 'taxonomy', 'id' => 'updateTax')) !!}
+			{!! Form::close() !!}
+			{!! Form::open(array('route'=> 'settings.category', 
+								'url' => 'admin/settings/category', 'class' => 'form-group', 'id' => 'saveCat')) !!}
+			
 			<div class="panel panel-default">
 				<div class="row">
 			    <ul class="bonsai category">
@@ -93,6 +98,13 @@
                 checkboxes: true, // depends on jquery.qubit plugin
                 handleDuplicateCheckboxes: true // optional
             });
+        $('button#saveBtn').click(function() {
+        	$('form#saveCat').submit();
+        });
+        $('button#updateBtn').click(function() {
+        	$('form#updateTax').submit();
+        });
+
     });
     </script>
 @endsection
