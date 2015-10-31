@@ -74,12 +74,6 @@ class AdsController extends Controller
         return view('ads.promotions.manage');
     }
 
-
-    public function manageTargeted(Request $request)
-    {
-        return view('ads.targeted.manage');
-    }
-
     public function createPromotion()
     {
         $ads = new Ads;
@@ -128,7 +122,8 @@ class AdsController extends Controller
         return redirect()->route('promotions.manager-manage');
     }
 
-    protected function storeImageAndThumbnail($request, $ads) {
+    protected function storeImageAndThumbnail($request, $ads)
+    {
         //image upload
         if ($request->input('image_display')) {
             if (!$request->input('provide_image_link')) {
@@ -175,7 +170,8 @@ class AdsController extends Controller
         }
     }
 
-    protected function storeArea($request, $ads) {
+    protected function storeArea($request, $ads)
+    {
         if (!$request->has('is_whole_system') || !$request->input('is_whole_system')) {
             $targetsID = $request->input('targetsID');
             if (!empty($targetsID)) {
@@ -452,89 +448,6 @@ class AdsController extends Controller
             $r['data'] = [];
         }
 
-        return response()->json($r);
-    }
-
-    public function targetedTable(Request $request)
-    {
-        $TARGETED_ADS_COLUMNS = ['id', 'title', 'areas', 'targeted_customers', 'start_date', 'end_date', 'updated_at'];
-        $allTargeted = Ads::targeted();
-        $r['draw'] = (int)$request->input('draw');
-        $r['recordsTotal'] = $allTargeted->count();
-        $filtered = $allTargeted;
-
-        //search
-        $noResult = false;
-        $cols = $request->input("columns");
-        for ($c = 1; $c < 7; $c++) {
-            $val = $cols[$c]['search']['value'];
-            if (!empty($val) && !$noResult) {
-                $colName = $TARGETED_ADS_COLUMNS[$c - 1];
-                switch ($colName) {
-                    case 'id':
-                        $val = trim($val);
-                        $filtered = $filtered->whereRaw("id LIKE ?", ["$val%"]);
-                        break;
-                    case 'title':
-                        $val = trim($val);
-                        $filtered = $filtered->whereRaw("title LIKE ?", ["%$val%"]);
-                        break;
-                    case 'areas':
-                        $noResult = Utils::filterByAreas($filtered, $val);
-                        break;
-                    case 'targeted_customers':
-                        //TODO Huy filter search text
-                        break;
-                    case 'start_date':
-                    case 'end_date':
-                        Utils::filterByFromToBased($filtered, $val, $colName);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-
-        if (!$noResult) {
-            $r['recordsFiltered'] = $filtered->count();
-
-            //order
-            if ($request->has('order')) {
-                $order = $request->input('order');
-                $orderColumn = $TARGETED_ADS_COLUMNS[$order[0]['column'] - 1];
-                switch ($orderColumn) {
-                    case 'areas':
-                        $displayPromotions = Utils::sortByAreasThenSlice($allTargeted, $order[0]['dir'],
-                            $request->input('start'), $request->input('length'));
-                        break;
-                    case 'targeted_customers':
-                        //TODO Huy: sort by targeted customers
-                        break;
-                    default:
-                        $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))
-                            ->orderBy($orderColumn, $order[0]['dir'])->get();
-                        break;
-                }
-            } else {
-                $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
-            }
-
-            //transform
-            $r['data'] = $displayPromotions->map(function ($ads) {
-                return [
-                    $ads->id,
-                    $ads->title,
-                    Utils::formatTargets($ads->targets),
-                    'TODO Huy',
-                    Carbon::parse($ads->getOriginal('start_date'))->format('m-d-Y'),
-                    Carbon::parse($ads->getOriginal('end_date'))->format('m-d-Y'),
-                ];
-            });
-        } else {
-            $r['recordsFiltered'] = 0;
-            $r['data'] = [];
-        }
         return response()->json($r);
     }
 

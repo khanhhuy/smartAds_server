@@ -1,19 +1,14 @@
 <?php namespace App\Http\Controllers;
 
+use App\Ads;
 use App\Http\Requests;
-use App\Http\Controllers\AdsController;
-use Utils;
-use Queue;
-use App\Facades\Connector;
 use App\Http\Requests\TargetedRequest;
 use App\Repositories\CustomerRepositoryInterface;
 use App\TargetedRule;
-use App\ActiveCustomer;
-use App\Ads;
 use Carbon\Carbon;
-
-
 use Illuminate\Http\Request;
+use Utils;
+
 
 class TargetedAdsController extends AdsController {
 
@@ -37,43 +32,86 @@ class TargetedAdsController extends AdsController {
         return view('ads.targeted.create')->with(compact(['ads', 'items', 'jobs']));
     }
 
-	public function targetedTable(Request $request)
+    public function targetedTable(Request $request)
     {
         $TARGETED_ADS_COLUMNS = ['id', 'title', 'areas', 'targeted_customers', 'start_date', 'end_date', 'updated_at'];
         $allTargeted = Ads::targeted();
         $r['draw'] = (int)$request->input('draw');
         $r['recordsTotal'] = $allTargeted->count();
-        $r['recordsFiltered'] = $r['recordsTotal'];
-        if ($request->has('order')) {
-            $order = $request->input('order');
-            $orderColumn = $TARGETED_ADS_COLUMNS[$order[0]['column'] - 1];
-            switch ($orderColumn) {
-                case 'areas':
-                    $displayPromotions = Utils::sortByAreasThenSlice($allTargeted, $order[0]['dir'],
-                        $request->input('start'), $request->input('length'));
-                    break;
-                case 'targeted_customers':
-                    //TODO Huy: sort by targeted customers
-                    break;
-                default:
-                    $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))
-                        ->orderBy($orderColumn, $order[0]['dir'])->get();
-                    break;
+        $filtered = $allTargeted;
+
+        //search
+        $noResult = false;
+        $cols = $request->input("columns");
+        for ($c = 1; $c < 7; $c++) {
+            $val = $cols[$c]['search']['value'];
+            if (!empty($val) && !$noResult) {
+                $colName = $TARGETED_ADS_COLUMNS[$c - 1];
+                switch ($colName) {
+                    case 'id':
+                        $val = trim($val);
+                        $filtered = $filtered->whereRaw("id LIKE ?", ["$val%"]);
+                        break;
+                    case 'title':
+                        $val = trim($val);
+                        $filtered = $filtered->whereRaw("title LIKE ?", ["%$val%"]);
+                        break;
+                    case 'areas':
+                        $noResult = Utils::filterByAreas($filtered, $val);
+                        break;
+                    case 'targeted_customers':
+                        //TODO Huy filter search text
+                        break;
+                    case 'start_date':
+                    case 'end_date':
+                        Utils::filterByFromToBased($filtered, $val, $colName);
+                        break;
+                    default:
+                        break;
+                }
             }
-        } else {
-            $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
         }
-        $r['data'] = $displayPromotions->map(function ($ads) {
-            return [
-                $ads->id,
-                $ads->title,
-                Utils::formatTargets($ads->targets),
-                Utils::formatRules($ads->targetedRule()->get()),
-                Carbon::parse($ads->getOriginal('start_date'))->format('m-d-Y'),
-                Carbon::parse($ads->getOriginal('end_date'))->format('m-d-Y'),
-                $ads->updated_at->format('m-d-Y'),
-            ];
-        });
+
+
+        if (!$noResult) {
+            $r['recordsFiltered'] = $filtered->count();
+
+            //order
+            if ($request->has('order')) {
+                $order = $request->input('order');
+                $orderColumn = $TARGETED_ADS_COLUMNS[$order[0]['column'] - 1];
+                switch ($orderColumn) {
+                    case 'areas':
+                        $displayPromotions = Utils::sortByAreasThenSlice($allTargeted, $order[0]['dir'],
+                            $request->input('start'), $request->input('length'));
+                        break;
+                    case 'targeted_customers':
+                        //TODO Huy: sort by targeted customers
+                        break;
+                    default:
+                        $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))
+                            ->orderBy($orderColumn, $order[0]['dir'])->get();
+                        break;
+                }
+            } else {
+                $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
+            }
+
+            //transform
+            $r['data'] = $displayPromotions->map(function ($ads) {
+                return [
+                    $ads->id,
+                    $ads->title,
+                    Utils::formatTargets($ads->targets),
+                    Utils::formatRules($ads->targetedRule()->get()),
+                    Carbon::parse($ads->getOriginal('start_date'))->format('m-d-Y'),
+                    Carbon::parse($ads->getOriginal('end_date'))->format('m-d-Y'),
+                ];
+            });
+        } else {
+            $r['recordsFiltered'] = 0;
+            $r['data'] = [];
+        }
         return response()->json($r);
     }
 
@@ -121,4 +159,5 @@ class TargetedAdsController extends AdsController {
         }
         return $errors;
     }
+
 }
