@@ -31,11 +31,11 @@
     </div>
     <div class="form-group">
         {!! Form::label('age','Customers\' Age',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
-        <div class="col-sm-2 col-lg-1">
+        <div class="col-sm-2 col-lg-2">
             {!! Form::input('number','from_age', null, ['class'=>'form-control inline-width', 'id' => 'from_age', 'placeholder'=>'0']) !!}
         </div>
-        <span class="seperator control-label">-</span>
-        <div class="col-sm-2 col-lg-1">
+        <span class="seperator control-label">to</span>
+        <div class="col-sm-2 col-lg-2">
             {!! Form::input('number','to_age', null, ['class'=>'form-control inline-width', 'id' => 'to_age', 'placeholder'=>'18']) !!}
         </div>
     </div>
@@ -47,12 +47,12 @@
     </div>
     <div class="form-group">
         {!! Form::label('family','Customers\' Family Member',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
-        <div class="col-sm-2 col-lg-1">
-            {!! Form::input('number','from_member', null, ['class'=>'form-control inline-width', 'id' => 'from_member', 'placeholder'=>'0']) !!}
+        <div class="col-sm-2 col-lg-2">
+            {!! Form::input('number','from_family_members', null, ['class'=>'form-control inline-width', 'placeholder'=>'0']) !!}
         </div>
-        <span class="seperator control-label">-</span>
-        <div class="col-sm-2 col-lg-1">
-            {!! Form::input('number','to_member', null, ['class'=>'form-control inline-width', 'id' => 'to_member', 'placeholder'=>'2']) !!}
+        <span class="seperator control-label">to</span>
+        <div class="col-sm-2 col-lg-2">
+            {!! Form::input('number','to_family_members', null, ['class'=>'form-control inline-width', 'placeholder'=>'2']) !!}
         </div>
     </div>
     <div class="form-group">
@@ -61,7 +61,7 @@
                 @foreach ($jobs as $job)
                     <div class="jobs">
                         <label class="jobs-label">
-                            {!! Form::checkbox('job-'.$job["id"], $job["name"], false, ['class' => 'jobs-input', 'id' => 'job-'.$job["id"]]) !!}
+                            {!! Form::checkbox('jobs_desc[]', $job["id"], false, ['class' => 'jobs-input']) !!}
                             <span>{{ $job["name"] }}</span>
                         </label>
                     </div>
@@ -71,8 +71,3 @@
 </fieldset>
 <br/>
 @include('ads.partials.mobile-display-form')
-<div class="form-group">
-    <div class="col-sm-offset-3 col-sm-9">
-        <input type="submit" class="btn btn-primary" value="{{$btnSubmitName}}"/>
-    </div>
-</div>

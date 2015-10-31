@@ -5,6 +5,7 @@ use App\Area;
 use App\Store;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
+use App\Facades\Connector;
 
 /**
  * Created by PhpStorm.
@@ -151,6 +152,47 @@ class Utils
             });
         }
         return $allAds->slice($start, $length);
+    }
+    
+    public static function formatRules($rule) {
+        if ($rule->isEmpty())
+            return "All";
+        $rule = $rule[0];
+        $displayedRule = '';
+        //Age
+        if ($rule['to_age'] != 0) 
+            $displayedRule .= 'Age:' . $rule['from_age'] . '-' . $rule['to_age'];
+        else if ($rule['from_age'] != 0)
+            $displayedRule .= $displayedRule . 'Age>' . $rule['from_age'];
+        //Family member
+        if ($rule['to_family_members'] != 0) 
+            $displayedRule .= ', Family:' . $rule['from_family_members'] . '-' . $rule['to_family_members'];
+        elseif ($rule['from_family_members'] != 0) 
+            $displayedRule .= ', Family>' . $rule['from_family_members'];
+        //Gender
+        switch ($rule['gender']) {
+            case 0:
+                $displayedRule .= ', Male';
+                break;
+            case 1:
+                $displayedRule .= ', Female';
+                break;
+            default:
+                break;
+        }
+        //Jobs
+        if ($rule['jobs_desc'] != null) {
+            $displayedRule .= ', Jobs:';
+            $jobDesc = Connector::getJobDesc();
+            $jobs = explode(',', $rule['jobs_desc']);
+            foreach ($jobDesc as $job) {
+                if (in_array($job['id'], $jobs))
+                    $displayedRule .= $job['name'].', ';
+            }
+        }
+
+        $displayedRule = trim($displayedRule, ', ');
+        return empty($displayedRule) ? 'All' : $displayedRule;
     }
 
     public static function genSearchCell($name)

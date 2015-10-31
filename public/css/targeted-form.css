@@ -1,5 +1,6 @@
 .seperator {
 	float: left;
+	font-weight: bold;
 }
 
 div.jobs {
@@ -22,4 +23,5 @@ label.jobs-label {
 
 label.jobs-label span {
 	vertical-align: middle;
+
 }

@@ -110,6 +110,25 @@ class AdsController extends Controller
 
         $ads = self::createPromotionFromRequest($request);
 
+        //image & thumbnail
+        $this->storeImageAndThumbnail($request, $ads);
+
+        //items
+        $itemsID = $request->input('itemsID');
+        foreach ($itemsID as $itemID) {
+            Item::firstOrCreate(['id' => $itemID]);
+        }
+        $ads->items()->attach($itemsID);
+
+        //targets
+        $this->storeArea($request, $ads);
+
+        $ads->save();
+        Flash::success(Lang::get('flash.add_success'));
+        return redirect()->route('promotions.manager-manage');
+    }
+
+    protected function storeImageAndThumbnail($request, $ads) {
         //image upload
         if ($request->input('image_display')) {
             if (!$request->input('provide_image_link')) {
@@ -154,15 +173,9 @@ class AdsController extends Controller
             });
             $ads->thumbnail_url = ('/img/thumbnails/' . $ads->id . '.png');
         }
+    }
 
-        //items
-        $itemsID = $request->input('itemsID');
-        foreach ($itemsID as $itemID) {
-            Item::firstOrCreate(['id' => $itemID]);
-        }
-        $ads->items()->attach($itemsID);
-
-        //targets
+    protected function storeArea($request, $ads) {
         if (!$request->has('is_whole_system') || !$request->input('is_whole_system')) {
             $targetsID = $request->input('targetsID');
             if (!empty($targetsID)) {
@@ -176,9 +189,6 @@ class AdsController extends Controller
                 }
             }
         }
-        $ads->save();
-        Flash::success(Lang::get('flash.add_success'));
-        return redirect()->route('promotions.manager-manage');
     }
 
     public function updatePromotion(Ads $ads, PromotionRequest $request)
