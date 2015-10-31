@@ -110,6 +110,25 @@ class AdsController extends Controller
 
         $ads = self::createPromotionFromRequest($request);
 
+        //image & thumbnail
+        $this->storeImageAndThumbnail($request, $ads);
+
+        //items
+        $itemsID = $request->input('itemsID');
+        foreach ($itemsID as $itemID) {
+            Item::firstOrCreate(['id' => $itemID]);
+        }
+        $ads->items()->attach($itemsID);
+
+        //targets
+        $this->storeArea($request, $ads);
+
+        $ads->save();
+        Flash::success(Lang::get('flash.add_success'));
+        return redirect()->route('promotions.manager-manage');
+    }
+
+    protected function storeImageAndThumbnail($request, $ads) {
         //image upload
         if ($request->input('image_display')) {
             if (!$request->input('provide_image_link')) {
@@ -154,15 +173,9 @@ class AdsController extends Controller
             });
             $ads->thumbnail_url = ('/img/thumbnails/' . $ads->id . '.png');
         }
+    }
 
-        //items
-        $itemsID = $request->input('itemsID');
-        foreach ($itemsID as $itemID) {
-            Item::firstOrCreate(['id' => $itemID]);
-        }
-        $ads->items()->attach($itemsID);
-
-        //targets
+    protected function storeArea($request, $ads) {
         if (!$request->has('is_whole_system') || !$request->input('is_whole_system')) {
             $targetsID = $request->input('targetsID');
             if (!empty($targetsID)) {
@@ -176,9 +189,6 @@ class AdsController extends Controller
                 }
             }
         }
-        $ads->save();
-        Flash::success(Lang::get('flash.add_success'));
-        return redirect()->route('promotions.manager-manage');
     }
 
     public function updatePromotion(Ads $ads, PromotionRequest $request)
@@ -380,46 +390,6 @@ class AdsController extends Controller
                 Utils::formatDisplayDate($ads->getOriginal('end_date')),
                 ((float)$ads->discount_rate) . ' %',
                 (float)$ads->discount_value,
-                $ads->updated_at->format('m-d-Y'),
-            ];
-        });
-        return response()->json($r);
-    }
-
-    public function targetedTable(Request $request)
-    {
-        $TARGETED_ADS_COLUMNS = ['id', 'title', 'areas', 'targeted_customers', 'start_date', 'end_date', 'updated_at'];
-        $allTargeted = Ads::targeted();
-        $r['draw'] = (int)$request->input('draw');
-        $r['recordsTotal'] = $allTargeted->count();
-        $r['recordsFiltered'] = $r['recordsTotal'];
-        if ($request->has('order')) {
-            $order = $request->input('order');
-            $orderColumn = $TARGETED_ADS_COLUMNS[$order[0]['column'] - 1];
-            switch ($orderColumn) {
-                case 'areas':
-                    $displayPromotions = Utils::sortByAreasThenSlice($allTargeted, $order[0]['dir'],
-                        $request->input('start'), $request->input('length'));
-                    break;
-                case 'targeted_customers':
-                    //TODO Huy: sort by targeted customers
-                    break;
-                default:
-                    $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))
-                        ->orderBy($orderColumn, $order[0]['dir'])->get();
-                    break;
-            }
-        } else {
-            $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
-        }
-        $r['data'] = $displayPromotions->map(function ($ads) {
-            return [
-                $ads->id,
-                $ads->title,
-                Utils::formatTargets($ads->targets),
-                'TODO Huy',
-                Carbon::parse($ads->getOriginal('start_date'))->format('m-d-Y'),
-                Carbon::parse($ads->getOriginal('end_date'))->format('m-d-Y'),
                 $ads->updated_at->format('m-d-Y'),
             ];
         });

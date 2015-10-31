@@ -21,38 +21,38 @@
         var myTableURL = "{{url('/ads/targeted/table')}}";
         var myOrder = [[7, 'desc']];
         var myDeleteURL = '{{route('ads.deleteMulti')}}';
-        var myColumns =
-                [
-                    {
-                        data: 0,
-                    },
-                    {
-                        "width": "230px",
-                        data: 1,
-                    },
-                    {
-                        data: 2,
-                    },
-                    {
-                        data: 3,
-                    },
-                    {
-                        data: 4,
-                    },
-                    {
-                        data: 5,
-                    },
-                    {
-                        data: 6,
-                    },
-                    {
-                        orderable: false,
-                        render: function (data, type, row, meta) {
-                            return '<a class="my-manage-edit-btn" role="button" href="' + row[0] + '/edit">' +
-                                    '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</a>';
-                        }
-                    }
-                ];
+        var myColumns = [
+            {
+                data: 0,
+            },
+            {
+                "width": "270px",
+                data: 1,
+            },
+            {
+                data: 2,
+            },
+            {
+                "width": "150px",
+                data: 3,
+            },
+            {
+                data: 4,
+            },
+            {
+                data: 5,
+            },
+            {
+                data: 6,
+            },
+            {
+                orderable: false,
+                render: function (data, type, row, meta) {
+                    return '<a class="my-manage-edit-btn" role="button" href="' + row[0] + '/edit">' +
+                            '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</a>';
+                }
+            }
+        ];
         @include('partials.fixed-pos-message-script')
     </script>
 

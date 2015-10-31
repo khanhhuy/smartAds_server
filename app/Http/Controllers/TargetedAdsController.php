@@ -39,17 +39,36 @@ class TargetedAdsController extends AdsController {
 
 	public function targetedTable(Request $request)
     {
+        $TARGETED_ADS_COLUMNS = ['id', 'title', 'areas', 'targeted_customers', 'start_date', 'end_date', 'updated_at'];
         $allTargeted = Ads::targeted();
         $r['draw'] = (int)$request->input('draw');
         $r['recordsTotal'] = $allTargeted->count();
         $r['recordsFiltered'] = $r['recordsTotal'];
-        $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
+        if ($request->has('order')) {
+            $order = $request->input('order');
+            $orderColumn = $TARGETED_ADS_COLUMNS[$order[0]['column'] - 1];
+            switch ($orderColumn) {
+                case 'areas':
+                    $displayPromotions = Utils::sortByAreasThenSlice($allTargeted, $order[0]['dir'],
+                        $request->input('start'), $request->input('length'));
+                    break;
+                case 'targeted_customers':
+                    //TODO Huy: sort by targeted customers
+                    break;
+                default:
+                    $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))
+                        ->orderBy($orderColumn, $order[0]['dir'])->get();
+                    break;
+            }
+        } else {
+            $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
+        }
         $r['data'] = $displayPromotions->map(function ($ads) {
             return [
                 $ads->id,
                 $ads->title,
                 Utils::formatTargets($ads->targets),
-                'TODO Huy',
+                Utils::formatRules($ads->targetedRule()->get()),
                 Carbon::parse($ads->getOriginal('start_date'))->format('m-d-Y'),
                 Carbon::parse($ads->getOriginal('end_date'))->format('m-d-Y'),
                 $ads->updated_at->format('m-d-Y'),
@@ -57,6 +76,7 @@ class TargetedAdsController extends AdsController {
         });
         return response()->json($r);
     }
+
 
     public function storeTargeted(TargetedRequest $request)
     {   
@@ -70,86 +90,20 @@ class TargetedAdsController extends AdsController {
         $inputs = $request->except(['_token', '_method', 'itemsID', 'targetsID', 
             'from_age', 'to_age', 'gender', 'from_member', 'to_member', 'job']);
         $inputs['is_promotion'] = false;
-
-        
-
         $ads = Ads::create($inputs);
 
         $this->storeImageAndThumbnail($request, $ads);
         $this->storeArea($request, $ads);
         $this->storeRules($request, $ads);
-        $this->storeRules($request, $ads);
         $ads->save();
         return redirect()->route('targeted.manager-manage');
-    }
-
-    protected function storeImageAndThumbnail($request, $ads) {
-        //image upload
-        if ($request->input('image_display')) {
-            if (!$request->input('provide_image_link')) {
-                $image = $request->file('image_file');
-                $fullSaveFileName = $ads->id . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('/img/ads'), $fullSaveFileName);
-                $ads->image_url = ('/img/ads/' . $fullSaveFileName);
-            }
-        }
-
-        //thumbnail
-        if (!$request->has('auto_thumbnail')) {
-            if (!$request->input('provide_thumbnail_link')) {
-                if ($request->hasFile('thumbnail_file')) {
-                    $thumbnail = $request->file('thumbnail_file');
-                    $fullSaveFileName = $ads->id . '.' . $thumbnail->getClientOriginalExtension();
-                    $thumbnail->move(public_path('/img/thumbnails'), $fullSaveFileName);
-                    $ads->thumbnail_url = ('/img/thumbnails/' . $fullSaveFileName);
-                }
-            }
-        } elseif ($request->input('auto_thumbnail') && $request->input('image_display')) {
-            $provide_image_link = $request->input('provide_image_link');
-            $adsID = $ads->id;
-            $ext = 'png';
-            $image_url = '';
-            if (!$provide_image_link) {
-                $ext = $image->getClientOriginalExtension();
-            } else {
-                $image_url = $request->input('image_url');
-            }
-            Queue::push(function ($job) use ($provide_image_link, $adsID, $ext, $image_url) {
-                if (!$provide_image_link) {
-                    Utils::createThumbnail($adsID, $ext, public_path('img/ads') . "/$adsID" . ".$ext");
-                } else {
-                    $ext = Utils::createThumbnailFromURL($image_url, $adsID);
-                }
-                $ads = Ads::find($adsID);
-                $ads->thumbnail_url = ('/img/thumbnails/' . $adsID . '.' . $ext);
-                $ads->save();
-
-                $job->delete();
-            });
-            $ads->thumbnail_url = ('/img/thumbnails/' . $ads->id . '.png');
-        }
-    }
-
-    protected function storeArea($request, $ads) {
-        if (!$request->has('is_whole_system') || !$request->input('is_whole_system')) {
-            $targetsID = $request->input('targetsID');
-            if (!empty($targetsID)) {
-                foreach ($targetsID as $targetID) {
-                    $a = Area::find($targetID);
-                    if (!empty($a)) {
-                        $ads->areas()->attach($targetID);
-                    } else {
-                        $ads->stores()->attach($targetID);
-                    }
-                }
-            }
-        }
     }
 
     protected function storeRules($request, $ads) {
         $inputs = $request->only('from_age', 'to_age', 'gender', 'from_family_members', 'to_family_members',
             'jobs_desc');
-        $inputs['jobs_desc'] = implode(',', $inputs['jobs_desc']);
+        if (!is_null($inputs['jobs_desc']))
+            $inputs['jobs_desc'] = implode(',', $inputs['jobs_desc']);
         $rule = new TargetedRule($inputs);
         $ads->targetedRule()->save($rule);
     }

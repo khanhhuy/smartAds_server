@@ -42,7 +42,7 @@ Route::get('/', 'WelcomeController@index');
 Route::get('home', 'HomeController@index');
 
 Route::get('ads/promotions/table', 'AdsController@promotionsTable');
-Route::get('ads/targeted/table', 'AdsController@targetedTable');
+Route::get('ads/targeted/table', 'TargetedAdsController@targetedTable');
 Route::get('ads/{ads}/','AdsController@show');
 
 Route::get('manager/', function () {
