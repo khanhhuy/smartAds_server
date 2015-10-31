@@ -334,7 +334,8 @@ class AdsController extends Controller
         for ($c = 1; $c < 8; $c++) {
             $val = $cols[$c]['search']['value'];
             if (!empty($val)) {
-                switch ($PROMOTIONS_COLUMNS[$c - 1]) {
+                $colName = $PROMOTIONS_COLUMNS[$c - 1];
+                switch ($colName) {
                     case 'id':
                         $filtered = $filtered->whereRaw("id LIKE ?", ["$val%"]);
                         break;
@@ -390,6 +391,18 @@ class AdsController extends Controller
                                 $filtered->orWhere('is_whole_system', true);
                             }
                         });
+                        break;
+                    case 'start_date':
+                    case 'end_date':
+                    case 'discount_rate':
+                    case 'discount_value':
+                        $vals = explode(',', $val);
+                        if (!empty($vals[0]) && $vals[0] != 'null') {
+                            $filtered->where($colName, '>=', $vals[0]);
+                        }
+                        if (!empty($vals[1]) && $vals[1] != 'null') {
+                            $filtered->where($colName, '<=', $vals[1]);
+                        }
                         break;
                     default:
                         break;

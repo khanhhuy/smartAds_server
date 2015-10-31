@@ -22,52 +22,44 @@
         {!! Utils::genSearchCell('areas') !!}
 
         <td>
-            <form class="search-form">
-                <div>
-                    <input class="form-control table-search search_date" type="text" name="search_from_from"
-                           id="search_from_from"
-                           placeholder="  From"
-                           onfocus="(this.type='date')"/>
-                </div>
-                <input class="form-control table-search search_date" name="search_from_to" id="search_from_to"
-                       placeholder="  To" type="text" onfocus="(this.type='date')"/>
-            </form>
+            <div>
+                <input class="form-control table-search search_date" type="text" name="search_from_from"
+                       id="search_from_from"
+                       placeholder=" From"
+                       onfocus="(this.type='date')"/>
+            </div>
+            <input class="form-control table-search search_date" name="search_from_to" id="search_from_to"
+                   placeholder=" To" type="text" onfocus="(this.type='date')"/>
         </td>
         <td>
-            <form class="search-form">
-                <div>
-                    <input class="form-control table-search search_date" type="text"
-                           name="search_to_from" id="search_to_from" placeholder="  From"
-                           onfocus="(this.type='date')"/>
-                </div>
-                <input class="form-control form-control table-search search_date"
-                       name="search_to_to" id="search_to_to"
-                       placeholder="  To" type="text" onfocus="(this.type='date')"/>
-            </form>
+            <div>
+                <input class="form-control table-search search_date" type="text"
+                       name="search_to_from" id="search_to_from" placeholder=" From"
+                       onfocus="(this.type='date')"/>
+            </div>
+            <input class="form-control form-control table-search search_date"
+                   name="search_to_to" id="search_to_to"
+                   placeholder=" To" type="text" onfocus="(this.type='date')"/>
         </td>
         <td>
-            <form class="search-form">
-                <div>
-                    <input type="number" name="search_rate_from" id="search_rate_from" ,
-                           class="form-control table-search search_rate" min="0.01" step="0.01" max="100" ,
-                           placeholder="  From"/>
-                </div>
-                <input type="number" name="search_rate_to" id="search_rate_to" ,
+            <div>
+                <input type="number" name="search_rate_from" id="search_rate_from" ,
                        class="form-control table-search search_rate" min="0.01" step="0.01" max="100" ,
-                       placeholder="  To"/>
-            </form>
+                       placeholder=" From"/>
+            </div>
+            <input type="number" name="search_rate_to" id="search_rate_to" ,
+                   class="form-control table-search search_rate" min="0.01" step="0.01" max="100" ,
+                   placeholder=" To"/>
         </td>
         <td>
-            <form class="search-form">
-                <div>
-                    <input type="number" name="search_value_from" id="search_value_from" ,
-                           class="form-control table-search search_value" min="0.001" ,
-                           placeholder="  From"/>
-                </div>
-                <input type="number" name="search_value_to" id="search_value_to" ,
+            <div>
+                <input type="number" name="search_value_from" id="search_value_from" ,
                        class="form-control table-search search_value" min="0.001" ,
-                       placeholder="  To"/>
-            </form>
+                       placeholder=" From"/>
+            </div>
+            <input type="number" name="search_value_to" id="search_value_to" ,
+                   class="form-control table-search search_value" min="0.001" ,
+                   placeholder=" To"/>
         </td>
         <td>
             <div>
@@ -76,7 +68,7 @@
                     <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
                 </button>
             </div>
-            <button type="button" id="btn_reset" class="btn btn-default btn-sm my-reset-btn">
+            <button type="button" id="btn_reset" class="btn btn-default btn-sm my-reset-btn" onclick="resetSearch()">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Reset
             </button>
         </td>
@@ -140,9 +132,20 @@
         function search() {
             for (var i = 1; i < 8; i++) {
                 var col = table.column(i);
+                var selector = "input#search_" + COLS[i - 1];
                 if (i < 4) {
-                    var selector = "input#search_" + COLS[i - 1];
                     col.search($(selector).val());
+                }
+                else {
+                    var from = $(selector + "_from").val();
+                    var to = $(selector + "_to").val();
+                    if (!from) {
+                        from = null;
+                    }
+                    if (!to) {
+                        to = null;
+                    }
+                    col.search(from + "," + to);
                 }
             }
             table.draw();
@@ -153,5 +156,10 @@
                 search();
             }
         });
+
+        function resetSearch() {
+            $('input.table-search').val('');
+            search();
+        }
     </script>
 @endsection
