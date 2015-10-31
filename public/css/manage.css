@@ -58,48 +58,41 @@
   background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.9) 25%, rgba(255, 255, 255, 0.9) 75%, rgba(255, 255, 255, 0) 100%); }
 
 #manage-ads input#search_id, .manage-page input#search_id {
-  max-width: 40px;
-}
+  max-width: 40px; }
 
 #manage-ads input.table-search, .manage-page input.table-search {
   width: 100%;
   height: 28px;
-  padding: 1px 5px;
-}
+  padding: 1px 5px; }
 
 #manage-ads input.table-search[type=date], .manage-page input.table-search[type=date] {
-  font-size: 13px;
-}
+  font-size: 13px; }
 
 #manage-ads input.table-search.search_date, .manage-page input.table-search.search_date {
-  width: 133px;
-}
+  width: 133px; }
 
 #manage-ads input.table-search.search_rate, .manage-page input.table-search.search_rate {
-  max-width: 70px;
-}
+  max-width: 70px; }
 
 #manage-ads input.table-search.search_value, .manage-page input.table-search.search_value {
-  max-width: 77px;
-}
+  max-width: 77px; }
 
 #manage-ads input#search_from_from, #manage-ads input#search_to_from, #manage-ads input#search_rate_from, #manage-ads input#search_value_from, #manage-ads .my-search-btn, .manage-page input#search_from_from, .manage-page input#search_to_from, .manage-page input#search_rate_from, .manage-page input#search_value_from, .manage-page .my-search-btn {
-  margin-bottom: 5px;
-}
+  margin-bottom: 5px; }
 
 #manage-ads .my-search-btn, #manage-ads .my-reset-btn, .manage-page .my-search-btn, .manage-page .my-reset-btn {
-  padding: 4px 8px;
-}
+  padding: 4px 8px; }
 
 #manage-ads .my-search-btn, .manage-page .my-search-btn {
   border-color: #2e6da4;
-  color: #337ab7;
-}
+  color: #337ab7; }
 
 #manage-ads .my-reset-btn, .manage-page .my-reset-btn {
   border-color: #d43f3a;
-  color: #d9534f;
-}
+  color: #d9534f; }
+
+#manage-ads .dataTables_info, .manage-page .dataTables_info {
+  text-align: right; }
 
 @media (min-width: 992px) {
   #manage-ads .table-responsive {

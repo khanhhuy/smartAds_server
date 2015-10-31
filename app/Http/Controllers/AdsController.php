@@ -6,7 +6,6 @@ use App\Area;
 use App\Http\Requests\PromotionRequest;
 use App\Item;
 use App\Repositories\ItemRepositoryInterface;
-use App\Store;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -321,88 +320,31 @@ class AdsController extends Controller
         //search
         $noResult = false;
         $cols = $request->input("columns");
-
-        //filter item first
-        $val = $cols[2]['search']['value'];
-        if (!empty($val)) {
-            $rItems = $this->itemRepo->searchItemsGetIDs($val);
-            if (!empty($rItems)) {
-                $filtered = $filtered->join('ads_item', 'ads.id', '=', 'ads_item.ads_id')->whereIn('item_id', $rItems);
-            }
-            $joinedAdsItem = true;
-        }
         for ($c = 1; $c < 8; $c++) {
             $val = $cols[$c]['search']['value'];
-            if (!empty($val)) {
+            if (!empty($val) && !$noResult) {
                 $colName = $PROMOTIONS_COLUMNS[$c - 1];
                 switch ($colName) {
                     case 'id':
                         $filtered = $filtered->whereRaw("id LIKE ?", ["$val%"]);
                         break;
                     case 'items':
-                        //already done
+                        $rItems = $this->itemRepo->searchItemsGetIDs($val);
+                        if (!empty($rItems)) {
+                            $filtered = $filtered->join('ads_item', 'ads.id', '=', 'ads_item.ads_id')->whereIn('item_id', $rItems);
+                            $joinedAdsItem = true;
+                        } else {
+                            $noResult = true;
+                        }
                         break;
                     case 'areas':
-                        $val = trim($val);
-                        $includeWholeSystem = false;
-                        $filteredAreas = [];
-                        $filteredStores = [];
-                        $words = preg_split("/ ( |,) /", $val);
-                        if (empty($words)) {
-                            break;
-                        }
-
-                        for ($i = 0; $i < count($words); $i++) {
-                            $w = $words[$i];
-                            if (in_array(strtolower($w), ['a', 'l', 'al', 'll', 'all'])) {
-                                $includeWholeSystem = true;
-                            }
-                            $filteredAreas[$i] = Area::whereRaw('name LIKE ?', ["%$w%"])->lists('id');
-                            $filteredStores[$i] = Store::whereRaw('name LIKE ?', ["%$w%"])->lists('id');
-                            if (empty($filteredAreas[$i]) && empty($filteredStores[$i])) {
-                                $noResult = true;
-                                break;
-                            }
-                        }
-                        if ($noResult) {
-                            if (count($words) == 1 && $includeWholeSystem) {
-                                $filtered->where('is_whole_system', true);
-                                $noResult = false;
-                            }
-                            break;
-                        }
-                        $filtered->leftJoin('ads_store', 'ads.id', '=', 'ads_store.ads_id')
-                            ->leftJoin('ads_area', 'ads.id', '=', 'ads_area.ads_id');
-                        $filtered->where(function ($filtered) use ($words, $filteredStores, $filteredAreas, $includeWholeSystem) {
-                            for ($i = 0; $i < count($words); $i++) {
-                                $filtered->where(function ($query) use ($i, $filteredStores, $filteredAreas) {
-                                    if (!empty($filteredAreas[$i])) {
-                                        $query->whereIn('area_id', $filteredAreas[$i]);
-                                        if (!empty($filteredStores[$i])) {
-                                            $query->orwhereIn('store_id', $filteredStores[$i]);
-                                        }
-                                    } else {
-                                        $query->whereIn('store_id', $filteredStores[$i]);
-                                    }
-                                });
-                            }
-
-                            if ($includeWholeSystem) {
-                                $filtered->orWhere('is_whole_system', true);
-                            }
-                        });
+                        $noResult = Utils::filterByAreas($filtered, $val);
                         break;
                     case 'start_date':
                     case 'end_date':
                     case 'discount_rate':
                     case 'discount_value':
-                        $vals = explode(',', $val);
-                        if (!empty($vals[0]) && $vals[0] != 'null') {
-                            $filtered->where($colName, '>=', $vals[0]);
-                        }
-                        if (!empty($vals[1]) && $vals[1] != 'null') {
-                            $filtered->where($colName, '<=', $vals[1]);
-                        }
+                    Utils::filterByFromToBased($filtered, $val, $colName);
                         break;
                     default:
                         break;
@@ -411,6 +353,7 @@ class AdsController extends Controller
         }
         if (!$noResult) {
             $r['recordsFiltered'] = $filtered->count();
+
             //order
             $itemNames = [];
             $useDefaultOrder = false;
@@ -480,6 +423,7 @@ class AdsController extends Controller
             }
 
 
+            //transform
             $r['data'] = $displayPromotions->map(function ($ads) use ($itemNames) {
                 return [
                     $ads->id,
@@ -507,37 +451,80 @@ class AdsController extends Controller
         $allTargeted = Ads::targeted();
         $r['draw'] = (int)$request->input('draw');
         $r['recordsTotal'] = $allTargeted->count();
-        $r['recordsFiltered'] = $r['recordsTotal'];
-        if ($request->has('order')) {
-            $order = $request->input('order');
-            $orderColumn = $TARGETED_ADS_COLUMNS[$order[0]['column'] - 1];
-            switch ($orderColumn) {
-                case 'areas':
-                    $displayPromotions = Utils::sortByAreasThenSlice($allTargeted, $order[0]['dir'],
-                        $request->input('start'), $request->input('length'));
-                    break;
-                case 'targeted_customers':
-                    //TODO Huy: sort by targeted customers
-                    break;
-                default:
-                    $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))
-                        ->orderBy($orderColumn, $order[0]['dir'])->get();
-                    break;
+        $filtered = $allTargeted;
+
+        //search
+        $noResult = false;
+        $cols = $request->input("columns");
+        for ($c = 1; $c < 7; $c++) {
+            $val = $cols[$c]['search']['value'];
+            if (!empty($val) && !$noResult) {
+                $colName = $TARGETED_ADS_COLUMNS[$c - 1];
+                switch ($colName) {
+                    case 'id':
+                        $val = trim($val);
+                        $filtered = $filtered->whereRaw("id LIKE ?", ["$val%"]);
+                        break;
+                    case 'title':
+                        $val = trim($val);
+                        $filtered = $filtered->whereRaw("title LIKE ?", ["%$val%"]);
+                        break;
+                    case 'areas':
+                        $noResult = Utils::filterByAreas($filtered, $val);
+                        break;
+                    case 'targeted_customers':
+                        //TODO Huy filter search text
+                        break;
+                    case 'start_date':
+                    case 'end_date':
+                        Utils::filterByFromToBased($filtered, $val, $colName);
+                        break;
+                    default:
+                        break;
+                }
             }
-        } else {
-            $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
         }
-        $r['data'] = $displayPromotions->map(function ($ads) {
-            return [
-                $ads->id,
-                $ads->title,
-                Utils::formatTargets($ads->targets),
-                'TODO Huy',
-                Carbon::parse($ads->getOriginal('start_date'))->format('m-d-Y'),
-                Carbon::parse($ads->getOriginal('end_date'))->format('m-d-Y'),
-                $ads->updated_at->format('m-d-Y'),
-            ];
-        });
+
+
+        if (!$noResult) {
+            $r['recordsFiltered'] = $filtered->count();
+
+            //order
+            if ($request->has('order')) {
+                $order = $request->input('order');
+                $orderColumn = $TARGETED_ADS_COLUMNS[$order[0]['column'] - 1];
+                switch ($orderColumn) {
+                    case 'areas':
+                        $displayPromotions = Utils::sortByAreasThenSlice($allTargeted, $order[0]['dir'],
+                            $request->input('start'), $request->input('length'));
+                        break;
+                    case 'targeted_customers':
+                        //TODO Huy: sort by targeted customers
+                        break;
+                    default:
+                        $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))
+                            ->orderBy($orderColumn, $order[0]['dir'])->get();
+                        break;
+                }
+            } else {
+                $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
+            }
+
+            //transform
+            $r['data'] = $displayPromotions->map(function ($ads) {
+                return [
+                    $ads->id,
+                    $ads->title,
+                    Utils::formatTargets($ads->targets),
+                    'TODO Huy',
+                    Carbon::parse($ads->getOriginal('start_date'))->format('m-d-Y'),
+                    Carbon::parse($ads->getOriginal('end_date'))->format('m-d-Y'),
+                ];
+            });
+        } else {
+            $r['recordsFiltered'] = 0;
+            $r['data'] = [];
+        }
         return response()->json($r);
     }
 

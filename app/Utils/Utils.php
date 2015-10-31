@@ -1,6 +1,8 @@
 <?php
 namespace App\Utils;
 
+use App\Area;
+use App\Store;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
 
@@ -157,5 +159,69 @@ class Utils
         return '<td>
                 <input class="form-control table-search" type="text" name="' . $fullName . '" id="' . $fullName . '"/>
         </td>';
+    }
+
+    public static function filterByAreas($currentQuery, $text)
+    {
+        $text = trim($text);
+        $includeWholeSystem = false;
+        $filteredAreas = [];
+        $filteredStores = [];
+        $words = preg_split("/ ( |,) /", $text);
+        $noResult = false;
+        if (empty($words)) {
+            return false;
+        }
+
+        for ($i = 0; $i < count($words); $i++) {
+            $w = $words[$i];
+            if (in_array(strtolower($w), ['a', 'l', 'al', 'll', 'all'])) {
+                $includeWholeSystem = true;
+            }
+            $filteredAreas[$i] = Area::whereRaw('name LIKE ?', ["%$w%"])->lists('id');
+            $filteredStores[$i] = Store::whereRaw('name LIKE ?', ["%$w%"])->lists('id');
+            if (empty($filteredAreas[$i]) && empty($filteredStores[$i])) {
+                $noResult = true;
+                break;
+            }
+        }
+        if ($noResult) {
+            if (count($words) == 1 && $includeWholeSystem) {
+                $currentQuery->where('is_whole_system', true);
+                return false;
+            }
+            return true;
+        }
+        $currentQuery->leftJoin('ads_store', 'ads.id', '=', 'ads_store.ads_id')
+            ->leftJoin('ads_area', 'ads.id', '=', 'ads_area.ads_id');
+        $currentQuery->where(function ($filtered) use ($words, $filteredStores, $filteredAreas, $includeWholeSystem) {
+            for ($i = 0; $i < count($words); $i++) {
+                $filtered->where(function ($query) use ($i, $filteredStores, $filteredAreas) {
+                    if (!empty($filteredAreas[$i])) {
+                        $query->whereIn('area_id', $filteredAreas[$i]);
+                        if (!empty($filteredStores[$i])) {
+                            $query->orwhereIn('store_id', $filteredStores[$i]);
+                        }
+                    } else {
+                        $query->whereIn('store_id', $filteredStores[$i]);
+                    }
+                });
+            }
+
+            if ($includeWholeSystem) {
+                $filtered->orWhere('is_whole_system', true);
+            }
+        });
+    }
+
+    public static function filterByFromToBased($currentQuery, $text, $colName)
+    {
+        $values = explode(',', $text);
+        if (!empty($values[0]) && $values[0] != 'null') {
+            $currentQuery->where($colName, '>=', $values[0]);
+        }
+        if (!empty($values[1]) && $values[1] != 'null') {
+            $currentQuery->where($colName, '<=', $values[1]);
+        }
     }
 }

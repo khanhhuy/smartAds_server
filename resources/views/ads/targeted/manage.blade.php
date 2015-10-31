@@ -12,8 +12,16 @@
         <th>Targeted Customers</th>
         <th>From</th>
         <th>To</th>
-        <th>Updated At</th>
         <th>Action</th>
+    </tr>
+    <tr>
+        <td></td>
+        {!! Utils::genSearchCell('id') !!}
+        {!! Utils::genSearchCell('title') !!}
+        {!! Utils::genSearchCell('areas') !!}
+        {!! Utils::genSearchCell('targeted_customers') !!}
+        @include('ads.partials.search-from-to')
+        @include('ads.partials.search-action-group')
     </tr>
     </thead>
 @endsection
@@ -22,6 +30,9 @@
     <script>
         var myTableURL = "{{url('/ads/targeted/table')}}";
         var myOrder = [[7, 'desc']];
+        var myDom = "<'row'<'col-sm-7'lB><'col-sm-5'i>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12'p>>";
         var myDeleteURL = '{{route('ads.deleteMulti')}}';
         var myColumns =
                 [
@@ -45,9 +56,6 @@
                         data: 5,
                     },
                     {
-                        data: 6,
-                    },
-                    {
                         orderable: false,
                         render: function (data, type, row, meta) {
                             return '<a class="my-manage-edit-btn" role="button" href="' + row[0] + '/edit">' +
@@ -59,4 +67,10 @@
     </script>
 
     @include('partials.manage-footer-script')
+
+    <script>
+        var COLS = ["id", "title", "areas", "targeted_customers", "from", "to"];
+        var divider = 5;
+    </script>
+    @include('ads.partials.search-footer-script')
 @endsection

@@ -21,26 +21,7 @@
         {!! Utils::genSearchCell('items') !!}
         {!! Utils::genSearchCell('areas') !!}
 
-        <td>
-            <div>
-                <input class="form-control table-search search_date" type="text" name="search_from_from"
-                       id="search_from_from"
-                       placeholder=" From"
-                       onfocus="(this.type='date')"/>
-            </div>
-            <input class="form-control table-search search_date" name="search_from_to" id="search_from_to"
-                   placeholder=" To" type="text" onfocus="(this.type='date')"/>
-        </td>
-        <td>
-            <div>
-                <input class="form-control table-search search_date" type="text"
-                       name="search_to_from" id="search_to_from" placeholder=" From"
-                       onfocus="(this.type='date')"/>
-            </div>
-            <input class="form-control form-control table-search search_date"
-                   name="search_to_to" id="search_to_to"
-                   placeholder=" To" type="text" onfocus="(this.type='date')"/>
-        </td>
+        @include('ads.partials.search-from-to')
         <td>
             <div>
                 <input type="number" name="search_rate_from" id="search_rate_from" ,
@@ -61,17 +42,7 @@
                    class="form-control table-search search_value" min="0.001" ,
                    placeholder=" To"/>
         </td>
-        <td>
-            <div>
-                <button type="button" id="btn_search" class="btn btn-default btn-sm my-search-btn"
-                        onclick="search()">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
-                </button>
-            </div>
-            <button type="button" id="btn_reset" class="btn btn-default btn-sm my-reset-btn" onclick="resetSearch()">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Reset
-            </button>
-        </td>
+        @include('ads.partials.search-action-group')
     </tr>
     </thead>
 
@@ -81,21 +52,21 @@
     <script>
         var myTableURL = "{{url('/ads/promotions/table')}}";
         var myOrder = [];
-        var myDom = "<'row'<'col-sm-12'lB>>" +
+        var myDom = "<'row'<'col-sm-7'lB><'col-sm-5'i>>" +
                 "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-4 col-lg-3'i><'col-sm-8 col-lg-9'p>>";
+                "<'row'<'col-sm-12'p>>";
         var myDeleteURL = '{{route('ads.deleteMulti')}}';
         var myColumns = [
             {
                 data: 0,
             },
             {
-                "width": "245px",
+                "width": "260px",
                 render: "[, ]",
                 data: 1,
             },
             {
-                "width": "135px",
+                "width": "120px",
                 render: "[, ]",
                 data: 2,
             },
@@ -129,37 +100,7 @@
 
     <script>
         var COLS = ["id", "items", "areas", "from", "to", "rate", "value"];
-        function search() {
-            for (var i = 1; i < 8; i++) {
-                var col = table.column(i);
-                var selector = "input#search_" + COLS[i - 1];
-                if (i < 4) {
-                    col.search($(selector).val());
-                }
-                else {
-                    var from = $(selector + "_from").val();
-                    var to = $(selector + "_to").val();
-                    if (!from) {
-                        from = null;
-                    }
-                    if (!to) {
-                        to = null;
-                    }
-                    col.search(from + "," + to);
-                }
-            }
-            table.draw();
-
-        }
-        $('input.table-search').keypress(function (e) {
-            if (e.which == 13 || e.keyCode == 13) {
-                search();
-            }
-        });
-
-        function resetSearch() {
-            $('input.table-search').val('');
-            search();
-        }
+        var divider = 4;
     </script>
+    @include('ads.partials.search-footer-script')
 @endsection
