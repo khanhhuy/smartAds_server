@@ -22,7 +22,6 @@ class TargetedRequest extends Request {
 	public function rules()
 	{
 		return [
-			'itemsID' => 'required|array',
             'is_whole_system' => 'boolean',
             'targetsID'=>'required_without:is_whole_system|array',
             'start_date' => 'required|date',

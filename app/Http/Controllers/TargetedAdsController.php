@@ -3,6 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\AdsController;
 use Utils;
+use Queue;
 use App\Facades\Connector;
 use App\Http\Requests\TargetedRequest;
 use App\Repositories\CustomerRepositoryInterface;
@@ -10,6 +11,7 @@ use App\TargetedRule;
 use App\ActiveCustomer;
 use App\Ads;
 use Carbon\Carbon;
+
 
 use Illuminate\Http\Request;
 
@@ -35,12 +37,6 @@ class TargetedAdsController extends AdsController {
         return view('ads.targeted.create')->with(compact(['ads', 'items', 'jobs']));
     }
 
-	public function getRule() {
-		//return $this->customerRepo->getCustomerInfo('1');
-		//return Ads::find('1')->targetedRule()->get();
-		return TargetedRule::all();
-	}
-
 	public function targetedTable(Request $request)
     {
         $allTargeted = Ads::targeted();
@@ -64,7 +60,6 @@ class TargetedAdsController extends AdsController {
 
     public function storeTargeted(TargetedRequest $request)
     {   
-        dd($request);
         $promotionErrors = parent::customValidatePromotionRequest($request);
         $targetedErrors = self::customValidateTargetedRequest($request);
         $errors = array_merge($promotionErrors, $targetedErrors);
@@ -72,10 +67,23 @@ class TargetedAdsController extends AdsController {
             return redirect()->back()->withInput()->withErrors($errors);
         }
 
-        return redirect()->route('targeted.create');
+        $inputs = $request->except(['_token', '_method', 'itemsID', 'targetsID', 
+            'from_age', 'to_age', 'gender', 'from_member', 'to_member', 'job']);
+        $inputs['is_promotion'] = false;
 
-        $ads = self::createPromotionFromRequest($request);
+        
 
+        $ads = Ads::create($inputs);
+
+        $this->storeImageAndThumbnail($request, $ads);
+        $this->storeArea($request, $ads);
+        $this->storeRules($request, $ads);
+        $this->storeRules($request, $ads);
+        $ads->save();
+        return redirect()->route('targeted.manager-manage');
+    }
+
+    protected function storeImageAndThumbnail($request, $ads) {
         //image upload
         if ($request->input('image_display')) {
             if (!$request->input('provide_image_link')) {
@@ -120,15 +128,9 @@ class TargetedAdsController extends AdsController {
             });
             $ads->thumbnail_url = ('/img/thumbnails/' . $ads->id . '.png');
         }
+    }
 
-        //items
-        $itemsID = $request->input('itemsID');
-        foreach ($itemsID as $itemID) {
-            Item::firstOrCreate(['id' => $itemID]);
-        }
-        $ads->items()->attach($itemsID);
-
-        //targets
+    protected function storeArea($request, $ads) {
         if (!$request->has('is_whole_system') || !$request->input('is_whole_system')) {
             $targetsID = $request->input('targetsID');
             if (!empty($targetsID)) {
@@ -142,8 +144,14 @@ class TargetedAdsController extends AdsController {
                 }
             }
         }
-        $ads->save();
-        return redirect()->route('promotions.manager-manage');
+    }
+
+    protected function storeRules($request, $ads) {
+        $inputs = $request->only('from_age', 'to_age', 'gender', 'from_family_members', 'to_family_members',
+            'jobs_desc');
+        $inputs['jobs_desc'] = implode(',', $inputs['jobs_desc']);
+        $rule = new TargetedRule($inputs);
+        $ads->targetedRule()->save($rule);
     }
 
     private static function customValidateTargetedRequest($request)
@@ -159,6 +167,4 @@ class TargetedAdsController extends AdsController {
         }
         return $errors;
     }
-
-
 }
