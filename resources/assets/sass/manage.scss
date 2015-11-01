@@ -51,9 +51,9 @@
     position: absolute;
     width: 100%;
     padding: 20px 0;
-    top: 30%;
+    top: 35%;
     left: 50%;
-    margin-top: 35px;
+    margin-top: 45px;
     margin-left: -50%;
     text-align: center;
     font-size: 1.1em;
@@ -85,8 +85,8 @@
   input.table-search.search_value {
     max-width: 77px;
   }
-  input#search_from_from, input#search_to_from, input#search_rate_from, input#search_value_from, .my-search-btn {
-    margin-bottom: 5px;
+  .second-row-in-cell {
+    margin-top: 5px;
   }
   .my-search-btn, .my-reset-btn {
     padding: 4px 8px;

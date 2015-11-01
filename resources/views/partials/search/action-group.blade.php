@@ -5,7 +5,8 @@
             <span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search
         </button>
     </div>
-    <button type="button" id="btn_reset" class="btn btn-default btn-sm my-reset-btn" onclick="resetSearch()">
+    <button type="button" id="btn_reset" class="btn btn-default btn-sm my-reset-btn second-row-in-cell"
+            onclick="resetSearch()">
         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Reset
     </button>
 </td>

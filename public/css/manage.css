@@ -48,9 +48,9 @@
   position: absolute;
   width: 100%;
   padding: 20px 0;
-  top: 30%;
+  top: 35%;
   left: 50%;
-  margin-top: 35px;
+  margin-top: 45px;
   margin-left: -50%;
   text-align: center;
   font-size: 1.1em;
@@ -77,8 +77,8 @@
 #manage-ads input.table-search.search_value, .manage-page input.table-search.search_value {
   max-width: 77px; }
 
-#manage-ads input#search_from_from, #manage-ads input#search_to_from, #manage-ads input#search_rate_from, #manage-ads input#search_value_from, #manage-ads .my-search-btn, .manage-page input#search_from_from, .manage-page input#search_to_from, .manage-page input#search_rate_from, .manage-page input#search_value_from, .manage-page .my-search-btn {
-  margin-bottom: 5px; }
+#manage-ads .second-row-in-cell, .manage-page .second-row-in-cell {
+  margin-top: 5px; }
 
 #manage-ads .my-search-btn, #manage-ads .my-reset-btn, .manage-page .my-search-btn, .manage-page .my-reset-btn {
   padding: 4px 8px; }
