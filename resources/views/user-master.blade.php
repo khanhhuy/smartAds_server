@@ -42,7 +42,7 @@
     </div>
 </div>
 @section('container')
-    <div class="container">
+    <div class="container container-main">
         @yield('content')
     </div>
 @show

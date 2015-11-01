@@ -35,6 +35,9 @@ html {
 body {
   background: #eff3f8; }
 
+.container-main {
+  padding-bottom: 30px; }
+
 .modal-open {
   padding-right: 0 !important; }
 

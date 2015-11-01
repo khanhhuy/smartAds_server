@@ -38,16 +38,30 @@
                         <fieldset>
                             <legend>Promotion Threshold</legend>
                             <div class="form-group">
-                                {!! Form::label('min-value','Minimum Value Promotion',['class'=>'col-sm-5 control-label']) !!}
+                                {!! Form::label('entrance-min-value','Entrance Minimum Value',['class'=>'col-sm-5 control-label']) !!}
                                 <div class="col-sm-2 col-lg-2">
-                                    {!! Form::input('number','min-value', null, ['class'=>'form-control', 'id' => 'min-value', 'placeholder'=>'10000']) !!}
+                                    {!! Form::input('number','entrance-min-value', null, ['class'=>'form-control', 'id' => 'entrance-min-value', 'placeholder'=>'10000']) !!}
                                 </div>
                                 <span class="unit"> VNĐ </span>
                             </div>
                             <div class="form-group">
-                                {!! Form::label('min-rate','Minimum Rate Promotion',['class'=>'col-sm-5 control-label']) !!}
+                                {!! Form::label('entrance-min-rate','Entrance Minimum Rate',['class'=>'col-sm-5 control-label']) !!}
                                 <div class="col-sm-2 col-lg-2">
-                                    {!! Form::input('number','min-rate', null, ['class'=>'form-control', 'id' => 'min-rate', 'placeholder'=>'20']) !!}
+                                    {!! Form::input('number','entrance-min-rate', null, ['class'=>'form-control', 'id' => 'entrance-min-rate', 'placeholder'=>'20']) !!}
+                                </div>
+                                <span class="unit"> % </span>
+                            </div>
+                            <div class="form-group">
+                                {!! Form::label('aisle-min-value','Aisle Minimum Value',['class'=>'col-sm-5 control-label']) !!}
+                                <div class="col-sm-2 col-lg-2">
+                                    {!! Form::input('number','aisle-min-value', null, ['class'=>'form-control', 'id' => 'aisle-min-value', 'placeholder'=>'10000']) !!}
+                                </div>
+                                <span class="unit"> VNĐ </span>
+                            </div>
+                            <div class="form-group">
+                                {!! Form::label('aisle-min-rate','Aisle Minimum Rate',['class'=>'col-sm-5 control-label']) !!}
+                                <div class="col-sm-2 col-lg-2">
+                                    {!! Form::input('number','aisle-min-rate', null, ['class'=>'form-control', 'id' => 'aisle-min-rate', 'placeholder'=>'20']) !!}
                                 </div>
                                 <span class="unit"> % </span>
                             </div>
@@ -77,10 +91,6 @@
     <script src="{{asset('/js/bootbox.min.js')}}"></script>
 	<script>
     $(document).ready( function(){
-
-        $('#btnShowCategory').on('click', function() {
-            
-        });
 
         $('button#btnReprocess').click(function() {
             //Todo AJAX re-mining

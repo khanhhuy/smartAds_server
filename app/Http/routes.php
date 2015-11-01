@@ -88,6 +88,8 @@ Route::post('admin/system/settings/category',
 
 Route::get('admin/system/tools',
             ['as' => 'system.tools', 'uses' => 'SystemConfigController@getTools']);
+Route::post('admin/system/tools/update-taxonomy', 
+            ['as' => 'system.tools.update-taxonomy', 'uses' => 'SystemConfigController@updateTax']);
 
 // Route::post('admin/system/settings/update', 
 //             ['as' => 'system.settings.update', 'uses' => 'ProcessTransactionController@updateTaxonomy']);
