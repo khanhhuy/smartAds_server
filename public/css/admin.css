@@ -2,6 +2,7 @@ div.date {
 	margin-bottom: 5px;
 	font-size: 0.95em;
 	color: #7f8c8d;
+	position: initial;
 }
 
 div #related-item {

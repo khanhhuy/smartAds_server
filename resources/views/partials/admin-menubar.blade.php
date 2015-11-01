@@ -1,18 +1,15 @@
 <nav class="navbar navbar-default menubar">
   <div class="container">
       <ul class="nav navbar-nav">
-        <li @if (Request::is('admin/settings/category')) class="active" @endif>
-        	<a href="{{url('admin/settings/category')}}"><span class="glyphicon glyphicon-list icon" aria-hidden="true"></span>Category Selection</a>
-    	</li>
-        <li @if (Request::is('admin/settings/process-config')) class="active" @endif>
-        	<a href="{{url('admin/settings/process-config')}}"><i class="fa fa-sliders fa-lg icon"></i>Transaction Process Config</a>
-    	</li>
-        <li @if (Request::is('admin/settings/area-config')) class="active" @endif>
-        	<a href="{{url('admin/settings/area-config')}}">
+        <li @if (Request::is('admin/system/settings')) class="active" @endif>
+        	<a href="{{url('admin/system/settings')}}"><i class="fa fa-sliders fa-lg icon"></i>Settings</a>
+    	  </li>
+        <li @if (Request::is('admin/system/tools')) class="active" @endif>
+        	<a href="{{url('admin/system/tools')}}">
             <i class="fa fa-cogs fa-lg icon"></i>
-              Area Config
+              Tools
           </a>
-    	</li>
+    	 </li>
       </ul>
   </div><!-- /.container-fluid -->
 </nav>

@@ -72,25 +72,30 @@ Route::get('majors/table', 'MajorsController@table');
 Route::resource('majors', 'MajorsController', ['only' => ['store','create','edit','update']]);
 Route::delete('majors', ['as' => 'majors.deleteMulti', 'uses' => 'MajorsController@deleteMulti']);
 
-Route::get('admin/settings', function() {
-    return redirect('admin/settings/category');
+
+Route::get('admin/system', function() {
+    return redirect('admin/system/settings');
 });
-Route::get('admin/settings/category', 
-            ['as' => 'settings.category', 'uses' => 'ProcessTransactionController@getListCategories']);
-Route::post('admin/settings/category', 
-            ['as' => 'settings.category', 'uses' => 'ProcessTransactionController@selectCategories']);
-Route::post('admin/settings/category/update', 
-            ['as' => 'settings.category.update', 'uses' => 'ProcessTransactionController@updateTaxonomy']);
+Route::get('admin/system/settings',
+            ['as' => 'system.settings', 'uses' => 'SystemConfigController@getSettings']);
+Route::post('admin/system/settings',
+            ['as' => 'system.settings', 'uses' => 'TODO']);
 
-Route::get('admin/settings/process-config',
-            ['as' => 'settings.process-config', 'uses' => 'ProcessTransactionController@getProcessConfig']);
-Route::post('admin/settings/process-config',
-            ['as' => 'settings.process-config', 'uses' => 'TODO']);
-Route::post('admin/settings/process-config/save',
-            ['as' => 'settings.process-config.save', 'uses' => 'TODO']);
+Route::get('admin/system/settings/category', 
+            ['as' => 'system.settings.category', 'uses' => 'ProcessTransactionController@getListCategories']);
+Route::post('admin/system/settings/category', 
+            ['as' => 'system.settings.category', 'uses' => 'ProcessTransactionController@selectCategories']);
 
-Route::get('admin/settings/area-config',
-            ['as' => 'settings.area-config', 'uses' => 'ProcessTransactionController@getAreaConfig']);
+Route::get('admin/system/tools',
+            ['as' => 'system.tools', 'uses' => 'SystemConfigController@getTools']);
+
+// Route::post('admin/system/settings/update', 
+//             ['as' => 'system.settings.update', 'uses' => 'ProcessTransactionController@updateTaxonomy']);
+
+
+
+Route::get('admin/system/area-config',
+            ['as' => 'system.area-config', 'uses' => 'ProcessTransactionController@getAreaConfig']);
 
 /*
 |------------------------Others Route---------------------|

@@ -28,13 +28,13 @@ class ProcessTransactionController extends Controller {
 	}
 
     public function getListCategories() {
-        return view('settings.category', ['tree' => $this->categoryRepo->getCategoryTree()]);
+        return view('system.category', ['tree' => $this->categoryRepo->getCategoryTree()]);
     }
 
     public function selectCategories(Request $request){
         $inputs = $request->all();
         $this->categoryRepo->selectCategory($inputs);
-        return view('settings.category', ['tree' => $this->categoryRepo->getCategoryTree()]);
+        return view('system.category', ['tree' => $this->categoryRepo->getCategoryTree()]);
     }
 
     public function updateTaxonomy() {
@@ -44,10 +44,10 @@ class ProcessTransactionController extends Controller {
 
     public function getProcessConfig() {
         //Todo: get config and show
-        return view('settings.process-config');
+        return view('system.process-config');
     }
 
     public function getAreaConfig() {
-        return view('settings.area-config');
+        return view('system.area-config');
     }
 }
