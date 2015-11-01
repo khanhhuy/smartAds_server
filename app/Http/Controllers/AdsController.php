@@ -1,6 +1,5 @@
 <?php namespace App\Http\Controllers;
 
-use App\ActiveCustomer;
 use App\Ads;
 use App\Area;
 use App\Http\Requests\PromotionRequest;
@@ -26,7 +25,6 @@ class AdsController extends Controller
 
     public function show(Ads $ads)
     {
-//        return view('ads.show.' . $ads->id, compact('ads'));
         if ($ads->image_display) {
             if ($ads->is_promotion) {
                 $start_date = Carbon::parse($ads->start_date)->format('d/m/Y');
@@ -41,34 +39,6 @@ class AdsController extends Controller
         }
     }
 
-    public function index(Request $request)
-    {
-        $idOnly = $request->input('id_only');
-        if ($idOnly != null && $idOnly == true) {
-            return Ads::lists('id');
-        } else {
-            return Ads::all();
-        }
-    }
-
-    public function receivedIndex(Request $request, ActiveCustomer $customer)
-    {
-        define('LIMIT_DEFAULT', 25);
-        $limit = $request->input('limit', LIMIT_DEFAULT);
-        if ($limit < 1) {
-            $limit = LIMIT_DEFAULT;
-        }
-        $result = $customer->receivedAds()->latest('last_received')->take($limit)->get();
-
-        $idOnly = Request::input('id_only');
-        if ($idOnly != null && $idOnly == true) {
-            return $result->lists('id');
-        } else {
-            return $result;
-        }
-
-    }
-
     public function managePromotions()
     {
         return view('ads.promotions.manage');
@@ -80,7 +50,6 @@ class AdsController extends Controller
         $items = [];
         return view('ads.promotions.create')->with(compact(['ads', 'items']));
     }
-
 
     public function edit(Ads $ads)
     {
@@ -379,7 +348,7 @@ class AdsController extends Controller
                             }
                             if (empty($itemIDs)) {
                                 $displayPromotions = $filtered->skip($request->input('start'))->take($request->input('length'))
-                                    ->orderBy('updated_at', 'desc')->get();
+                                    ->orderBy('ads.updated_at', 'desc')->get();
                                 break;
                             }
                             $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
@@ -423,11 +392,10 @@ class AdsController extends Controller
                     ->orderBy('updated_at', 'desc')->get();
             }
 
-            if (empty($itemNames)) {
+            if ($r['recordsFiltered'] !== 0 && empty($itemNames)) {
                 $itemIDs = DB::table('ads_item')->whereIn('ads_id', $displayPromotions->lists('id'))->distinct()->lists('item_id');
                 $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
             }
-
 
             //transform
             $r['data'] = $displayPromotions->map(function ($ads) use ($itemNames) {
@@ -455,7 +423,7 @@ class AdsController extends Controller
     {
         $ids = $request->input('ids');
         if (empty($ids)) {
-            return abort('400');
+            abort('400');
         }
         Ads::destroy($ids);
     }

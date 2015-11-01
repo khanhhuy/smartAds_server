@@ -20,29 +20,10 @@
         {!! Utils::genSearchCell('id') !!}
         {!! Utils::genSearchCell('items') !!}
         {!! Utils::genSearchCell('areas') !!}
-
-        @include('ads.partials.search-from-to')
-        <td>
-            <div>
-                <input type="number" name="search_rate_from" id="search_rate_from" ,
-                       class="form-control table-search search_rate" min="0.01" step="0.01" max="100" ,
-                       placeholder=" From"/>
-            </div>
-            <input type="number" name="search_rate_to" id="search_rate_to" ,
-                   class="form-control table-search search_rate" min="0.01" step="0.01" max="100" ,
-                   placeholder=" To"/>
-        </td>
-        <td>
-            <div>
-                <input type="number" name="search_value_from" id="search_value_from" ,
-                       class="form-control table-search search_value" min="0.001" ,
-                       placeholder=" From"/>
-            </div>
-            <input type="number" name="search_value_to" id="search_value_to" ,
-                   class="form-control table-search search_value" min="0.001" ,
-                   placeholder=" To"/>
-        </td>
-        @include('ads.partials.search-action-group')
+        @include('partials.search.start-end-date')
+        @include('partials.search.number-from-to',['name'=>'rate','min'=>'0.01','step'=>'0.01','max'=>'100'])
+        @include('partials.search.number-from-to',['name'=>'value','min'=>'0.001','step'=>'0.001'])
+        @include('partials.search.action-group')
     </tr>
     </thead>
 
@@ -102,5 +83,5 @@
         var COLS = ["id", "items", "areas", "from", "to", "rate", "value"];
         var divider = 4;
     </script>
-    @include('ads.partials.search-footer-script')
+    @include('partials.search.footer-script')
 @endsection

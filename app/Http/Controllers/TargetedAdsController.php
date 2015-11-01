@@ -10,9 +10,10 @@ use Illuminate\Http\Request;
 use Utils;
 
 
-class TargetedAdsController extends AdsController {
+class TargetedAdsController extends AdsController
+{
 
-	private $customerRepo;
+    private $customerRepo;
 
     public function __construct(CustomerRepositoryInterface $customerRepo)
     {
@@ -72,7 +73,6 @@ class TargetedAdsController extends AdsController {
             }
         }
 
-
         if (!$noResult) {
             $r['recordsFiltered'] = $filtered->count();
 
@@ -82,23 +82,23 @@ class TargetedAdsController extends AdsController {
                 $orderColumn = $TARGETED_ADS_COLUMNS[$order[0]['column'] - 1];
                 switch ($orderColumn) {
                     case 'areas':
-                        $displayPromotions = Utils::sortByAreasThenSlice($allTargeted, $order[0]['dir'],
+                        $displayAds = Utils::sortByAreasThenSlice($filtered, $order[0]['dir'],
                             $request->input('start'), $request->input('length'));
                         break;
                     case 'targeted_customers':
                         //TODO Huy: sort by targeted customers
                         break;
                     default:
-                        $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))
+                        $displayAds = $filtered->skip($request->input('start'))->take($request->input('length'))
                             ->orderBy($orderColumn, $order[0]['dir'])->get();
                         break;
                 }
             } else {
-                $displayPromotions = $allTargeted->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
+                $displayAds = $filtered->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
             }
 
             //transform
-            $r['data'] = $displayPromotions->map(function ($ads) {
+            $r['data'] = $displayAds->map(function ($ads) {
                 return [
                     $ads->id,
                     $ads->title,
@@ -117,7 +117,7 @@ class TargetedAdsController extends AdsController {
 
 
     public function storeTargeted(TargetedRequest $request)
-    {   
+    {
         $promotionErrors = parent::customValidatePromotionRequest($request);
         $targetedErrors = self::customValidateTargetedRequest($request);
         $errors = array_merge($promotionErrors, $targetedErrors);
@@ -125,7 +125,7 @@ class TargetedAdsController extends AdsController {
             return redirect()->back()->withInput()->withErrors($errors);
         }
 
-        $inputs = $request->except(['_token', '_method', 'itemsID', 'targetsID', 
+        $inputs = $request->except(['_token', '_method', 'itemsID', 'targetsID',
             'from_age', 'to_age', 'gender', 'from_member', 'to_member', 'job']);
         $inputs['is_promotion'] = false;
         $ads = Ads::create($inputs);
@@ -137,7 +137,8 @@ class TargetedAdsController extends AdsController {
         return redirect()->route('targeted.manager-manage');
     }
 
-    protected function storeRules($request, $ads) {
+    protected function storeRules($request, $ads)
+    {
         $inputs = $request->only('from_age', 'to_age', 'gender', 'from_family_members', 'to_family_members',
             'jobs_desc');
         if (!is_null($inputs['jobs_desc']))

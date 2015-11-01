@@ -37,7 +37,8 @@
     position: static;
   }
 }
-@media (min-width: 768px) {
+
+@media (min-width: 400px) {
   .table-responsive {
     overflow: hidden;
   }

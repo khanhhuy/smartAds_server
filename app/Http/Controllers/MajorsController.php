@@ -6,6 +6,7 @@ use App\Http\Requests\MajorRequest;
 use Illuminate\Http\Request;
 use Lang;
 use Laracasts\Flash\Flash;
+use Utils;
 
 class MajorsController extends Controller
 {
@@ -20,28 +21,66 @@ class MajorsController extends Controller
         $MAJOR_COLUMNS = ['store', 'area', 'major', 'updated_at'];
         $r['draw'] = (int)$request->input('draw');
         $r['recordsTotal'] = BeaconMajor::count();
-        $r['recordsFiltered'] = $r['recordsTotal'];
+        $filtered = BeaconMajor::query();
+
+        //search
+        $noResult = false;
+        $joinedStore = false;
+        $cols = $request->input("columns");
+        for ($c = 1; $c < 4; $c++) {
+            $val = $cols[$c]['search']['value'];
+            if (!empty($val) && !$noResult) {
+                $colName = $MAJOR_COLUMNS[$c - 1];
+                switch ($colName) {
+                    case 'store':
+                        $val = trim($val);
+                        $filtered = $filtered->join('stores', 'beacon_majors.store_id', '=', 'stores.id')
+                            ->whereRaw("stores.name LIKE ?", ["%$val%"]);
+                        $joinedStore = true;
+                        break;
+                    case 'area':
+                        $val = trim($val);
+                        if (!$joinedStore) {
+                            $filtered = $filtered->join('stores', 'beacon_majors.store_id', '=', 'stores.id')
+                                ->whereRaw("stores.display_area LIKE ?", ["%$val%"]);
+                        } else {
+                            $filtered->whereRaw("stores.display_area LIKE ?", ["%$val%"]);
+                        }
+                        break;
+                    case 'major':
+                        Utils::filterByFromToBased($filtered, $val, $colName);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        $r['recordsFiltered'] = $filtered->count();
+
+        //order
         if ($request->has('order')) {
             $order = $request->input('order');
             $orderColumn = $MAJOR_COLUMNS[$order[0]['column'] - 1];
             switch ($orderColumn) {
                 case 'store':
-                    $displays = BeaconMajor::join('stores', 'beacon_majors.store_id', '=', 'stores.id')->skip($request->input('start'))->take($request->input('length'))
+                    $displays = $filtered->join('stores', 'beacon_majors.store_id', '=', 'stores.id')->skip($request->input('start'))->take($request->input('length'))
                         ->orderBy('stores.name', $order[0]['dir'])->get();
                     break;
                 case 'area':
-                    $displays = BeaconMajor::join('stores', 'beacon_majors.store_id', '=', 'stores.id')->skip($request->input('start'))->take($request->input('length'))
+                    $displays = $filtered->join('stores', 'beacon_majors.store_id', '=', 'stores.id')->skip($request->input('start'))->take($request->input('length'))
                         ->orderBy('stores.display_area', $order[0]['dir'])->get();
                     break;
                 default:
-                    $displays = BeaconMajor::skip($request->input('start'))->take($request->input('length'))
+                    $displays = $filtered->skip($request->input('start'))->take($request->input('length'))
                         ->orderBy($orderColumn, $order[0]['dir'])->get();
                     break;
             }
         } else {
-            $displays = BeaconMajor::skip($request->input('start'))->take($request->input('length'))->orderBy('major', 'asc')->get();
+            $displays = $filtered->skip($request->input('start'))->take($request->input('length'))
+                ->orderBy('beacon_majors.updated_at', 'desc')->get();
         }
 
+        //transform
         $r['data'] = $displays->map(function ($major) {
             $store = $major->store;
             return [
@@ -59,7 +98,7 @@ class MajorsController extends Controller
     {
         $ids = $request->input('ids');
         if (empty($ids)) {
-            return abort('400');
+            abort('400');
         }
         BeaconMajor::destroy($ids);
     }

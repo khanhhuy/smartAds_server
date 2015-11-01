@@ -23,8 +23,14 @@
                                 <th>Store</th>
                                 <th>Area</th>
                                 <th>Major</th>
-                                <th>Updated At</th>
                                 <th>Action</th>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                {!! Utils::genSearchCell('store') !!}
+                                {!! Utils::genSearchCell('area') !!}
+                                @include('partials.search.number-from-to',['name'=>'major','min'=>'1','step'=>'1','max'=>'65535'])
+                                @include('partials.search.action-group')
                             </tr>
                             </thead>
                         </table>
@@ -50,7 +56,10 @@
 @section('body-footer')
     <script>
         var myTableURL = "{{url('/majors/table')}}";
-        var myOrder = [[4, 'desc']];
+        var myOrder = [];
+        var myDom = "<'row'<'col-sm-6'lB><'col-sm-6'i>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12'p>>";
         var myDeleteURL = '{{route('majors.deleteMulti')}}';
         var myColumns = [
             {
@@ -61,13 +70,12 @@
             },
             {
                 data: 2,
-            },
-            {
-                data: 3,
+                width: "50px",
             },
             {
                 orderable: false,
-                searchable:false,
+                width: "70px",
+                searchable: false,
                 render: function (data, type, row, meta) {
                     return '<button class="my-manage-edit-btn" role="button" onclick="loadEditForm(this)">' +
                             '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</button>';
@@ -168,5 +176,11 @@
                 $('tr#' + editingRow).addClass('editing-row');
             }
         }
+
+        //for search
+        var COLS = ["store", "area", "major"];
+        var divider = 3;
     </script>
+
+    @include('partials.search.footer-script')
 @endsection
