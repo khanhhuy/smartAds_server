@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="col-sm-8 col-md-4">
-            <div id="affix-form" data-spy="affix" data-offset-top="130">
+            <div id="affix-form" data-spy="affix" data-offset-top="160">
                 <div class="panel panel-default" id="form-container">
                     @include('majors.partials.create')
                 </div>

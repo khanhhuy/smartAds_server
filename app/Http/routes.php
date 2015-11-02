@@ -38,7 +38,9 @@ Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
 /*
 |------------------------Portal Route---------------------|
 */
-Route::get('/', 'WelcomeController@index');
+Route::get('/', function () {
+    return redirect('auth/login');
+});
 Route::get('home', 'HomeController@index');
 
 Route::get('ads/promotions/table', 'AdsController@promotionsTable');
@@ -103,7 +105,7 @@ Route::get('admin/system/area-config',
 |------------------------Others Route---------------------|
 */
 Route::controllers([
-    'portal/auth' => 'Auth\PortalAuthController',
-    'portal/password' => 'Auth\PasswordController',
+    'auth' => 'Auth\PortalAuthController',
+    'password' => 'Auth\PasswordController',
 ]);
 
