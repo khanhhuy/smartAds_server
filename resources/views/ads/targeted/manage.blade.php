@@ -48,6 +48,7 @@
                     },
                     {
                         data: 3,
+                        orderable: false,
                     },
                     {
                         data: 4,
