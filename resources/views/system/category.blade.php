@@ -1,4 +1,4 @@
-@extends('settings.admin-settings')
+@extends('system.admin-system')
 
 @section('head-footer-child')
 	<link rel="stylesheet" type="text/css" href="{{asset('js/jQuery-bonsai/bower_components/jquery-bonsai/jquery.bonsai.css') }}" >
@@ -13,6 +13,7 @@
 @section('title','Set Up Category')
 @section('page-title','Set Up Category')
 @section('breadcrumb-child')
+	<li><a href="{{url('admin/system/settings')}}">Settings</a></li>
     <li class="active">Category</li>
 @endsection
 
@@ -22,10 +23,8 @@
 			<div class="date">Last updated taxonomy: TODO</div>
 			<button class="btn btn-primary" id="saveBtn">Save</button>
 			<button class="btn btn-warning" id="updateBtn">Update Taxonomy</button>
-			{!! Form::open(array('route' => 'settings.category.update', 'class' => 'taxonomy', 'id' => 'updateTax')) !!}
-			{!! Form::close() !!}
-			{!! Form::open(array('route'=> 'settings.category', 
-								'url' => 'admin/settings/category', 'class' => 'form-group', 'id' => 'saveCat')) !!}
+			{!! Form::open(array('route'=> 'system.settings.category', 
+								'class' => 'form-group', 'id' => 'saveCat')) !!}
 			
 			<div class="panel panel-default">
 				<div class="row">

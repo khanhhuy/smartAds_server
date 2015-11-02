@@ -11,6 +11,6 @@
 @endsection
 
 @section('breadcrumb')
-    <li class="active"><a href="settings">Settings</a></li>
+    <li class="active"><a href="{{url('/admin/system')}}">System</a></li>
     @yield('breadcrumb-child')
 @endsection
