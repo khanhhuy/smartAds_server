@@ -16,16 +16,20 @@ use App\BeaconMinor;
 use App\Facades\Connector;
 use App\Repositories\CategoryRepositoryInterface;
 use App\Repositories\StoreRepositoryInterface;
+use App\Repositories\CustomerRepositoryInterface;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 
 class ContextAdsService
 {
-    protected $categoryRepo, $storeRepo;
+    protected $categoryRepo, $storeRepo, $customerRepo;
 
-    public function __construct(CategoryRepositoryInterface $categoryRepo, StoreRepositoryInterface $storeRepo)
+    public function __construct(CategoryRepositoryInterface $categoryRepo, StoreRepositoryInterface $storeRepo, CustomerRepositoryInterface $customerRepo)
     {
         $this->categoryRepo = $categoryRepo;
         $this->storeRepo = $storeRepo;
+        $this->customerRepo = $customerRepo;
     }
 
     public function getContextAds(ActiveCustomer $customer, BeaconMajor $major, BeaconMinor $minor)
@@ -58,11 +62,45 @@ class ContextAdsService
             $a['minors'] = $minors;
         }
 
+        $entranceAds = $entranceAds->merge($this->getTargetedAds($customer));
+
         $result['entranceAds'] = $entranceAds->values();
         $result['aisleAds'] = $aisleAds->values();
 
-
         return $result;
+    }
+
+    public function getTargetedAds(ActiveCustomer $customer) {
+        $customerInfo = $this->customerRepo->getCustomerInfo($customer->id);
+        $allTargeted = Ads::available()->targeted()->get();
+        $targetedAds = array();
+
+        foreach ($allTargeted as $ads) {
+            $rule = $ads->targetedRule()->get()[0];
+            if (($customerInfo['gender'] != $rule->gender) && ($rule->gender != 2))
+                continue;
+            $age = Carbon::now()->diffInYears(Carbon::createFromFormat('Y-m-d', $customerInfo['birth']));
+            $toAge = ($rule->to_age == 0) ? $rule->to_age + $age + 1 : $rule->to_age; //to age = 0 exception
+            if (($age < $rule->from_age) || ($age > $toAge))
+                continue;
+
+            $toMember = ($rule->to_family_members == 0) ? $rule->to_family_members + $age + 1 : $rule->to_family_members;
+            if (($customerInfo['family_members'] < $rule->from_family_members) 
+                || ($customerInfo['family_members'] > $toMember))
+                continue;            
+
+            if ($rule->jobs_desc != null) {
+                if ($customerInfo['jobs_id'] == null)
+                    continue;
+                $jobs= explode(',', $rule->jobs_desc);
+                if (!in_array($customerInfo['jobs_id'], $jobs))
+                    continue;
+            }
+
+            $targetedAds[] = $ads;
+        }
+
+        return Collection::make($targetedAds);
     }
 
     /*public function getContextAds(ActiveCustomer $customer, BeaconMinor $minor)

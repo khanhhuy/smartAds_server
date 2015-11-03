@@ -53,6 +53,7 @@ Route::get('manager/ads/promotions/create', ['as'=>'promotions.create','uses'=>'
 Route::get('manager/ads/targeted', ['as'=>'targeted.manager-manage','uses'=>'TargetedAdsController@manageTargeted']);
 Route::get('manager/ads/targeted/create', ['as'=>'targeted.create','uses'=>'TargetedAdsController@createTargeted']);
 Route::get('manager/ads/{ads}/edit', ['as'=>'ads.edit','uses'=>'AdsController@edit']);
+Route::get('manager/ads/targeted/{ads}/edit', ['as'=>'ads.edit','uses'=>'TargetedAdsController@edit']);
 
 Route::post('ads/promotions', ['as'=>'promotions.store','uses'=>'AdsController@storePromotion']);
 Route::post('ads/targeted', ['as'=>'targeted.store','uses'=>'TargetedAdsController@storeTargeted']);

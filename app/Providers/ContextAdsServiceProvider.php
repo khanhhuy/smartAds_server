@@ -28,9 +28,12 @@ class ContextAdsServiceProvider extends ServiceProvider
     {
         App::bind('App\Repositories\StoreRepositoryInterface', 'App\Repositories\StoreRepository');
         App::bind('App\Repositories\CategoryRepositoryInterface', 'App\Repositories\CategoryRepository');
+        App::bind('App\Repositories\CustomerRepositoryInterface', 'App\Repositories\CustomerRepository');
         App::bind('contextAdsService', function ($app) {
             return new ContextAdsService($app->make('App\Repositories\CategoryRepositoryInterface'),
-                $app->make('App\Repositories\StoreRepositoryInterface'));
+                $app->make('App\Repositories\StoreRepositoryInterface'),
+                $app->make('App\Repositories\CustomerRepositoryInterface')
+                );
         });
     }
 }

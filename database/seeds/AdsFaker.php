@@ -23,7 +23,8 @@ class AdsFaker extends Seeder
                 $start = $faker->dateTimeBetween('-5 day', 'now')->format('Y-m-d');
                 $whole = false;
             }
-            $is_promotion = $faker->boolean(65);
+            //$is_promotion = $faker->boolean(65);
+            $is_promotion = true;
             $ads = Ads::create([
                 'title' => $faker->sentence(5),
                 'start_date' => $start,
