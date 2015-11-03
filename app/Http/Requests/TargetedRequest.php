@@ -30,8 +30,8 @@ class TargetedRequest extends Request {
             'from_age' => 'integer|min:0',
             'to_age' => 'integer|min:0',
             'gender' => 'required',
-            'from_member' => 'integer|min:0',
-            'to_member' => 'integer|min:0',
+            'from_family_members' => 'integer|min:0',
+            'to_family_members' => 'integer|min:0',
 
             'title' => 'required|min:3',
             'image_display' => 'required|boolean',

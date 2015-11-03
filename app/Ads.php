@@ -54,7 +54,7 @@ class Ads extends Model
     {
         return $query->where('is_promotion', false);
     }
-
+ 
     public function scopeForCustomer($query, ActiveCustomer $customer)
     {
         $minValue = $customer->getMinDiscountValue();

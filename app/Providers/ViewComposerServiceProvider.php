@@ -2,6 +2,7 @@
 
 use App\Area;
 use App\Store;
+use App\Repositories\CustomerRepositoryInterface;
 use DB;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\View;

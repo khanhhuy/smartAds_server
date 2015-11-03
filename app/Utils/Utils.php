@@ -165,22 +165,22 @@ class Utils
         $rule = $rule[0];
         $displayedRule = '';
         //Age
-        if ($rule['to_age'] != 0)
+        if ($rule['to_age'] > 0) 
             $displayedRule .= 'Age:' . $rule['from_age'] . '-' . $rule['to_age'];
-        else if ($rule['from_age'] != 0)
+        else if ($rule['from_age'] > 0)
             $displayedRule .= $displayedRule . 'Age>' . $rule['from_age'];
         //Family member
-        if ($rule['to_family_members'] != 0)
+        if ($rule['to_family_members'] > 0) 
             $displayedRule .= ', Family:' . $rule['from_family_members'] . '-' . $rule['to_family_members'];
         elseif ($rule['from_family_members'] != 0)
             $displayedRule .= ', Family>' . $rule['from_family_members'];
         //Gender
         switch ($rule['gender']) {
             case 0:
-                $displayedRule .= ', Male';
+                $displayedRule .= ', Female';
                 break;
             case 1:
-                $displayedRule .= ', Female';
+                $displayedRule .= ', Male';
                 break;
             default:
                 break;

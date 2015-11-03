@@ -4,7 +4,7 @@
         {!! Form::label('is_whole_system','Apply on whole system?',['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 ">
             <div class="checkbox-inline">
-                {!! Form::checkbox('is_whole_system',1,true) !!}
+                {!! Form::checkbox('is_whole_system',1, true) !!}
             </div>
         </div>
     </div>
@@ -32,27 +32,27 @@
     <div class="form-group">
         {!! Form::label('age','Customers\' Age',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
         <div class="col-sm-2 col-lg-2">
-            {!! Form::input('number','from_age', null, ['class'=>'form-control inline-width', 'id' => 'from_age', 'placeholder'=>'0']) !!}
+            {!! Form::input('number','from_age', $rule->from_age, ['class'=>'form-control inline-width', 'id' => 'from_age', 'placeholder'=>'0']) !!}
         </div>
         <span class="seperator control-label">to</span>
         <div class="col-sm-2 col-lg-2">
-            {!! Form::input('number','to_age', null, ['class'=>'form-control inline-width', 'id' => 'to_age', 'placeholder'=>'18']) !!}
+            {!! Form::input('number','to_age', $rule->to_age, ['class'=>'form-control inline-width', 'id' => 'to_age', 'placeholder'=>'18']) !!}
         </div>
     </div>
     <div class="form-group">
         {!! Form::label('gender','Customers\' Gender',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
         <div class="col-sm-2 col-lg-2">
-            {!! Form::select('gender', ['Male', 'Female', 'All'], 2, ['class' => 'form-control', 'required'=>'required'])!!}
+            {!! Form::select('gender', ['Female', 'Male', 'All'], $rule->gender, ['class' => 'form-control', 'required'=>'required'])!!}
         </div>
     </div>
     <div class="form-group">
         {!! Form::label('family','Customers\' Family Member',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
         <div class="col-sm-2 col-lg-2">
-            {!! Form::input('number','from_family_members', null, ['class'=>'form-control inline-width', 'placeholder'=>'0']) !!}
+            {!! Form::input('number','from_family_members', $rule->from_family_members, ['class'=>'form-control inline-width', 'placeholder'=>'0']) !!}
         </div>
         <span class="seperator control-label">to</span>
         <div class="col-sm-2 col-lg-2">
-            {!! Form::input('number','to_family_members', null, ['class'=>'form-control inline-width', 'placeholder'=>'2']) !!}
+            {!! Form::input('number','to_family_members', $rule->to_family_members, ['class'=>'form-control inline-width', 'placeholder'=>'2']) !!}
         </div>
     </div>
     <div class="form-group">
@@ -61,7 +61,14 @@
                 @foreach ($jobs as $job)
                     <div class="jobs">
                         <label class="jobs-label">
-                            {!! Form::checkbox('jobs_desc[]', $job["id"], false, ['class' => 'jobs-input']) !!}
+                            <?php 
+                                $checked = false;
+                                if ($rule->jobs_desc != null) {
+                                    if (in_array($job["id"], $rule->jobs_desc))
+                                        $checked = true;
+                                }
+                            ?>
+                            {!! Form::checkbox('jobs_desc[]', $job["id"], $checked, ['class' => 'jobs-input']) !!}
                             <span>{{ $job["name"] }}</span>
                         </label>
                     </div>
