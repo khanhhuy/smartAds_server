@@ -1,9 +1,9 @@
 <?php namespace App;
 
-use App\Facades\Connector;
 use Illuminate\Database\Eloquent\Model;
 
 class Store extends Model {
+    protected $fillable = ['id', 'name', 'address', 'area_id', 'display_area'];
 
     public function ads()
     {

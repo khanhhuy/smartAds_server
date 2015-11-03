@@ -96,8 +96,8 @@ Route::post('taxonomy/update-requests',
     ['as' => 'taxonomy.update-requests.process', 'uses' => 'CategoriesController@updateTaxonomy']);
 Route::get('taxonomy/update-status', ['as' => 'taxonomy.update-status', 'uses' => 'CategoriesController@updateTaxonomyStatus']);
 Route::post('stores/update-requests',
-    ['as' => 'stores.update-requests.process', 'uses' => 'CategoriesController@updateTaxonomy']);
-Route::get('stores/update-status', ['as' => 'stores.update-status', 'uses' => 'CategoriesController@updateTaxonomyStatus']);
+    ['as' => 'stores.update-requests.process', 'uses' => 'StoresController@updateStores']);
+Route::get('stores/update-status', ['as' => 'stores.update-status', 'uses' => 'StoresController@updateStoresStatus']);
 
 // Route::post('admin/system/settings/update', 
 //             ['as' => 'system.settings.update', 'uses' => 'ProcessTransactionController@updateTaxonomy']);

@@ -1,11 +1,6 @@
 @extends('system.admin-system')
 
 <?php
-$taxonomyLastUpdated = Setting::get('taxonomy.updated_at');
-$taxnomyUpdating = ($taxonomyLastUpdated === 'Updating');
-if ($taxnomyUpdating) {
-    $taxonomyLastUpdated .= ' ...';
-}
 $loader = asset('/img/icon/rolling.svg');
 ?>
 
@@ -32,75 +27,107 @@ $loader = asset('/img/icon/rolling.svg');
         <img src="{{$loader}}" class="icon-loader">
         <span class="glyphicon glyphicon-ok icon-success" aria-hidden="true"></span>
 
-        <div class="btn-update">Last updated: {{$taxonomyLastUpdated}}</div>
+        <div class="btn-update">Last updated: {{$lastUpdated['taxonomy']}}</div>
     </div>
     <div class="btn-rich" id="btnStoreArea">
-        <div class="btn-name">Update Area</div>
+        <div class="btn-name">Update Store List</div>
         <img src="{{$loader}}" class="icon-loader">
         <span class="glyphicon glyphicon-ok icon-success" aria-hidden="true"></span>
 
-        <div class="btn-update">Last updated: 11-1-2015</div>
+        <div class="btn-update">Last updated: {{$lastUpdated['stores_areas']}}</div>
     </div>
 @endsection
 
 @section('body-footer')
     <script>
-        function handleClick(id, urlRequest, urlStatus) {
-            $('#' + id + ' .icon-loader').show("slow");
-            $('#' + id + ' .btn-update').text('Last updated: Updating ...');
-            $.ajax({
-                method: 'POST',
-                url: urlRequest,
-                success: function (data) {
-                    console.log(data);
-                    pollingUpdateStatus(id, urlStatus);
-                },
-                error: function (jqXHR, type, errorThrown) {
-                    $('#' + id + ' .icon-loader').hide("slow");
-                    if (errorThrown != null) {
-                        alert(errorThrown);
-                    }
-                }
-            });
+        var OBJS = {
+            'taxonomy': {
+                id: "#btnTaxonomy",
+                requestURL: "{{route('taxonomy.update-requests.process')}}",
+                statusURL: "{{route('taxonomy.update-status')}}",
+                updating: false,
+            },
+            'stores_areas': {
+                id: "#btnStoreArea",
+                requestURL: "{{route('stores.update-requests.process')}}",
+                statusURL: "{{route('stores.update-status')}}",
+                updating: false,
+            }
+        };
+        function showUpdatingIndicator(obj) {
+            obj.updating = true;
+            $(obj.id + ' .icon-success').hide();
+            $(obj.id + ' .icon-loader').show("slow");
+            $(obj.id + ' .btn-update').text('Last updated: Updating ...');
         }
-        var TAXONOMY_URL = ["{{route('taxonomy.update-requests.process')}}", "{{route('taxonomy.update-status')}}"];
-        var STORE_AREA_URL = ['{{route('stores.update-requests.process')}}', '{{route('stores.update-status')}}'];
+        function handleClick(name) {
+            var obj = OBJS[name];
+            if (!obj.updating) {
+                showUpdatingIndicator(obj);
+                $.ajax({
+                    method: 'POST',
+                    url: obj.requestURL,
+                    success: function (data) {
+                        console.log(data);
+                        pollingUpdateStatus(obj);
+                    },
+                    error: function (jqXHR, type, errorThrown) {
+                        $(obj.id + ' .icon-loader').hide("slow");
+                        if (errorThrown != null) {
+                            alert(errorThrown);
+                        }
+                    }
+                });
+            }
+        }
+
         $(document).ready(function () {
             $('#btnProcess').click(function () {
                 $(this).find('.icon-loader').show("slow");
             });
-            $('#btnTaxonomy').click(function () {
-                handleClick('btnTaxonomy', TAXONOMY_URL[0], TAXONOMY_URL[1]);
+            var obj;
+            @foreach($names as $name)
+                obj = OBJS['{{$name}}'];
+            $(obj.id).click(function () {
+                handleClick('{{$name}}');
             });
-            $('#btnStoreArea').click(function () {
-                handleClick('btnStoreArea', TAXONOMY_URL[1], STORE_AREA_URL[1]);
-            });
+            @endforeach
+
+
+
+
         });
-        function pollingUpdateStatus(id, urlStatus) {
+        function pollingUpdateStatus(obj) {
             $.ajax({
-                url: urlStatus,
+                url: obj.statusURL,
                 success: function (data) {
-                    console.log(id + ": " + data);
+                    console.log(obj.id + ": " + data);
                     if (data === "Updating") {
-                        setTimeout(pollingUpdateStatus(id, urlStatus), 1000);
+                        setTimeout(function () {
+                            pollingUpdateStatus(obj);
+                        }, 1000);
                     }
                     else {
-                        $('#' + id + ' .btn-update').text('Last updated: ' + data);
-                        $('#' + id + ' .icon-loader').hide("slow");
-                        $('#' + id + ' .icon-success').show("slow");
+                        $(obj.id + ' .btn-update').text('Last updated: ' + data);
+                        $(obj.id + ' .icon-loader').hide();
+                        $(obj.id + ' .icon-success').show("slow");
+                        obj.updating = false;
                     }
                 },
                 error: function (jqXHR, type, errorThrown) {
-                    $('#' + id + ' .icon-loader').hide("slow");
+                    $(obj.id + ' .icon-loader').hide("slow");
                     if (errorThrown != null) {
                         alert(errorThrown);
                     }
                 }
             });
         }
-        @if($taxnomyUpdating)
-            $('#btnTaxonomy .icon-loader').show();
-        pollingUpdateStatus('btnTaxonomy', TAXONOMY_URL[1]);
+        @foreach($names as $name)
+            @if ($updating[$name])
+                obj = OBJS['{{$name}}'];
+        showUpdatingIndicator(obj);
+        pollingUpdateStatus(obj);
         @endif
+        @endforeach
     </script>
 @endsection

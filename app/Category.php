@@ -4,7 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model {
 
-    protected $fillable = ['id'];
+    protected $fillable = ['id', 'name', 'parent_id', 'is_leaf', 'is_suitable'];
 	public $incrementing=false;
 
     public function parentCategory()
