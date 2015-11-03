@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="col-sm-8 col-md-4">
-            <div id="affix-form" data-spy="affix" data-offset-top="100">
+            <div id="affix-form" data-spy="affix" data-offset-top="160">
                 <div class="panel panel-default" id="form-container">
                     @include('majors.partials.create')
                 </div>
@@ -87,6 +87,9 @@
         var myDelSuccessFunc = function () {
             loadCreateForm();
         }
+        var myDrawCallbackFunc = function () {
+            updateEditingRow(editingRow);
+        }
     </script>
     @include('partials.manage-footer-script')
     <script src="{{asset('/js/select2.min.js')}}"></script>
@@ -107,9 +110,9 @@
                     $('#form-container').html(data);
                     $('#my-submit-btn').prop('disabled', false);
                     if ($('#form-container .alert-danger').length === 0) {
+                        updateEditingRow(-1);
                         table.draw(false);
                         @include('partials.fixed-pos-message-script')
-
 
                     }
 
@@ -119,7 +122,6 @@
                             if (errorThrown != null) {
                                 alert(errorThrown);
                             }
-//                   $('#form-container').html(jqXHR.responseText);
                         });
                 posting.always(function () {
                     $('#my-submit-btn').prop('disabled', false);

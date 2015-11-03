@@ -2,10 +2,11 @@
 namespace App\Utils;
 
 use App\Area;
+use App\Facades\Connector;
+use App\PortalUser;
 use App\Store;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
-use App\Facades\Connector;
 
 /**
  * Created by PhpStorm.
@@ -153,8 +154,9 @@ class Utils
         }
         return $allAds->slice($start, $length);
     }
-    
-    public static function formatRules($rule) {
+
+    public static function formatRules($rule)
+    {
         if ($rule->isEmpty())
             return "All";
         $rule = $rule[0];
@@ -167,7 +169,7 @@ class Utils
         //Family member
         if ($rule['to_family_members'] > 0) 
             $displayedRule .= ', Family:' . $rule['from_family_members'] . '-' . $rule['to_family_members'];
-        elseif ($rule['from_family_members'] != 0) 
+        elseif ($rule['from_family_members'] != 0)
             $displayedRule .= ', Family>' . $rule['from_family_members'];
         //Gender
         switch ($rule['gender']) {
@@ -187,7 +189,7 @@ class Utils
             $jobs = explode(',', $rule['jobs_desc']);
             foreach ($jobDesc as $job) {
                 if (in_array($job['id'], $jobs))
-                    $displayedRule .= $job['name'].', ';
+                    $displayedRule .= $job['name'] . ', ';
             }
         }
 
@@ -264,6 +266,24 @@ class Utils
         }
         if (!empty($values[1]) && $values[1] != 'null') {
             $currentQuery->where($colName, '<=', $values[1]);
+        }
+    }
+
+    public static function getCurrentUserHome()
+    {
+        switch (PortalUser::getCurrentUserType()) {
+            case 'Admin':
+                return '/admin';
+                break;
+            case 'Ads_Manager':
+                return '/manager';
+                break;
+            case 'Guest':
+                return '/';
+                break;
+            default:
+                return '/';
+                break;
         }
     }
 }

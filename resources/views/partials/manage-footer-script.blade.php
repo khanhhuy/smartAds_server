@@ -92,6 +92,10 @@
             if (table.rows(':not(.selected)').count() > 0) {
                 uncheckSelectAll();
             }
+
+            if (typeof myDrawCallbackFunc !== 'undefined') {
+                myDrawCallbackFunc();
+            }
         },
     });
     $('#select-all-chkbox').click(function () {

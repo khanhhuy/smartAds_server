@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder {
 		Model::unguard();
         $this->command->info('-------------Seeding-------------');
 		$this->call('ActiveCustomerSeeder');
+        $this->call('PortalUserSeeder');
 		$this->call('AdsSeeder');
 		$this->call('StoreSeeder');
         $this->call('BeaconSeeder');

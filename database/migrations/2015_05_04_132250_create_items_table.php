@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateItemsTable extends Migration {
 
@@ -46,9 +46,9 @@ class CreateItemsTable extends Migration {
 	 */
 	public function down()
 	{
-        Schema::drop('watching_lists');
-		Schema::drop('items');
         Schema::drop('black_lists');
+        Schema::drop('watching_lists');
+        Schema::drop('items');
 	}
 
 }

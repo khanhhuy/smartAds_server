@@ -15,18 +15,19 @@
 |---------------------- API for Mobile -----------------------|
 */
 Route::group(['prefix'=>'api/v1'],function(){
-	Route::get('customers/{customers}/context-ads/{majors}/{minors}','ContextAdsController@index');
-	Route::get('ads','AdsController@index');
-	Route::get('customers/{customers}/received-ads','AdsController@receivedIndex');
-	Route::get('account-status','CustomersController@accountStatus');
-    Route::post('customers/{customers}/update-request', 'AccountController@update');
-    Route::post('customers/{customers}/feedback', 'AccountController@feedback');
-	//for testing
-	Route::get('customers/{customers}/update-request', 'AccountController@update');
 
-    Route::get('customers/{customers}/config', 'CustomersController@getSettings');
-    Route::post('customers/{customers}/config', 'CustomersController@storeSettings');
+    Route::group(['middleware' => 'apiAuth'], function () {
+        Route::get('customers/{customers}/context-ads/{majors}/{minors}', 'ContextAdsController@index');
+        Route::post('customers/{customers}/update-request', 'AccountController@update');
+        Route::post('customers/{customers}/feedback', 'AccountController@feedback');
+        //for testing
+        Route::get('customers/{customers}/update-request', 'AccountController@update');
 
+        Route::get('customers/{customers}/config', 'CustomersController@getSettings');
+        Route::post('customers/{customers}/config', 'CustomersController@storeSettings');
+    });
+
+    Route::get('account-status', 'CustomersController@accountStatus');
     Route::controller('auth', 'Auth\APIAuthController');
 });
 Route::get('ads/thumbnail/{ads}', 'AdsController@thumbnail');
@@ -38,7 +39,9 @@ Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
 /*
 |------------------------Portal Route---------------------|
 */
-Route::get('/', 'WelcomeController@index');
+Route::get('/', function () {
+    return redirect('auth/login');
+});
 Route::get('home', 'HomeController@index');
 
 Route::get('ads/promotions/table', 'AdsController@promotionsTable');
@@ -104,7 +107,7 @@ Route::get('admin/system/area-config',
 |------------------------Others Route---------------------|
 */
 Route::controllers([
-    'portal/auth' => 'Auth\PortalAuthController',
-    'portal/password' => 'Auth\PasswordController',
+    'auth' => 'Auth\PortalAuthController',
+    'password' => 'Auth\PasswordController',
 ]);
 
