@@ -91,8 +91,12 @@ Route::post('admin/system/settings/category',
 
 Route::get('admin/system/tools',
             ['as' => 'system.tools', 'uses' => 'SystemConfigController@getTools']);
-Route::post('admin/system/tools/update-taxonomy', 
-            ['as' => 'system.tools.update-taxonomy', 'uses' => 'SystemConfigController@updateTax']);
+Route::post('taxonomy/update-requests',
+    ['as' => 'taxonomy.update-requests.process', 'uses' => 'CategoriesController@updateTaxonomy']);
+Route::get('taxonomy/update-status', ['as' => 'taxonomy.update-status', 'uses' => 'CategoriesController@updateTaxonomyStatus']);
+Route::post('stores/update-requests',
+    ['as' => 'stores.update-requests.process', 'uses' => 'CategoriesController@updateTaxonomy']);
+Route::get('stores/update-status', ['as' => 'stores.update-status', 'uses' => 'CategoriesController@updateTaxonomyStatus']);
 
 // Route::post('admin/system/settings/update', 
 //             ['as' => 'system.settings.update', 'uses' => 'ProcessTransactionController@updateTaxonomy']);

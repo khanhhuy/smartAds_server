@@ -36,10 +36,10 @@ class CustomersController extends Controller
     public function getSettings(ActiveCustomer $customer)
     {
         return response()->json([
-            'min_entrance_value' => $customer->getOriginal('min_entrance_value'),
-            'min_entrance_rate' => $customer->getOriginal('min_entrance_rate'),
-            'min_aisle_value' => $customer->getOriginal('min_aisle_value'),
-            'min_aisle_rate' => $customer->getOriginal('min_aisle_rate'),
+            'min_entrance_value' => $customer->getMinEntranceDiscountValue(),
+            'min_entrance_rate' => $customer->getMinEntranceDiscountRate(),
+            'min_aisle_value' => $customer->getMinDiscountValue(),
+            'min_aisle_rate' => $customer->getMinDiscountRate(),
         ]);
     }
 

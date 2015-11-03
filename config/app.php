@@ -150,6 +150,7 @@ return [
         'App\Providers\ProcessTransactionProvider',
         'App\Providers\ViewComposerServiceProvider',
 		'Laracasts\Flash\FlashServiceProvider',
+        'anlutro\LaravelSettings\ServiceProvider',
 
         /**
          * IDE Helper Service Providers....
@@ -209,6 +210,7 @@ return [
     	'Form'      => 'Illuminate\Html\FormFacade',
 		'Utils' => 'App\Utils\Utils',
 		'Flash' => 'Laracasts\Flash\Flash',
+        'Setting' => 'anlutro\LaravelSettings\Facade'
 	],
 
 ];

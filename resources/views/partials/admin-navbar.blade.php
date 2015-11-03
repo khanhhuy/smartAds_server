@@ -12,9 +12,10 @@
                 <a href="{{url('admin/majors')}}"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span> Majors -
                     Stores</a></li>
         </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li @if (Request::is('admin/settings/*')) class="active" @endif>
-                <a href="{{url('admin/settings')}}"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> System </a>
+        <ul class="nav my-nav-pills navbar-nav navbar-right">
+            <li @if (Request::is('admin/system/*')) class="active" @endif>
+                <a href="{{url('admin/system')}}"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                    System </a>
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"

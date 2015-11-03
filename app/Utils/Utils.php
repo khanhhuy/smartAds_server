@@ -2,11 +2,14 @@
 namespace App\Utils;
 
 use App\Area;
+use App\Category;
 use App\Facades\Connector;
 use App\PortalUser;
 use App\Store;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Support\Facades\Request;
+use Setting;
 
 /**
  * Created by PhpStorm.
@@ -284,6 +287,35 @@ class Utils
             default:
                 return '/';
                 break;
+        }
+    }
+
+    public static function updateTaxonomy($taxonomy)
+    {
+        Setting::set('taxonomy.updated_at', 'Updating');
+        Setting::save();
+        DB::table('categories')->whereNotIn('id', DB::table('category_minor')->distinct()->lists('category_id'))->delete();
+        $categories = $taxonomy['categories'];
+        foreach ($categories as $category) {
+            self::update($category, null);
+        }
+
+        Setting::set('taxonomy.updated_at', Carbon::now()->format('m-d-Y'));
+        Setting::save();
+    }
+
+    private static function update(array $category, $parent)
+    {
+        $cat = Category::updateOrCreate(['id' => $category['id'], 'name' => $category['name'], 'parent_id' => $parent['id']]);
+        if (array_key_exists('children', $category)) {
+            $cat->is_leaf = false;
+            $cat->save();
+            foreach ($category['children'] as $child) {
+                self::update($child, $category);
+            }
+        } else {
+            $cat->is_leaf = true;
+            $cat->save();
         }
     }
 }
