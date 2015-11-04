@@ -75,7 +75,10 @@ class ContextAdsService
         $targetedAds = array();
 
         foreach ($allTargeted as $ads) {
-            $rule = $ads->targetedRule()->get()[0];
+            $rule = $ads->targetedRule()->get();
+            if ($rule->isEmpty())
+                continue;
+            $rule = $rule[0];
             if (($customerInfo['gender'] != $rule->gender) && ($rule->gender != 2))
                 continue;
             $age = Carbon::now()->diffInYears(Carbon::createFromFormat('Y-m-d', $customerInfo['birth']));
