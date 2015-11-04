@@ -1,4 +1,4 @@
-//process.env.DISABLE_NOTIFIER = true;
+process.env.DISABLE_NOTIFIER = true;
 var elixir = require('laravel-elixir');
 
 /*
@@ -21,6 +21,7 @@ elixir(function(mix) {
     mix.sass('manage.scss');
     mix.sass('promotion-form.scss');
     mix.sass('major-manage.scss');
+    mix.sass('change-info.scss');
 
     //mix.scripts([
     //   "jquery-2.1.4.min.js",

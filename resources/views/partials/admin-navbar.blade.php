@@ -23,7 +23,7 @@
                     </span>&nbsp; @if (Auth::guest()) Admin @else{{ Auth::user()->first_name }}@endif <span
                             class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#password">Change Account Info</a></li>
+                    <li><a href="{{url('admin/password/edit')}}">Change Password</a></li>
                     <li class="divider"></li>
                     <li><a href="{{ url('/auth/logout') }}">Logout</a></li>
                 </ul>

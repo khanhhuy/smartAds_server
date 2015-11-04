@@ -1,9 +1,14 @@
 <?php namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChangeInfoRequest;
+use Auth;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\PasswordBroker;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Lang;
+use Laracasts\Flash\Flash;
+use Utils;
 
 class PasswordController extends Controller {
 
@@ -31,8 +36,23 @@ class PasswordController extends Controller {
 	{
 		$this->auth = $auth;
 		$this->passwords = $passwords;
+    }
 
-		$this->middleware('guest');
+    public function adminEdit()
+    {
+        return view('auth.password.admin-edit');
 	}
+
+    public function managerEdit()
+    {
+        return view('auth.password.manager-edit');
+    }
+
+    public function update(ChangeInfoRequest $request)
+    {
+        Auth::user()->update(['password' => bcrypt($request->input('new_password'))]);
+        Flash::overlay(Lang::get('flash.change_pass_success'), 'Success!');
+        return redirect(Utils::getCurrentUserHome());
+    }
 
 }
