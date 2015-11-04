@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateBeaconMajorsTable extends Migration {
 
@@ -16,7 +16,7 @@ class CreateBeaconMajorsTable extends Migration {
 		{
 			$table->smallInteger('major',true,true);
 			$table->string('store_id')->unique()->nullable()->index();
-			$table->foreign('store_id')->references('id')->on('stores')->onDelete('set null');
+			$table->foreign('store_id')->references('id')->on('stores')->onDelete('restrict');
 			$table->timestamps();
 		});
 	}

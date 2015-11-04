@@ -63,6 +63,9 @@ Route::post('ads/targeted', ['as'=>'targeted.store','uses'=>'TargetedAdsControll
 Route::put('ads/promotions/{ads}', ['as'=>'promotions.update','uses'=>'AdsController@updatePromotion']);
 Route::put('ads/targeted/{ads}', ['as'=>'targeted.update','uses'=>'TargetedAdsController@updateTargeted']);
 Route::delete('ads',['as'=>'ads.deleteMulti','uses'=>'AdsController@deleteMulti']);
+Route::get('manager/password/edit', 'Auth\PasswordController@managerEdit');
+Route::put('manager/password', 'Auth\PasswordController@update');
+
 
 /*
 |------------------------Admin Route---------------------|
@@ -76,6 +79,8 @@ Route::get('majors/table', 'MajorsController@table');
 Route::resource('majors', 'MajorsController', ['only' => ['store','create','edit','update']]);
 Route::delete('majors', ['as' => 'majors.deleteMulti', 'uses' => 'MajorsController@deleteMulti']);
 
+Route::get('admin/password/edit', 'Auth\PasswordController@adminEdit');
+Route::put('admin/password', 'Auth\PasswordController@update');
 
 Route::get('admin/system', function() {
     return redirect('admin/system/settings');
@@ -92,8 +97,12 @@ Route::post('admin/system/settings/category',
 
 Route::get('admin/system/tools',
             ['as' => 'system.tools', 'uses' => 'SystemConfigController@getTools']);
-Route::post('admin/system/tools/update-taxonomy', 
-            ['as' => 'system.tools.update-taxonomy', 'uses' => 'SystemConfigController@updateTax']);
+Route::post('taxonomy/update-requests',
+    ['as' => 'taxonomy.update-requests.process', 'uses' => 'CategoriesController@updateTaxonomy']);
+Route::get('taxonomy/update-status', ['as' => 'taxonomy.update-status', 'uses' => 'CategoriesController@updateTaxonomyStatus']);
+Route::post('stores/update-requests',
+    ['as' => 'stores.update-requests.process', 'uses' => 'StoresController@updateStores']);
+Route::get('stores/update-status', ['as' => 'stores.update-status', 'uses' => 'StoresController@updateStoresStatus']);
 
 // Route::post('admin/system/settings/update', 
 //             ['as' => 'system.settings.update', 'uses' => 'ProcessTransactionController@updateTaxonomy']);

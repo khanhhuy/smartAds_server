@@ -1,14 +1,10 @@
 <?php
 
-use App\ActiveCustomer;
-use App\Beacon;
 use App\BeaconMinor;
 use App\Category;
-use App\Item;
-use App\Repositories\CategoryRepository;
+use App\Utils\Utils;
 use App\WatchingList;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 
 class CategorySeeder extends Seeder {
 
@@ -24,11 +20,7 @@ class CategorySeeder extends Seeder {
         DB::table('category_minor')->delete();
         $catRepo=App::make('App\Repositories\CategoryRepositoryInterface');
         $taxonomy = $catRepo->getTaxonomy(true);
-        $categories = $taxonomy['categories'];
-        foreach ($categories as $category) {
-            $this->insert($category,null);
-        }
-
+        Utils::updateTaxonomy($taxonomy,false);
         $this->seedCatMinor();
 	}
 
@@ -46,22 +38,6 @@ class CategorySeeder extends Seeder {
         $minor1->categories()->attach($catFabricSofteners);
         $minor2->categories()->attach($catLaundryDetergents);
         $minor3->categories()->attach([$catSoftDrinks->id, $catToothpaste->id]);
-    }
-
-    private function insert(array $category, $parent)
-    {
-        $cat = new Category(['id' => $category['id'], 'name' => $category['name'], 'parent_id' => $parent['id']]);
-        if (array_key_exists('children', $category)) {
-            $cat->is_leaf=false;
-            $cat->save();
-            foreach ($category['children'] as $child) {
-                $this->insert($child,$category);
-            }
-        }
-        else{
-            $cat->is_leaf=true;
-            $cat->save();
-        }
     }
 
 }

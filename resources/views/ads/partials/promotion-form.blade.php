@@ -64,3 +64,4 @@ $urlGroupClass = "col-sm-8 col-md-7";
 </fieldset>
 <br/>
 @include('ads.partials.mobile-display-form')
+<hr/>

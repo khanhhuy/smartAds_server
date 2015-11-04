@@ -1,6 +1,11 @@
 @extends('system.admin-system')
-    <link rel="stylesheet" type="text/css" href="{{asset('/css/admin-tool.css')}}">
+
+<?php
+$loader = asset('/img/icon/rolling.svg');
+?>
+
 @section('head-footer-child')
+    <link rel="stylesheet" type="text/css" href="{{asset('/css/admin-tool.css')}}">
 @endsection
 
 @section('title','Tools')
@@ -10,52 +15,119 @@
 @endsection
 
 @section('content')
-    <div class="row">
-        <?php $loader = asset('/img/icon/rolling.svg'); ?>
-        <div class="btn-rich" id="btnProcess">
-            <a class="btn-name" href="#">Re-Process </a>
-            <img src="{{$loader}}" class="icon-loader">
-            <span class="glyphicon glyphicon-ok icon-success" aria-hidden="true"></span>
-            <div class="btn-update">Last updated: 11-1-2015</div>
-        </div>
-        <div class="btn-rich" id="btnTaxonomy">
-            <a class="btn-name" href="#">Update Taxonomy</a>
-            <img src="{{$loader}}" class="icon-loader">
-            <span class="glyphicon glyphicon-ok icon-success" aria-hidden="true"></span>
-            <div class="btn-update">Last updated: 11-1-2015</div>
-        </div>
-        <div class="btn-rich" id="btnArea">
-            <a class="btn-name" href="#">Update Area</a>
-            <img src="{{$loader}}" class="icon-loader">
-            <span class="glyphicon glyphicon-ok icon-success" aria-hidden="true"></span>
-            <div class="btn-update">Last updated: 11-1-2015</div>
-        </div>
+    <div class="btn-rich" id="btnProcess">
+        <div class="btn-name">Re-Process</div>
+        <img src="{{$loader}}" class="icon-loader">
+        <span class="glyphicon glyphicon-ok icon-success" aria-hidden="true"></span>
+
+        <div class="btn-update">Last updated: 11-1-2015</div>
+    </div>
+    <div class="btn-rich" id="btnTaxonomy">
+        <div class="btn-name">Update Taxonomy</div>
+        <img src="{{$loader}}" class="icon-loader">
+        <span class="glyphicon glyphicon-ok icon-success" aria-hidden="true"></span>
+
+        <div class="btn-update">Last updated: {{$lastUpdated['taxonomy']}}</div>
+    </div>
+    <div class="btn-rich" id="btnStoreArea">
+        <div class="btn-name">Update Store List</div>
+        <img src="{{$loader}}" class="icon-loader">
+        <span class="glyphicon glyphicon-ok icon-success" aria-hidden="true"></span>
+
+        <div class="btn-update">Last updated: {{$lastUpdated['stores_areas']}}</div>
     </div>
 @endsection
-    
+
 @section('body-footer')
-<script>
-    $(document).ready( function(){
-        $('#btnProcess').click(function() {
-            $(this).find('.icon-loader').show("slow");
-        });
-        $('#btnTaxonomy').click(function() {
-            $(this).find('.icon-loader').show("slow");
-            $(this).find('.icon-success').hide();
-            $.ajax({
-                url: "{{route('system.tools.update-taxonomy')}}", //TODO: implement backend
-                success: function(data) {
-                    console.log(data);
-                    $('#btnTaxonomy .btn-update').text('Last updated: ' + data);
-                    $('#btnTaxonomy').find('.icon-loader').hide("slow");
-                    $('#btnTaxonomy').find('.icon-success').show("slow");
-                },
-                error: function(error) {
-                    console.log(error);
-                },
-                type: 'POST'
+    <script>
+        var OBJS = {
+            'taxonomy': {
+                id: "#btnTaxonomy",
+                requestURL: "{{route('taxonomy.update-requests.process')}}",
+                statusURL: "{{route('taxonomy.update-status')}}",
+                updating: false,
+            },
+            'stores_areas': {
+                id: "#btnStoreArea",
+                requestURL: "{{route('stores.update-requests.process')}}",
+                statusURL: "{{route('stores.update-status')}}",
+                updating: false,
+            }
+        };
+        function showUpdatingIndicator(obj) {
+            obj.updating = true;
+            $(obj.id + ' .icon-success').hide();
+            $(obj.id + ' .icon-loader').show("slow");
+            $(obj.id + ' .btn-update').text('Last updated: Updating ...');
+        }
+        function handleClick(name) {
+            var obj = OBJS[name];
+            if (!obj.updating) {
+                showUpdatingIndicator(obj);
+                $.ajax({
+                    method: 'POST',
+                    url: obj.requestURL,
+                    success: function (data) {
+                        console.log(data);
+                        pollingUpdateStatus(obj);
+                    },
+                    error: function (jqXHR, type, errorThrown) {
+                        $(obj.id + ' .icon-loader').hide("slow");
+                        if (errorThrown != null) {
+                            alert(errorThrown);
+                        }
+                    }
+                });
+            }
+        }
+
+        $(document).ready(function () {
+            $('#btnProcess').click(function () {
+                $(this).find('.icon-loader').show("slow");
             });
+            var obj;
+            @foreach($names as $name)
+                obj = OBJS['{{$name}}'];
+            $(obj.id).click(function () {
+                handleClick('{{$name}}');
+            });
+            @endforeach
+
+
+
+
         });
-    });
+        function pollingUpdateStatus(obj) {
+            $.ajax({
+                url: obj.statusURL,
+                success: function (data) {
+                    console.log(obj.id + ": " + data);
+                    if (data === "Updating") {
+                        setTimeout(function () {
+                            pollingUpdateStatus(obj);
+                        }, 1000);
+                    }
+                    else {
+                        $(obj.id + ' .btn-update').text('Last updated: ' + data);
+                        $(obj.id + ' .icon-loader').hide();
+                        $(obj.id + ' .icon-success').show("slow");
+                        obj.updating = false;
+                    }
+                },
+                error: function (jqXHR, type, errorThrown) {
+                    $(obj.id + ' .icon-loader').hide("slow");
+                    if (errorThrown != null) {
+                        alert(errorThrown);
+                    }
+                }
+            });
+        }
+        @foreach($names as $name)
+            @if ($updating[$name])
+                obj = OBJS['{{$name}}'];
+        showUpdatingIndicator(obj);
+        pollingUpdateStatus(obj);
+        @endif
+        @endforeach
     </script>
 @endsection

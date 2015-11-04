@@ -1,5 +1,6 @@
 @extends('admin-master')
 
+<<<<<<< HEAD
 @section('title','Minor - Category Management')
 
 @section('head-footer')
@@ -43,6 +44,7 @@
 		Add Minor - Category
 	</button>
 	
+	@include('partials.flash-overlay')
 
 @endsection
 
@@ -74,6 +76,8 @@
         $('button#updateBtn').click(function() {
         	$('form#updateTax').submit();
         });	
+
+        $('#flash-overlay-modal').modal();
      
     });
     </script>

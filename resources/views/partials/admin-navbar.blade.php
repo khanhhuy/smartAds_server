@@ -12,9 +12,10 @@
                 <a href="{{url('admin/majors')}}"><span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span> Majors -
                     Stores</a></li>
         </ul>
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav my-nav-pills navbar-nav navbar-right">
             <li @if (Request::is('admin/system/*')) class="active" @endif>
-                <a href="{{url('admin/system')}}"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> System </a>
+                <a href="{{url('admin/system')}}"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                    System </a>
             </li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
@@ -22,7 +23,7 @@
                     </span>&nbsp; @if (Auth::guest()) Admin @else{{ Auth::user()->first_name }}@endif <span
                             class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#password">Change Account Info</a></li>
+                    <li><a href="{{url('admin/password/edit')}}">Change Password</a></li>
                     <li class="divider"></li>
                     <li><a href="{{ url('/auth/logout') }}">Logout</a></li>
                 </ul>

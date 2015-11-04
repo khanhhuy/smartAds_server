@@ -1,10 +1,11 @@
 <?php namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Config;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Database\Eloquent\Model;
 
 class ActiveCustomer extends Model implements AuthenticatableContract, CanResetPasswordContract
 {
@@ -38,7 +39,7 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
             return $this->min_entrance_value;
         } else {
             //TODO Huy: implement save default value;
-            return 10000;
+            return Config::get('promotion-threshold.entrance_value');
         }
     }
 
@@ -48,7 +49,7 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
             return $this->min_entrance_rate;
         } else {
             //TODO Huy: implement save default rate;
-            return 20;
+            return Config::get('promotion-threshold.entrance_rate');
         }
     }
 
@@ -58,7 +59,7 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
             return $this->min_aisle_value;
         } else {
             //TODO Huy: implement save default value;
-            return 4000;
+            return Config::get('promotion-threshold.aisle_value');
         }
     }
 
@@ -68,7 +69,7 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
             return $this->min_aisle_rate;
         } else {
             //TODO Huy: implement save default rate;
-            return 10;
+            return Config::get('promotion-threshold.aisle_rate');
         }
     }
 

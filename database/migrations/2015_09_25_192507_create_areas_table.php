@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateAreasTable extends Migration
 {
@@ -18,20 +18,20 @@ class CreateAreasTable extends Migration
             $table->primary('id');
             $table->string('name');
             $table->string('parent_id')->index()->nullable();
-            $table->foreign('parent_id')->references('id')->on('areas')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('areas')->onDelete('set null');
             $table->timestamps();
         });
 
         Schema::table('stores', function (Blueprint $table) {
-            $table->string('area_id');
-            $table->foreign('area_id')->references('id')->on('areas')->onDelete('cascade');
+            $table->string('area_id')->nullable();
+            $table->foreign('area_id')->references('id')->on('areas')->onDelete('set null');
         });
 
         Schema::create('ads_area', function (Blueprint $table) {
             $table->unsignedInteger('ads_id')->index();
             $table->foreign('ads_id')->references('id')->on('ads')->onDelete('cascade');
             $table->string('area_id')->index();
-            $table->foreign('area_id')->references('id')->on('areas')->onDelete('cascade');
+            $table->foreign('area_id')->references('id')->on('areas')->onDelete('restrict');
         });
     }
 

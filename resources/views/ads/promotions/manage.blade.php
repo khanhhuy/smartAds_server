@@ -26,7 +26,10 @@
         @include('partials.search.action-group')
     </tr>
     </thead>
+@endsection
 
+@section('content-footer')
+    @include('partials.flash-overlay')
 @endsection
 
 @section('body-footer')
@@ -82,6 +85,8 @@
     <script>
         var COLS = ["id", "items", "areas", "from", "to", "rate", "value"];
         var divider = 4;
+
+        $('#flash-overlay-modal').modal();
     </script>
     @include('partials.search.footer-script')
 @endsection

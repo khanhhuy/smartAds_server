@@ -2,11 +2,14 @@
 namespace App\Utils;
 
 use App\Area;
+use App\Category;
 use App\Facades\Connector;
 use App\PortalUser;
 use App\Store;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Support\Facades\Request;
+use Setting;
 
 /**
  * Created by PhpStorm.
@@ -119,11 +122,15 @@ class Utils
     public static function formatStoreAreas($store)
     {
         $a = $store->area;
-        $r = $a->name;
-        $a = $a->parentArea;
-        while (!empty($a)) {
-            $r .= ' - ' . $a->name;
+        if (!empty($a)) {
+            $r = $a->name;
             $a = $a->parentArea;
+            while (!empty($a)) {
+                $r .= ' - ' . $a->name;
+                $a = $a->parentArea;
+            }
+        } else {
+            $r = null;
         }
         return $r;
     }
@@ -162,12 +169,12 @@ class Utils
         $rule = $rule[0];
         $displayedRule = '';
         //Age
-        if ($rule['to_age'] > 0) 
+        if ($rule['to_age'] > 0)
             $displayedRule .= 'Age:' . $rule['from_age'] . '-' . $rule['to_age'];
         else if ($rule['from_age'] > 0)
             $displayedRule .= $displayedRule . 'Age>' . $rule['from_age'];
         //Family member
-        if ($rule['to_family_members'] > 0) 
+        if ($rule['to_family_members'] > 0)
             $displayedRule .= ', Family:' . $rule['from_family_members'] . '-' . $rule['to_family_members'];
         elseif ($rule['from_family_members'] != 0)
             $displayedRule .= ', Family>' . $rule['from_family_members'];
@@ -273,10 +280,10 @@ class Utils
     {
         switch (PortalUser::getCurrentUserType()) {
             case 'Admin':
-                return '/admin';
+                return '/admin/minors';
                 break;
             case 'Ads_Manager':
-                return '/manager';
+                return '/manager/ads/promotions';
                 break;
             case 'Guest':
                 return '/';
@@ -284,6 +291,76 @@ class Utils
             default:
                 return '/';
                 break;
+        }
+    }
+
+    public static function updateTaxonomy($taxonomy, $delete = true)
+    {
+        Setting::set('taxonomy.updated_at', 'Updating');
+        Setting::save();
+        if ($delete) {
+            DB::table('categories')->whereNotIn('id', DB::table('category_minor')->distinct()->lists('category_id'))->delete();
+        }
+        $categories = $taxonomy['categories'];
+        foreach ($categories as $category) {
+            self::recursiveUpdateCategory($category, null);
+        }
+
+        Setting::set('taxonomy.updated_at', Carbon::now()->format('m-d-Y'));
+        Setting::save();
+    }
+
+    private static function recursiveUpdateCategory(array $category, $parent)
+    {
+        $cat = Category::updateOrCreate(['id' => $category['id']], ['name' => $category['name'], 'parent_id' => $parent['id']]);
+        if (array_key_exists('children', $category)) {
+            $cat->is_leaf = false;
+            $cat->save();
+            foreach ($category['children'] as $child) {
+                self::recursiveUpdateCategory($child, $category);
+            }
+        } else {
+            $cat->is_leaf = true;
+            $cat->save();
+        }
+    }
+
+    public static function updateStoresAreas($stores, $delete = true)
+    {
+        Setting::set('stores_areas.updated_at', 'Updating');
+        Setting::save();
+        $cantDelStores1 = DB::table('beacon_majors')->distinct()->lists('store_id');
+        $cantDelStores2 = DB::table('ads_store')->distinct()->lists('store_id');
+        if ($delete) {
+            DB::table('stores')->whereNotIn('id', array_merge($cantDelStores1, $cantDelStores2))->delete();
+            DB::table('areas')->whereNotIn('id', DB::table('ads_area')->distinct()->lists('area_id'))->delete();
+        }
+        foreach ($stores as $as) {
+            self::recursiveupdateStoreArea($as, null);
+        }
+
+        $all = Store::all();
+        foreach ($all as $s) {
+            $d = self::formatStoreAreas($s);
+            if (!is_null($d)) {
+                $s->display_area = $d;
+                $s->save();
+            }
+        }
+
+        Setting::set('stores_areas.updated_at', Carbon::now()->format('m-d-Y'));
+        Setting::save();
+    }
+
+    private static function recursiveupdateStoreArea($as, $parentID)
+    {
+        if (array_key_exists('children', $as)) {
+            Area::updateOrCreate(['id' => 'A_' . $as['id']], ['parent_id' => $parentID, 'name' => $as['name']]);
+            foreach ($as['children'] as $child) {
+                self::recursiveupdateStoreArea($child, 'A_' . $as['id']);
+            }
+        } else {
+            Store::updateOrCreate(['id' => 'S_' . $as['id']], ['area_id' => $parentID, 'name' => trim($as['name']), 'address' => $as['address']]);
         }
     }
 }

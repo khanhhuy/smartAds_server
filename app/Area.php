@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 
 class Area extends Model {
-
+    protected $fillable = ['id', 'name', 'parent_id'];
     public function ads()
     {
         return $this->belongsToMany('App\Ads');
