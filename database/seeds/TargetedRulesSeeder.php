@@ -21,7 +21,7 @@ class TargetedRulesSeeder extends Seeder {
 			'jobs_desc' => '1']);
 
 		Ads::find('1')->targetedRule()->save($rule1);
-		Ads::find('2')->targetedRule()->save($rule3);
-		Ads::find('3')->targetedRule()->save($rule5);
+		Ads::find('2')->targetedRule()->save($rule2);
+		Ads::find('3')->targetedRule()->save($rule3);
 	}
 }
