@@ -13,13 +13,12 @@ use App\ActiveCustomer;
 use App\Ads;
 use App\BeaconMajor;
 use App\BeaconMinor;
-use App\Facades\Connector;
 use App\Repositories\CategoryRepositoryInterface;
-use App\Repositories\StoreRepositoryInterface;
 use App\Repositories\CustomerRepositoryInterface;
-use Illuminate\Support\Facades\DB;
+use App\Repositories\StoreRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ContextAdsService
 {
@@ -58,7 +57,7 @@ class ContextAdsService
             $items = $a->items;
             $cats = $this->categoryRepo->getAllCategoryNodesOfItems($items);
             //$minors=BeaconMinor::join('category_minor','beacon_minors.minor','=','category_minor.beacon_minor')->whereIn('category_id',$cats)->get();
-            $minors = DB::table('category_minor')->whereIn('category_id', $cats)->lists('beacon_minor');
+            $minors = DB::table('category_minor')->whereIn('category_id', $cats)->distinct()->lists('beacon_minor');
             $a['minors'] = $minors;
         }
 

@@ -78,3 +78,4 @@
 </fieldset>
 <br/>
 @include('ads.partials.mobile-display-form')
+<hr/>

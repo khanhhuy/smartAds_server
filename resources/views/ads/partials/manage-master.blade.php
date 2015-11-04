@@ -20,4 +20,5 @@
         </div>
     </div>
     @include('partials.delete-success')
+    @yield('content-footer')
 @endsection

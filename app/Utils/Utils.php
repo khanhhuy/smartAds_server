@@ -280,10 +280,10 @@ class Utils
     {
         switch (PortalUser::getCurrentUserType()) {
             case 'Admin':
-                return '/admin';
+                return '/admin/minors';
                 break;
             case 'Ads_Manager':
-                return '/manager';
+                return '/manager/ads/promotions';
                 break;
             case 'Guest':
                 return '/';
