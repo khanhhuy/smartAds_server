@@ -72,7 +72,7 @@
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row, meta) {
-                    return '<a class="my-manage-edit-btn" role="button" href="' + row[0] + '/edit">' +
+                    return '<a class="my-manage-edit-btn" role="button" href="{{url("manager/ads/promotions")}}/' + row[0] + '/edit">' +
                             '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> Edit</a>';
                 }
             }

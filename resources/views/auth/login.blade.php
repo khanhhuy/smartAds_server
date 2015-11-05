@@ -15,11 +15,12 @@
 
         #login_btn {
             min-width: 80px;
+            margin-right: 25px;
         }
 
         @media (min-width: 768px) {
             #my-login-panel {
-                width: 510px;
+                width: 470px;
                 margin-left: auto;
                 margin-right: auto;
             }
@@ -32,6 +33,10 @@
                 padding-left: 20px;
                 padding-right: 20px;
             }
+        }
+
+        #remember_chk {
+            display: inline-block;
         }
     </style>
 
@@ -81,20 +86,14 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="col-sm-6 col-sm-offset-4">
-                                <div class="checkbox">
+                            <div class="col-sm-8 col-sm-offset-4">
+                                <button type="submit" id="login_btn" class="btn btn-primary">Login</button>
+
+                                <div class="checkbox" id="remember_chk">
                                     <label>
                                         <input type="checkbox" name="remember"> Remember Me
                                     </label>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-sm-8 col-sm-offset-4">
-                                <button type="submit" id="login_btn" class="btn btn-primary">Login</button>
-
-                                <a class="btn btn-link" href="{{ url('/password/email') }}">Forgot Your Password?</a>
                             </div>
                         </div>
                     </form>
