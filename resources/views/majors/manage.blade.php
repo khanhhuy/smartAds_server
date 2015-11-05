@@ -100,7 +100,6 @@
                     return markup;
                 }
             });
-
             $('#form-container form').first().submit(function (e) {
                 e.preventDefault();
                 $('#my-submit-btn').prop('disabled', true);
