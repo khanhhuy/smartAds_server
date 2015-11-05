@@ -115,6 +115,15 @@ class ConnectorService
         return $r->result;
     }
 
+    public function validateAuthByID($customer_id, $password)
+    {
+        $response = $this->client->post('auth/validate', [
+            'form_params' => compact('customer_id', 'password')
+        ]);
+        $r = json_decode($response->getBody());
+        return $r->result;
+    }
+
     public function getCustomerFromEmail($email)
     {
         $response=$this->client->get('customer-by-email',[
@@ -168,6 +177,14 @@ class ConnectorService
             ]
         ]);
         return self::decodeResponse($r, true)['items'];
+    }
+
+    public function changePassword($customerID, $param)
+    {
+        $r = $this->client->put("customers/$customerID/password", [
+            'form_params' => $param
+        ]);
+        return self::decodeResponse($r, true);
     }
 
 }

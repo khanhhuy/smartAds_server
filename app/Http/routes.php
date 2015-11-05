@@ -25,6 +25,7 @@ Route::group(['prefix'=>'api/v1'],function(){
 
         Route::get('customers/{customers}/config', 'CustomersController@getSettings');
         Route::post('customers/{customers}/config', 'CustomersController@storeSettings');
+        Route::put('customers/{customers}/password', 'Auth\APIPasswordController@update');
     });
 
     Route::get('account-status', 'CustomersController@accountStatus');
@@ -117,6 +118,6 @@ Route::get('admin/system/area-config',
 */
 Route::controllers([
     'auth' => 'Auth\PortalAuthController',
-    'password' => 'Auth\PasswordController',
+    'password' => 'Auth\PortalPasswordController',
 ]);
 
