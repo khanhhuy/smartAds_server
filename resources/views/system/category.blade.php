@@ -21,7 +21,10 @@
 	<div class="date">Last updated taxonomy: TODO</div>
 	<button class="btn btn-primary" id="saveBtn">Save</button>
 	<button class="btn btn-warning" id="updateBtn">Update Taxonomy</button>
+    {!! Form::open(array('route'=> 'system.settings.category', 
+    'class' => 'form-group', 'id' => 'saveCat')) !!}
 		@include('system.partials.category-tree')
+    {!! Form::close() !!}
 @endsection
 
 @section('body-footer')
@@ -44,10 +47,6 @@
         $('button#saveBtn').click(function() {
         	$('form#saveCat').submit();
         });
-        $('button#updateBtn').click(function() {
-        	$('form#updateTax').submit();
-        });
-
     });
     </script>
 @endsection

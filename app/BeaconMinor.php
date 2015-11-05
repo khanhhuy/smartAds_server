@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\Model;
 class BeaconMinor extends Model {
 
 	protected $primaryKey='minor';
+	protected $fillable = ['minor, is_entry_minor'];
 
     public function beacons()
     {

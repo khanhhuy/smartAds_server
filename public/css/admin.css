@@ -14,3 +14,10 @@ span.unit {
 	display: inline-block;
 }
 
+span.ignore {
+	color: #A9AFB0;
+}
+
+div.modal-header {
+	background-color: #eff3f8;
+}

@@ -8,7 +8,6 @@
     <link rel="stylesheet" type="text/css" href={!! URL::asset('css/admin-select.css') !!}>
     <link rel="stylesheet" type="text/css" href={!! URL::asset('css/admin.css') !!}>
 
-    <script type="text/javascript" src={!! URL::asset('js/jQuery-bonsai/bower_components/jquery/dist/jquery.min.js') !!} defer></script>
     <script type="text/javascript" src={!! URL::asset('js/jQuery-bonsai/bower_components/jquery-qubit/jquery.qubit.js') !!} defer></script>
     <script type="text/javascript" src={!! URL::asset('js/jQuery-bonsai/bower_components/jquery-bonsai/jquery.bonsai.js') !!} defer></script>	
 @endsection
@@ -17,35 +16,38 @@
 	
 @section('content')
 
-	<div class="modal fade" id="taxonomyModal">
-	  <div class="modal-dialog modal-lg">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h4 class="modal-title">Add Category - Minor</h4>
-	        <div class="date">Last updated:</div>
-	      </div>
-	      <div class="modal-body">
-	      	{!! Form::label('minor','Minor') !!}
-	      	{!! Form::input('number','minor', null,['class'=>'form-control','required'=>'required']) !!}
-	        	@include('system.partials.category-tree')
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary">
-	        	Add
-	        </button>
-	      </div>
-	    </div><!-- /.modal-content -->
-	  </div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
-
-	<button id="btnAddMinor" class="btn btn-primary" data-toggle="modal" data-target="#taxonomyModal">
-		Add Minor - Category
-	</button>
+	<div class="row">
+		<button id="btnOpenAdd" class="btn btn-primary">
+			Add Minor - Category
+		</button>
+        <div class="panel panel-default category-tree" id="category-tree" style="display:none;">
+            <div class="panel-body">
+            	{!! Form::open(array('route'=> 'admin.minors.store', 'class' => 'form-group', 'id' => 'saveMinor')) !!}
+			      	<div class="form-group form-inline">
+			      		{!! Form::label('minor_id','Minor') !!}
+			  			{!! Form::input('number','minor_id', null,['class'=>'form-control', 'id' => 'minor_id','required'=>'required']) !!}
+			  			@include('errors.list')
+			  			<button type="button" class="btn btn-primary" id="btnAddMinor">Add</button>
+			      	</div>
+			      	<h4 class="modal-title">List Categories</h4>
+			    	@include('system.partials.category-tree')
+			    {!! Form::close() !!}
+            </div>
+        </div>
+        <div id="manage-minor">
+        	<p>
+        		Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+        		tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+        		quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+        		consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+        		cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+        		proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        	</p>
+        </div>
+    </div>
 	
-	@include('partials.flash-overlay')
-
+	
+	<div id="pos-message"></div>
 @endsection
 
 @section('breadcrumb')
@@ -55,8 +57,34 @@
 @section('body-footer')
 <script>
     $(document).ready( function(){
-        $("input[data-suitable=1]").prop("checked", true);
-        $("input[data-suitable=0]").hide();
+
+    	$('#btnOpenAdd').click(function() {
+    		$('#manage-minor').slideToggle('fast');
+    		$('#category-tree').slideToggle('fast');
+    	});
+
+    	//add new minor
+    	$('#btnAddMinor').click(function() {
+    		$.ajax({
+    			type: 'POST',
+    			url: $(this).attr('action'),
+    			data: $('#saveMinor').serialize(),
+    			success: function(data) {
+    				$('#pos-message').html(data);
+    				$('#taxonomyModal').modal('hide');
+    				$('.bonsai input[type=checkbox]').prop('checked', false);
+    				$('#category-tree').slideToggle('fast');
+    				@include('partials.fixed-pos-message-script')
+    			},
+    			error: function (jqXHR, type, errorThrown) {
+                    if (errorThrown != null) {
+                        alert(errorThrown);
+                    }
+                }
+    		});
+    	});
+
+    	//split the list to 2 columns
         var totalList = $(".category .first-level").size();
         var halfList = Math.floor(totalList/2);
         $(".category").each(function() {
@@ -65,20 +93,13 @@
         $(".category").each(function() {
             $(this).wrapAll('<div class="col-md-6"></div>');
         });
+
+        //apply bonsai tree
         $('.category').bonsai({
                 expandAll: false,
-                checkboxes: true, // depends on jquery.qubit plugin
+                checkboxes: false, // depends on jquery.qubit plugin
                 handleDuplicateCheckboxes: true // optional
             });
-        $('button#saveBtn').click(function() {
-        	$('form#saveCat').submit();
-        });
-        $('button#updateBtn').click(function() {
-        	$('form#updateTax').submit();
-        });	
-
-        $('#flash-overlay-modal').modal();
-     
     });
     </script>
 @endsection
