@@ -22,7 +22,7 @@ class ChangeInfoRequest extends Request
     {
         return [
             'current_password' => 'required|current_password',
-            'new_password' => 'required|confirmed',
+            'new_password' => 'required|confirmed|min:6',
         ];
     }
 

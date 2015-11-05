@@ -53,11 +53,15 @@ class AdsController extends Controller
 
     public function edit(Ads $ads)
     {
-        $items1 = $ads->items;
-        foreach ($items1 as $item) {
-            $items[$item->id] = Utils::formatItem($this->itemRepo->getItemNameByID($item->id), $item->id);
+        if ($ads->is_promotion) {
+            $items1 = $ads->items;
+            foreach ($items1 as $item) {
+                $items[$item->id] = Utils::formatItem($this->itemRepo->getItemNameByID($item->id), $item->id);
+            }
+            return view('ads.promotions.edit')->with(compact(['items', 'ads']));
+        } else {
+            abort(400);
         }
-        return view('ads.promotions.edit')->with(compact(['items', 'ads']));
     }
 
     public function storePromotion(PromotionRequest $request)

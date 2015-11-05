@@ -39,8 +39,7 @@ class PortalUser extends Model implements AuthenticatableContract, CanResetPassw
         if (Auth::guest()) {
             return 'Guest';
         } else {
-            $user = Auth::user();
-            return $user->role;
+            return Auth::user()->role;
         }
     }
 }
