@@ -108,24 +108,26 @@
 	</script>
 	@include('partials.manage-footer-script')
 	<script>
-	    $(document).ready( function(){
+            function togglePanel() {
+                $('#minor-table').slideToggle('fast');
+                $('#category-tree').slideToggle('fast');
+            }
 
 	    	$('#btnOpenAdd').click(function() {
-		    	$('#minor-table').slideToggle('fast');
-	    		$('#category-tree').slideToggle('fast');
+		    	togglePanel();
 	    	});
 
 	    	//add new minor
 	    	$('#btnAddMinor').click(function() {
+                var minor = $('#minor_id').val();
 	    		$.ajax({
 	    			type: 'POST',
 	    			url: $(this).attr('action'),
 	    			data: $('#saveMinor').serialize(),
 	    			success: function(data) {
 	    				$('#pos-message').html(data);
-	    				$('#taxonomyModal').modal('hide');
 	    				$('.bonsai input[type=checkbox]').prop('checked', false);
-	    				$('#category-tree').slideToggle('fast');
+	    				togglePanel();
 	    				if ($('#pos-message .alert-danger').length === 0) {
                      	   	updateEditingRow(-1);
                         	table.draw(false);
@@ -178,28 +180,26 @@
 	            });
 	            updateEditingRow(minor);
 	        }
-
-
-
-	    }
-	</script>
-	<script type="text/javascript">
-    	//split the list to 2 columns
-        var totalList = $(".category .first-level").size();
-        var halfList = Math.floor(totalList/2);
-        $(".category").each(function() {
-            $(this).children(':gt('+halfList+')').detach().wrapAll('<ul class="bonsai category"></ul>').parent().insertAfter(this);
-        });
-        $(".category").each(function() {
-            $(this).wrapAll('<div class="col-md-6"></div>');
-        });
-
-        //apply bonsai tree
-        $('.category').bonsai({
-                expandAll: false,
-                checkboxes: false, // depends on jquery.qubit plugin
-                handleDuplicateCheckboxes: true // optional
+    	
+        $(document).ready( function(){
+            //split the list to 2 columns
+            var totalList = $(".category .first-level").size();
+            var halfList = Math.floor(totalList/2);
+            $(".category").each(function() {
+                $(this).children(':gt('+halfList+')').detach().wrapAll('<ul class="bonsai category"></ul>').parent().insertAfter(this);
             });
+            $(".category").each(function() {
+                $(this).wrapAll('<div class="col-md-6"></div>');
+            });
+
+            //apply bonsai tree
+        
+            $('.category').bonsai({
+                    expandAll: false,
+                    checkboxes: false, // depends on jquery.qubit plugin
+                    handleDuplicateCheckboxes: true // optional
+            });
+        });
 	</script>
 @include('partials.search.footer-script')
 @endsection
