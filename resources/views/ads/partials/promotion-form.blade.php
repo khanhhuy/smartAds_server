@@ -47,7 +47,7 @@ $urlGroupClass = "col-sm-8 col-md-7";
         {!! Form::label('discount_value','Discount Amount',['class'=>"$labelClass"]) !!}
         <div class="{{$fromValueGroup}}">
             <div class="input-group my-inline-input-group">
-                {!! Form::input('number','discount_value',null,['class'=>'form-control my-inline-control','required'=>'required',
+                {!! Form::input('number','discount_value',null,['class'=>'form-control my-inline-control discount-value','required'=>'required',
                  'min'=>'0.001','step'=>'0.001','placeholder'=>'e.g. 10500']) !!}
                 <div class="input-group-addon">VND</div>
             </div>
@@ -55,7 +55,7 @@ $urlGroupClass = "col-sm-8 col-md-7";
         <div class="{{$toRateGroup}}">
             {!! Form::label('discount_rate','Rate',['class'=>'control-label my-between-label']) !!}
             <div class="input-group my-inline-input-group">
-                {!! Form::input('number','discount_rate',null,['class'=>'form-control my-inline-control', 'min'=>'0.01','step'=>'0.01','max'=>'100',
+                {!! Form::input('number','discount_rate',null,['class'=>'form-control my-inline-control discount-rate', 'min'=>'0.01','step'=>'0.01','max'=>'100',
                 'required'=>'required','placeholder'=>'e.g. 20']) !!}
                 <div class="input-group-addon">%</div>
             </div>

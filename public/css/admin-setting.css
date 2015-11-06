@@ -1,0 +1,86 @@
+.my-setting-container .panel-group {
+  margin-bottom: 0;
+}
+
+.my-setting-container .my-list-setting-panel a.panel-heading {
+  display: block;
+  text-decoration: none;
+  text-align: center;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}
+
+.my-setting-container .submit-top-hr {
+  margin-bottom: 7px;
+}
+
+.my-setting-container .btn[type=submit] {
+  float: right;
+}
+
+.my-setting-container label.control-label {
+  width: initial;
+  margin-right: 20px;
+}
+
+.my-setting-container input.discount-value {
+  width: 150px;
+}
+
+.my-setting-container input.discount-rate {
+  width: 90px;
+}
+
+@media (min-width: 768px) {
+  .my-setting-container .my-inline-control {
+    display: initial;
+  }
+
+  .my-setting-container .my-between-label {
+    width: 20px;
+    margin-left: 10px;
+    margin-right: 15px;
+  }
+
+  .my-setting-container .my-inline-input-group {
+    display: inline-table;
+  }
+
+  .my-setting-container .my-inline-input-group input[type=number] {
+    float: initial;
+  }
+}
+
+.my-setting-container .my-inline-input-group .input-group-addon {
+  width: initial;
+}
+
+@media (min-width: 768px) {
+  .my-setting-container {
+    width: 722px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+    .my-setting-container .threshold-panel label.control-label.my-between-label {
+      width: initial;
+      margin-left: 30px;
+      margin-right: 15px;
+    }
+    .my-setting-container .trans-process-panel label.control-label {
+      width: 325px;
+    }
+    .my-setting-container .trans-process-panel input.form-control {
+      display: initial;
+      width: initial;
+    }
+    .my-setting-container .trans-process-panel input#time-range {
+      width: 65px;
+    }
+}
+
+.my-setting-container .form-group {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+/*# sourceMappingURL=admin-setting.css.map */

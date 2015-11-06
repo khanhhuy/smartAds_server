@@ -2,31 +2,7 @@
   input[type=date].form-control {
     width: initial;
   }
-  input[name=discount_value].form-control {
-    width: 150px;
-  }
-  input[name=discount_rate].form-control {
-    width: 90px;
-  }
-  @media (min-width: 768px) {
-    .my-inline-control {
-      display: initial;
-    }
-    .my-between-label {
-      width: 20px;
-      margin-left: 10px;
-      margin-right: 15px;
-    }
-    .my-inline-input-group {
-      display: inline-table;
-      input[type=number] {
-        float: initial;
-      }
-    }
-  }
-  .my-inline-input-group .input-group-addon {
-    width: initial;
-  }
+  @import "input-threshold";
   #is_whole_system,#auto_thumbnail {
     position: initial;
   }
