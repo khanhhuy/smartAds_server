@@ -89,8 +89,12 @@ class MinorsController extends Controller
 
     }
 
-    public function edit() {
-        
+    public function edit(BeaconMinor $minor) {
+        $categories = $minor->categories()->lists('id');
+        $v = array();
+        $v['id'] = $minor->minor;
+        $v['categories'] = $categories;
+        return $v;
     }
 
 }

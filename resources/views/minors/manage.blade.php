@@ -142,25 +142,39 @@
 	    		});
 	    	});
 
-	    	function loadForm(url, alwaysFunc) {
-            $('#my-submit-btn').prop('disabled', true);
-            $('#form-container').load(url, function (response, status, xhr) {
-                if (status == "error") {
-                    var msg = "Sorry but there was an error: ";
-                    alert(msg + xhr.status + " " + xhr.statusText);
-                    $('#my-submit-btn').prop('disabled', false);
-//                    $('#form-container').html(response);
-                }
-
-                initForm();
-                if (alwaysFunc) {
-                    alwaysFunc();
-                }
-            });
-        }
+            //edit minor
+	    	function loadEditForm(btn) {
+                var row = table.row($(btn).closest('tr'));
+                var minor = row.data()[0];
+                $.ajax({
+                    type: 'GET',
+                    url: "{{url('admin/minors')}}/" + minor + "/edit",
+                    success: function(data) {
+                        //reset tree - too-slow!
+                        $('ul.category').each( function() {
+                            var bonsai = $(this).data('bonsai');
+                            bonsai.collapseAll();
+                        });
+                        $('.bonsai input[type=checkbox]').prop('checked', false);
+                        //set up tree
+                        $('#minor_id').val(data.id);
+                        var bonsai = $('ul.category').data('bonsai');
+                        $.each(data.categories, function(k, v) {
+                            $('input#node_' + v).prop('checked', true);
+                            var listItem = $('input#node_' + v).closest('li');
+                            bonsai.expand(listItem);
+                        });
+                        togglePanel();
+                    },
+                    error: function (jqXHR, type, errorThrown) {
+                        if (errorThrown != null) {
+                            alert(errorThrown);
+                        }
+                    }
+                });
+            }
 
 			var editingRow = -1;
-
 	    	function updateEditingRow(newMinor) {
 	            if (editingRow >= 0) {
 	                $('tr#' + editingRow).removeClass('editing-row');
@@ -171,16 +185,6 @@
 	            }
 	        }
 
-	        function loadEditForm(btn) {
-	            var row = table.row($(btn).closest('tr'));
-	            var minor = row.data()[0];
-	            var url = "{{url('/minors')}}/" + minor + "/edit";
-	            loadForm(url, function () {
-	                $('#minor').focus();
-	            });
-	            updateEditingRow(minor);
-	        }
-    	
         $(document).ready( function(){
             //split the list to 2 columns
             var totalList = $(".category .first-level").size();
