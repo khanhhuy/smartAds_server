@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateAdsTable extends Migration {
 
@@ -15,8 +15,8 @@ class CreateAdsTable extends Migration {
 		Schema::create('ads', function(Blueprint $table)
 		{
 			$table->increments('id')->index();
-            $table->dateTime('start_date')->nullable();
-            $table->dateTime('end_date');
+            $table->date('start_date')->nullable();
+            $table->date('end_date');
             $table->string('title');
             $table->boolean('is_promotion')->default(true);
             $table->boolean('is_whole_system')->default(false);

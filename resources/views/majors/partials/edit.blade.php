@@ -1,5 +1,8 @@
-<div class="panel-heading text-center"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-    Edit
+<div class="panel-heading text-center">
+    <h3 class="panel-title">
+        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+        Edit
+    </h3>
 </div>
 <div class="panel-body">
     @include('errors.list')

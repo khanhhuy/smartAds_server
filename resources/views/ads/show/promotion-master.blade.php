@@ -5,10 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{$ads->title}}</title>
+
     <style>
         #content {
             text-align: center;
-            padding-top: 25px;
+            padding-top: 20px;
         }
 
         #ads-img {
@@ -25,6 +26,10 @@
 
         #name-container {
             text-align: center;
+        }
+
+        body {
+            overflow-x: hidden;
         }
 
         #name {
@@ -44,5 +49,10 @@
         <div id="name-container"><p id="name">{{$itemName}}</p></div>
     @show
 </div>
+{{--<script src="{{asset('/js/all.js')}}"></script>--}}
+{{--<script>--}}
+{{--var s=$('body').width()+" "+$('body').height();--}}
+{{--//    $('#name').text(s);--}}
+{{--</script>--}}
 </body>
 </html>

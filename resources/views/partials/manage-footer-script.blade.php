@@ -21,6 +21,7 @@
                 "<'row'<'col-sm-4 col-lg-3'i><'col-sm-8 col-lg-9'p>>";
     }
 
+
     var table = $('#manage-table').DataTable({
         "processing": true,
         "serverSide": true,
@@ -97,6 +98,7 @@
                 myDrawCallbackFunc();
             }
         },
+        preDrawCallback: myPreDrawCallBack,
     });
     $('#select-all-chkbox').click(function () {
         if (!$(this).hasClass("checked")) {
