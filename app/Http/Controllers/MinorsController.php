@@ -2,11 +2,14 @@
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use App\Http\Requests\MinorRequest;
 use App\Repositories\CategoryRepositoryInterface;
 use App\BeaconMinor;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laracasts\Flash\Flash;
 use Lang;
+use App\Utils\Utils;
+use DB;
 
 class MinorsController extends Controller
 {	
@@ -18,27 +21,47 @@ class MinorsController extends Controller
 
    public function table(Request $request)
     {
-        $MAJOR_COLUMNS = ['minor', 'category'];
+        $MAJOR_COLUMNS = ['category', 'minor'];
         $r['draw'] = (int)$request->input('draw');
         $r['recordsTotal'] = BeaconMinor::count();
         $filtered = BeaconMinor::query();
+
+        //search
+        $cols = $request->input("columns");
+        for ($c = 1; $c < 3; $c++) {
+            $val = $cols[$c]['search']['value'];
+            if (!empty($val)) {
+                $colName = $MAJOR_COLUMNS[$c - 1];
+                $val = trim($val);
+                switch ($colName) {
+                    case 'category':
+                        $selectCat = DB::table('category_minor')->lists('category_id');
+                        $rCatId = $this->categoryRepo->searchCategoryByName($val, array_unique($selectCat));
+                        if (!empty($rCatId)) {
+                            $filtered = $filtered->join('category_minor', 'beacon_minors.minor', '=', 'category_minor.beacon_minor')
+                                                    ->whereIn('category_id', $rCatId)->groupby('minor');
+                        }
+                        break;
+                    case 'minor':
+                        Utils::filterByFromToBased($filtered, $val, $colName);
+                            break;
+                    default:
+                        break;
+                }
+            }
+        }
+        $r['recordsFiltered'] = $filtered->count();
 
         //order
         if ($request->has('order')) {
             $order = $request->input('order');
             $orderColumn = $MAJOR_COLUMNS[$order[0]['column'] - 1];
             switch ($orderColumn) {
-                case 'store':
-                    $displays = $filtered->join('stores', 'beacon_majors.store_id', '=', 'stores.id')->skip($request->input('start'))->take($request->input('length'))
-                        ->orderBy('stores.name', $order[0]['dir'])->get();
-                    break;
-                case 'area':
-                    $displays = $filtered->join('stores', 'beacon_majors.store_id', '=', 'stores.id')->skip($request->input('start'))->take($request->input('length'))
-                        ->orderBy('stores.display_area', $order[0]['dir'])->get();
+                case 'category':
                     break;
                 default:
                     $displays = $filtered->skip($request->input('start'))->take($request->input('length'))
-                        ->orderBy($orderColumn, $order[0]['dir'])->get();
+                        ->orderBy($orderColumn, $order[0]['dir'])->get(); //skip: offset page, take: limit page
                     break;
             }
         } else {
@@ -49,10 +72,10 @@ class MinorsController extends Controller
         //transform
         $r['data'] = $displays->map(function ($minor) {
             return [
-                $minor->minor,
                 $minor->categories->map(function ($category) {
                         return $category->name;
                     }),
+                $minor->minor
             ];
         });
 
@@ -65,15 +88,17 @@ class MinorsController extends Controller
         return view('minors.manage', ['tree' => $tree]);
     }
 
-    public function store(Request $request) {
+    public function store(MinorRequest $request) {
         $inputs = $request->input();
         try {
             $minor = BeaconMinor::findOrFail($inputs['minor_id']);
         }
         catch (ModelNotFoundException $e) {
-            $minor = BeaconMinor::create([$inputs['minor_id'], false]);
+            $minor_id = $inputs['minor_id'];
+            BeaconMinor::create(['minor' => $minor_id]);
+            $minor = BeaconMinor::find($minor_id);
         }
-        $minor->categories()->detach();
+        
         $categories = $request->except(['_token', 'minor_id']);
         $newCat = array();
         foreach ($categories as $key => $value) {
@@ -85,16 +110,37 @@ class MinorsController extends Controller
         return view('partials.fixed-pos-message');
     }
 
-    public function deleteMulti() {
-
+    public function deleteMulti(Request $request) {
+        $ids = $request->input('ids');
+        if (empty($ids)) {
+            abort('400');
+        }
+        BeaconMinor::destroy($ids);
     }
 
-    public function edit(BeaconMinor $minor) {
+    public function show(BeaconMinor $minor) {
         $categories = $minor->categories()->lists('id');
         $v = array();
         $v['id'] = $minor->minor;
         $v['categories'] = $categories;
         return $v;
+    }
+
+    public function edit(BeaconMinor $minor, Request $request) {
+        $minor->categories()->detach();
+        $categories = $request->except(['_token', 'minor_id']);
+        $newCat = array();
+        foreach ($categories as $key => $value) {
+            $newCat[] = $key;
+        }
+        $minor->categories()->attach($newCat);
+        Flash::success(Lang::get('flash.edit_success'));
+        return view('partials.fixed-pos-message');
+
+    }
+
+    public function errors() {
+        return view('errors.list');
     }
 
 }

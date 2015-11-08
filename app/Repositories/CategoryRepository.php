@@ -109,6 +109,11 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $parsedTree;
     }
 
+    public function searchCategoryByName($name, $categoryList) {
+        $category = Category::query()->whereIn('id', $categoryList)->where('name', 'LIKE', '%'.$name.'%');
+        return $category->lists('id');
+    }
+
     public function selectCategory($categories) {
         DB::table('categories')->update(['is_suitable' => 0]);
         foreach ($categories as $key => $value) {

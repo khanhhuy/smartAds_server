@@ -14,9 +14,10 @@ class CreateBeaconsTable extends Migration {
 	{
         Schema::create('beacon_minors', function(Blueprint $table)
         {
-            $table->smallInteger('minor',true,true);
+            $table->smallInteger('minor')->unsigned();
             $table->boolean('is_entry_minor')->default(false);
             $table->timestamps();
+            $table->primary('minor');
         });
 
         /*Schema::create('beacons', function(Blueprint $table)

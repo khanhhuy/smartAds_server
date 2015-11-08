@@ -22,18 +22,22 @@
 @section('content')
 
 	<div class="row manage-page major-manage">
-		<button id="btnOpenAdd" class="btn btn-primary">
-			Add Minor - Category
-		</button>
-        <div class="panel panel-default category-tree">
+        <div class="col-sm-offset-1 col-sm-10">
+    		<button id="btnOpenAdd" class="btn btn-primary">
+    			Add Minor - Category
+    		</button>
+            <div class="panel panel-default category-tree">
             <div class="panel-body">
             	<div id="category-tree" style="display:none;">
 	            	{!! Form::open(array('route'=> 'admin.minors.store', 'class' => 'form-group', 'id' => 'saveMinor')) !!}
 				      	<div class="form-group form-inline">
+                            <div id="pos-message"></div>
 				      		{!! Form::label('minor_id','Minor') !!}
 				  			{!! Form::input('number','minor_id', null,['class'=>'form-control', 'id' => 'minor_id','required'=>'required']) !!}
-				  			@include('errors.list')
 				  			<button type="button" class="btn btn-primary" id="btnAddMinor">Add</button>
+                            <button type="button" class="btn btn-primary" id="btnEditMinor" style="display:none;">Save</button>
+                            <button type="button" class="btn" id="btnCancel">Cancel</button>
+                            <input type="submit" value="Submit" hidden>
 				      	</div>
 				      	<h4 class="modal-title">List Categories</h4>
 				    	@include('system.partials.category-tree')
@@ -45,25 +49,26 @@
                             <thead>
                             <tr>
                                 <th id="select-all-chkbox"></th>
-                                <th>Minor</th>
                                 <th>Category</th>
+                                <th>Minor</th>
                                 <th>Action</th>
                             </tr>
                             <tr>
                                 <td></td>
+                                {!! Utils::genSearchCell('category') !!}
                                 @include('partials.search.number-from-to',['name'=>'minor','min'=>'1','step'=>'1','max'=>'65535'])
-                                {!! Utils::genSearchCell('Category name') !!}
                                 @include('partials.search.action-group')
                             </tr>
                             </thead>
                         </table>
                     </div>
             </div>
+            <div class="col-sm-12 col-md-8">
         </div>
         
     </div>
 	@include('partials.delete-success')
-	<div id="pos-message"></div>
+	
 @endsection
 
 @section('breadcrumb')
@@ -81,11 +86,12 @@
         var myColumns = [
             {
                 data: 0,
-                width: "100px"
+                width: "600px",
+                orderable: false
             },
             {
                 data: 1,
-                width: "600px"
+                width: "100px"
             },
             {
                 orderable: false,
@@ -98,13 +104,7 @@
             }
         ];
 
-        var myIDIndex = 2;
-        var myDelSuccessFunc = function () {
-            //loadCreateForm();
-        }
-        var myDrawCallbackFunc = function () {
-            updateEditingRow(editingRow);
-        }
+        var myIDIndex = 1;
 	</script>
 	@include('partials.manage-footer-script')
 	<script>
@@ -115,10 +115,18 @@
 
 	    	$('#btnOpenAdd').click(function() {
 		    	togglePanel();
+                $('.bonsai input[type=checkbox]').prop('checked', false);
+                $('#minor_id').val('');
 	    	});
 
 	    	//add new minor
-	    	$('#btnAddMinor').click(function() {
+	    	$('#btnAddMinor').click(function(e) {
+                e.preventDefault();
+                var $form = $('#saveMinor');
+                if (!$form[0].checkValidity()) {
+                    $form.find(':submit').click();
+                    return;
+                }
                 var minor = $('#minor_id').val();
 	    		$.ajax({
 	    			type: 'POST',
@@ -126,13 +134,12 @@
 	    			data: $('#saveMinor').serialize(),
 	    			success: function(data) {
 	    				$('#pos-message').html(data);
-	    				$('.bonsai input[type=checkbox]').prop('checked', false);
-	    				togglePanel();
-	    				if ($('#pos-message .alert-danger').length === 0) {
-                     	   	updateEditingRow(-1);
-                        	table.draw(false);
-                        	@include('partials.fixed-pos-message-script')
-	                    }
+                        if ($('#pos-message .alert-danger').length === 0) {
+                            table.draw(false);
+                            @include('partials.fixed-pos-message-script')
+    	    				$('.bonsai input[type=checkbox]').prop('checked', false);
+    	    				togglePanel();
+                        }
 	    			},
 	    			error: function (jqXHR, type, errorThrown) {
 	                    if (errorThrown != null) {
@@ -145,10 +152,10 @@
             //edit minor
 	    	function loadEditForm(btn) {
                 var row = table.row($(btn).closest('tr'));
-                var minor = row.data()[0];
+                var minor = row.data()[1];
                 $.ajax({
                     type: 'GET',
-                    url: "{{url('admin/minors')}}/" + minor + "/edit",
+                    url: "{{url('admin/minors')}}/" + minor,
                     success: function(data) {
                         //reset tree - too-slow!
                         $('ul.category').each( function() {
@@ -157,6 +164,7 @@
                         });
                         $('.bonsai input[type=checkbox]').prop('checked', false);
                         //set up tree
+                        console.log(data.id);
                         $('#minor_id').val(data.id);
                         var bonsai = $('ul.category').data('bonsai');
                         $.each(data.categories, function(k, v) {
@@ -164,6 +172,9 @@
                             var listItem = $('input#node_' + v).closest('li');
                             bonsai.expand(listItem);
                         });
+                        $('#btnEditMinor').show();
+                        $('#btnAddMinor').hide();
+                        $('#minor_id').prop('disabled', true);
                         togglePanel();
                     },
                     error: function (jqXHR, type, errorThrown) {
@@ -174,16 +185,29 @@
                 });
             }
 
-			var editingRow = -1;
-	    	function updateEditingRow(newMinor) {
-	            if (editingRow >= 0) {
-	                $('tr#' + editingRow).removeClass('editing-row');
-	            }
-	            editingRow = newMinor;
-	            if (editingRow >= 0) {
-	                $('tr#' + editingRow).addClass('editing-row');
-	            }
-	        }
+            $('#btnEditMinor').click(function(e) {
+                e.preventDefault();
+                var minor = $('#minor_id').val();
+                $.ajax({
+                    type: 'GET',
+                    url: "{{url('admin/minors')}}/" + minor +"/edit",
+                    data: $('#saveMinor').serialize(),
+                    success: function(data) {
+                        $('#pos-message').html(data);
+                        if ($('#pos-message .alert-danger').length === 0) {
+                            table.draw(false);
+                            @include('partials.fixed-pos-message-script')
+                            $('.bonsai input[type=checkbox]').prop('checked', false);
+                            togglePanel();
+                        }
+                    },
+                    error: function (jqXHR, type, errorThrown) {
+                        if (errorThrown != null) {
+                            alert(errorThrown);
+                        }
+                    }
+                });
+            });
 
         $(document).ready( function(){
             //split the list to 2 columns
@@ -204,6 +228,10 @@
                     handleDuplicateCheckboxes: true // optional
             });
         });
+
+        //for search
+        var COLS = ["category", "minor"];
+        var divider = 2;
 	</script>
 @include('partials.search.footer-script')
 @endsection
