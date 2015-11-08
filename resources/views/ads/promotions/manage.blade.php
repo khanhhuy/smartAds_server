@@ -30,20 +30,10 @@
 
 @section('content-footer')
     @include('partials.flash-overlay')
-
-    <div id="detail_ads" style="display: none">
-        <iframe width="400px" height="455px" style="border:none;"></iframe>
-    </div>
 @endsection
 
-@section('body-footer')
-    <script>
-        var myTableURL = "{{url('/ads/promotions/table')}}";
-        var myOrder = [];
-        var myDom = "<'row'<'col-sm-7'lB><'col-sm-5'i>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-12'p>>";
-        var myDeleteURL = '{{route('ads.deleteMulti')}}';
+@section('table-url',url('/ads/promotions/table'))
+@section('my-columns')
         var myColumns = [
             {
                 data: 0,
@@ -81,53 +71,8 @@
                 }
             }
         ];
-        var myPreDrawCallBack = function () {
-            if (typeof lastClickIDCol !== 'undefined' && lastClickIDCol != null) {
-                lastClickIDCol.popover('destroy');
-            }
-        }
-
-        @include('partials.fixed-pos-message-script')
-    </script>
-
-    @include('partials.manage-footer-script')
-
-    <script>
-        //view details
-        var lastClickIDCol = null;
-        var BASE_ADS_URL = "{{url('ads')}}";
-        $('#manage-table').find('tbody').on('click', 'tr', function () {
-            var idCol = $(this).find('td:nth-child(2)');
-            var detailAds = $('#detail_ads');
-            detailAds.find('>iframe').prop('src', BASE_ADS_URL + '/' + idCol.text() + "/preview");
-            var sameRow = false;
-            if (lastClickIDCol != null) {
-                if (lastClickIDCol.text() != idCol.text()) {
-                    lastClickIDCol.popover('destroy');
-                }
-                else {
-                    sameRow = true;
-                }
-            }
-            if (!sameRow) {
-                idCol.popover({
-                    trigger: 'manual',
-                    html: true,
-                    container: '#manage-ads',
-                    content: function () {
-                        return $('#detail_ads').html();
-                    }
-                });
-            }
-            idCol.popover('toggle');
-            lastClickIDCol = idCol;
-        });
-
-        //search
+@endsection
+@section('table-search-init')
         var COLS = ["id", "items", "areas", "from", "to", "rate", "value"];
         var divider = 4;
-
-        $('#flash-overlay-modal').modal();
-    </script>
-    @include('partials.search.footer-script')
 @endsection
