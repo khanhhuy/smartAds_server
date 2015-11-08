@@ -39,6 +39,11 @@ class AdsController extends Controller
         }
     }
 
+    public function preview(Ads $ads)
+    {
+        return view('ads.show.preview')->with(compact('ads'));
+    }
+
     public function managePromotions()
     {
         return view('ads.promotions.manage');

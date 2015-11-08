@@ -7,10 +7,10 @@ use App\Repositories\CustomerRepositoryInterface;
 use App\TargetedRule;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Utils;
-use Queue;
 use Lang;
 use Laracasts\Flash\Flash;
+use Queue;
+use Utils;
 
 
 class TargetedAdsController extends AdsController
@@ -128,7 +128,7 @@ class TargetedAdsController extends AdsController
                         break;
                 }
             } else {
-                $displayAds = $filtered->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'asc')->get();
+                $displayAds = $filtered->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'desc')->get();
             }
 
             //transform

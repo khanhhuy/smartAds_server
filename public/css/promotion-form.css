@@ -1,10 +1,10 @@
 .promotion-form input[type=date].form-control {
   width: initial; }
 
-.promotion-form input[name=discount_value].form-control {
+.promotion-form input.discount-value {
   width: 150px; }
 
-.promotion-form input[name=discount_rate].form-control {
+.promotion-form input.discount-rate {
   width: 90px; }
 
 @media (min-width: 768px) {
@@ -16,8 +16,10 @@
     margin-right: 15px; }
   .promotion-form .my-inline-input-group {
     display: inline-table; }
-    .promotion-form .my-inline-input-group input[type=number] {
-      float: initial; } }
+  .promotion-form .my-inline-input-group input[type=number] {
+    float: initial;
+  }
+}
 
 .promotion-form .my-inline-input-group .input-group-addon {
   width: initial; }

@@ -22,6 +22,7 @@ elixir(function(mix) {
     mix.sass('promotion-form.scss');
     mix.sass('major-manage.scss');
     mix.sass('change-info.scss');
+    mix.sass('admin-setting.scss');
 
     //mix.scripts([
     //   "jquery-2.1.4.min.js",

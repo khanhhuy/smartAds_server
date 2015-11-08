@@ -14,7 +14,7 @@
 /*
 |---------------------- API for Mobile -----------------------|
 */
-Route::group(['prefix'=>'api/v1'],function(){
+Route::group(['prefix' => 'api/v1'], function () {
 
     Route::group(['middleware' => 'apiAuth'], function () {
         Route::get('customers/{customers}/context-ads/{majors}/{minors}', 'ContextAdsController@index');
@@ -126,7 +126,8 @@ Route::group(['middleware' => 'admin'], function () {
 |------------------------Others Route---------------------|
 */
 Route::get('ads/thumbnail/{ads}', 'AdsController@thumbnail');
-Route::get('ads/{ads}/', 'AdsController@show');
+Route::get('ads/{ads}/preview', 'AdsController@preview');
+Route::get('ads/{ads}/', ['as' => 'ads.show', 'uses' => 'AdsController@show']);
 
 Route::controllers([
     'auth' => 'Auth\PortalAuthController',

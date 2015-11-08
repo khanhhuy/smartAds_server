@@ -26,14 +26,9 @@
     </thead>
 @endsection
 
-@section('body-footer')
-    <script>
-        var myTableURL = "{{url('/ads/targeted/table')}}";
-        var myOrder = [];
-        var myDom = "<'row'<'col-sm-7'lB><'col-sm-5'i>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-12'p>>";
-        var myDeleteURL = '{{route('ads.deleteMulti')}}';
+@section('table-url',url('/ads/targeted/table'))
+
+@section('my-columns')
         var myColumns =
                 [
                     {
@@ -64,14 +59,8 @@
                         }
                     }
                 ];
-        @include('partials.fixed-pos-message-script')
-    </script>
-
-    @include('partials.manage-footer-script')
-
-    <script>
-        var COLS = ["id", "title", "areas", "targeted_customers", "from", "to"];
-        var divider = 5;
-    </script>
-    @include('partials.search.footer-script')
+@endsection
+@section('table-search-init')
+    var COLS = ["id", "title", "areas", "targeted_customers", "from", "to"];
+    var divider = 5;
 @endsection

@@ -32,14 +32,8 @@
     @include('partials.flash-overlay')
 @endsection
 
-@section('body-footer')
-    <script>
-        var myTableURL = "{{url('/ads/promotions/table')}}";
-        var myOrder = [];
-        var myDom = "<'row'<'col-sm-7'lB><'col-sm-5'i>>" +
-                "<'row'<'col-sm-12'tr>>" +
-                "<'row'<'col-sm-12'p>>";
-        var myDeleteURL = '{{route('ads.deleteMulti')}}';
+@section('table-url',url('/ads/promotions/table'))
+@section('my-columns')
         var myColumns = [
             {
                 data: 0,
@@ -77,16 +71,8 @@
                 }
             }
         ];
-        @include('partials.fixed-pos-message-script')
-    </script>
-
-    @include('partials.manage-footer-script')
-
-    <script>
+@endsection
+@section('table-search-init')
         var COLS = ["id", "items", "areas", "from", "to", "rate", "value"];
         var divider = 4;
-
-        $('#flash-overlay-modal').modal();
-    </script>
-    @include('partials.search.footer-script')
 @endsection
