@@ -49,7 +49,7 @@
         var BASE_ADS_URL = "{{url('ads')}}";
         $('#manage-table').find('tbody').on('click', 'tr', function (e) {
             if (e.target.tagName.toLowerCase() !== 'td' || e.target.cellIndex === 0 || e.target.cellIndex === 8) {
-                return true;
+                return ;
             }
             var idCol = $(this).find('td:nth-child(2)');
             var sameRow = false;
@@ -73,7 +73,7 @@
             }
             idCol.popover('toggle');
             lastClickIDCol = idCol;
-            return false;
+            e.stopPropagation();
         });
         $('body').click(function (e) {
             if (typeof lastClickIDCol !== 'undefined' && lastClickIDCol != null) {
