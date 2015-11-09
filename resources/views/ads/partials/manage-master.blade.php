@@ -37,8 +37,6 @@
                 lastClickIDCol.popover('destroy');
             }
         }
-
-        @include('partials.fixed-pos-message-script')
     </script>
 
     @include('partials.manage-footer-script')

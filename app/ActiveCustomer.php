@@ -38,7 +38,6 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
         if ($this->min_entrance_value != null) {
             return $this->min_entrance_value;
         } else {
-            //TODO Huy: implement save default value;
             return Config::get('promotion-threshold.entrance_value');
         }
     }
@@ -48,7 +47,6 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
         if ($this->min_entrance_rate != null) {
             return $this->min_entrance_rate;
         } else {
-            //TODO Huy: implement save default rate;
             return Config::get('promotion-threshold.entrance_rate');
         }
     }
@@ -58,7 +56,6 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
         if ($this->min_aisle_value != null) {
             return $this->min_aisle_value;
         } else {
-            //TODO Huy: implement save default value;
             return Config::get('promotion-threshold.aisle_value');
         }
     }
@@ -68,7 +65,6 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
         if ($this->min_aisle_rate != null) {
             return $this->min_aisle_rate;
         } else {
-            //TODO Huy: implement save default rate;
             return Config::get('promotion-threshold.aisle_rate');
         }
     }

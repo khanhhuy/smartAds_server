@@ -111,8 +111,6 @@
                     if ($('#form-container .alert-danger').length === 0) {
                         updateEditingRow(-1);
                         table.draw(false);
-                        @include('partials.fixed-pos-message-script')
-
                     }
 
                     initForm();

@@ -90,6 +90,12 @@ return [
 		'attribute-name' => [
 			'rule-name' => 'custom-message',
 		],
+        'aisle_value' => [
+            'max' => 'Minimum discount value at Aisles cannot larger than at Entrances',
+        ],
+        'aisle_rate' => [
+            'max' => 'Minimum discount rate at Aisles cannot larger than at Entrances',
+        ],
 	],
 
 	/*
