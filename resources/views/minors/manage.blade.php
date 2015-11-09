@@ -136,7 +136,6 @@
 	    				$('#pos-message').html(data);
                         if ($('#pos-message .alert-danger').length === 0) {
                             table.draw(false);
-                            @include('partials.fixed-pos-message-script')
     	    				$('.bonsai input[type=checkbox]').prop('checked', false);
     	    				togglePanel();
                         }
@@ -196,7 +195,6 @@
                         $('#pos-message').html(data);
                         if ($('#pos-message .alert-danger').length === 0) {
                             table.draw(false);
-                            @include('partials.fixed-pos-message-script')
                             $('.bonsai input[type=checkbox]').prop('checked', false);
                             togglePanel();
                         }
