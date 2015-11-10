@@ -1,5 +1,6 @@
 <fieldset>
     <legend>Targeted Ads Info</legend>
+    @yield('id-group')
     <div class="form-group">
         {!! Form::label('is_whole_system','Apply on whole system?',['class'=>'col-sm-3 control-label']) !!}
         <div class="col-sm-9 ">

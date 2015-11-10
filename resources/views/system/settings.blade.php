@@ -24,24 +24,25 @@ $toRateGroup = "";
                             <a class=" panel-heading panel-title" data-toggle="collapse" role="tab"
                                data-parent="#accordion"
                                href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                Promotion Notification Threshold
+                                Notification Threshold
                             </a>
 
                             <div id="collapseTwo" class="collapse in">
                                 <div class="panel-body">
-                                    {!! Form::open(['route'=> 'system.settings','class'=>'form-horizontal','enctype'=>'multipart/form-data', 'id' => 'process-config']) !!}
+                                    {!! Form::open(['method'=>'PUT','route'=> 'system.settings.update-threshold','class'=>'form-horizontal', 'id' => 'threshold-config']) !!}
+                                    <div id="threshold_errors"></div>
                                     <fieldset>
                                         <legend>Entrance Notification</legend>
                                         <div class="form-group">
                                             {!! Form::label('entrance_value','Min Discount Amount',['class'=>"$labelClass"]) !!}
                                             <div class="input-group my-inline-input-group">
-                                                {!! Form::input('number','entrance_value',null,['class'=>'form-control my-inline-control discount-value','required'=>'required',
-                                                 'min'=>'0.001','step'=>'0.001','placeholder'=>'e.g. 10500']) !!}
+                                                {!! Form::input('number','entrance_value',Config::get('promotion-threshold.entrance_value'),['class'=>'form-control my-inline-control discount-value','required'=>'required',
+                                                 'min'=>'0','step'=>'0.001','placeholder'=>'e.g. 10500']) !!}
                                                 <div class="input-group-addon">VND</div>
                                             </div>
                                             {!! Form::label('entrance_rate','Rate',['class'=>'control-label my-between-label']) !!}
                                             <div class="input-group my-inline-input-group">
-                                                {!! Form::input('number','entrance_rate',null,['class'=>'form-control my-inline-control  discount-rate', 'min'=>'0.01','step'=>'0.01','max'=>'100',
+                                                {!! Form::input('number','entrance_rate',Config::get('promotion-threshold.entrance_rate'),['class'=>'form-control my-inline-control  discount-rate', 'min'=>'0','step'=>'0.01','max'=>'100',
                                                 'required'=>'required','placeholder'=>'e.g. 20']) !!}
                                                 <div class="input-group-addon">%</div>
                                             </div>
@@ -53,13 +54,13 @@ $toRateGroup = "";
                                         <div class="form-group">
                                             {!! Form::label('aisle_value','Min Discount Amount',['class'=>"$labelClass"]) !!}
                                             <div class="input-group my-inline-input-group">
-                                                {!! Form::input('number','aisle_value',null,['class'=>'form-control my-inline-control discount-value','required'=>'required',
-                                                 'min'=>'0.001','step'=>'0.001','placeholder'=>'e.g. 10500']) !!}
+                                                {!! Form::input('number','aisle_value',Config::get('promotion-threshold.aisle_value'),['class'=>'form-control my-inline-control discount-value','required'=>'required',
+                                                 'min'=>'0','step'=>'0.001','placeholder'=>'e.g. 10500']) !!}
                                                 <div class="input-group-addon">VND</div>
                                             </div>
                                             {!! Form::label('aisle_rate','Rate',['class'=>'control-label my-between-label']) !!}
                                             <div class="input-group my-inline-input-group">
-                                                {!! Form::input('number','aisle_rate',null,['class'=>'form-control my-inline-control  discount-rate', 'min'=>'0.01','step'=>'0.01','max'=>'100',
+                                                {!! Form::input('number','aisle_rate',Config::get('promotion-threshold.aisle_rate'),['class'=>'form-control my-inline-control  discount-rate', 'min'=>'0','step'=>'0.01','max'=>'100',
                                                 'required'=>'required','placeholder'=>'e.g. 20']) !!}
                                                 <div class="input-group-addon">%</div>
                                             </div>
@@ -105,7 +106,6 @@ $toRateGroup = "";
                                     {!! Form::close() !!}
                                 </div>
                             </div>
-
                         </div>
                         <div class="panel panel-default">
                             <a class="collapsed panel-heading panel-title" data-parent="#accordion"
@@ -117,22 +117,33 @@ $toRateGroup = "";
                 </div>
             </div>
         </div>
-        {{--<button class="btn btn-primary" id="btnSaveConf">Save config</button>--}}
     </div>
+    <div id="my-fixed-pos-message-container"></div>
 @endsection
 
 @section('body-footer')
     <script src="{{asset('/js/bootbox.min.js')}}"></script>
     <script>
         $(document).ready(function () {
-
-            $('button#btnReprocess').click(function () {
-                //Todo AJAX re-mining
-            });
-            $('button#btnSaveConf').click(function () {
-                //Todo AJX save config
-            });
-
+            $('#threshold-config').submit(function (e) {
+                e.preventDefault();
+                var url = $(this).prop('action');
+                $.ajax({
+                    'url': url,
+                    'method': 'POST',
+                    data: $(this).serialize(),
+                    success: function (result) {
+                        console.log(result);
+                        if ($(result).is('.alert-danger')) {
+                            $('#threshold_errors').html(result);
+                        }
+                        else {
+                            $('#my-fixed-pos-message-container').html(result);
+                            $('#threshold_errors').html('');
+                        }
+                    }
+                });
+            })
         });
     </script>
 @endsection

@@ -7,7 +7,7 @@
         <li @if (Request::is('admin/system/tools')) class="active" @endif>
         	<a href="{{url('admin/system/tools')}}">
             <i class="fa fa-cogs fa-lg icon"></i>
-              Tools
+              Admin Tools
           </a>
     	 </li>
       </ul>

@@ -99,8 +99,8 @@ Route::group(['middleware' => 'admin'], function () {
     });
     Route::get('admin/system/settings',
         ['as' => 'system.settings', 'uses' => 'SystemConfigController@getSettings']);
-    Route::post('admin/system/settings',
-        ['as' => 'system.settings', 'uses' => 'TODO']);
+    Route::put('admin/system/settings',
+        ['as' => 'system.settings.update-threshold', 'uses' => 'SystemConfigController@updateThreshold']);
     //cats select
     Route::get('admin/system/settings/category',
         ['as' => 'system.settings.category', 'uses' => 'ProcessTransactionController@getListCategories']);

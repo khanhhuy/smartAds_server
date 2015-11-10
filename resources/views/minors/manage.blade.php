@@ -52,7 +52,7 @@
                             <thead>
                             <tr>
                                 <th id="select-all-chkbox"></th>
-                                <th>Category</th>
+                                <th>Categories</th>
                                 <th>Minor</th>
                                 <th>Action</th>
                             </tr>
@@ -221,9 +221,6 @@
                     if ($('#pos-message .alert-danger').length === 0) {
                         table.draw(false);
                         @include('partials.fixed-pos-message-script')
-                        $('.bonsai input[type=checkbox]').prop('checked', false);
-                        togglePanel();
-                    }
                 },
                 error: function (jqXHR, type, errorThrown) {
                     if (errorThrown != null) {
