@@ -196,12 +196,15 @@
                     $('#minor_id').val(data.id);
                     var bonsai = $('ul.category').data('bonsai');
                     $.each(data.categories, function(k, v) {
-                        parentList = $('input#node_' + v).parents('li');
-                        $(parentList[0]).find('input[type=checkbox]').prop('checked', true);
+                        //go to the first <li> and find children   
+                        $('input#node_' + v).parents('li').first().
+                            find('input[type=checkbox]').prop('checked', true); 
+                        //go to all upper <li> and set indeterminate
+                        $('input#node_' + v).parents('li').each(function() {
+                            $(this).find('input[type=checkbox]:first').prop('indeterminate', true); 
+                        });
+                        $('input#node_' + v).prop('indeterminate', false);
                         $('input#node_' + v).prop('checked', true);
-                    });
-                    $('.category').each(function() {
-                        $(this).qubit();
                     });
                     $('#btnSaveEdit').show();
                     $('#btnAddMinor').hide();
