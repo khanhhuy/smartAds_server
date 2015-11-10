@@ -143,4 +143,8 @@ class MinorsController extends Controller
         return view('errors.list');
     }
 
+    // public preProcessCategories() {
+        
+    // }
+
 }

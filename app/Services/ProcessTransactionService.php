@@ -45,7 +45,7 @@ class ProcessTransactionService
         //remove duplicate & blacklist item
         foreach ($transactions as $key => $eachTrans) {
             if( (!in_array($eachTrans['item_id'], $watchingList)) &&
-                (!in_array($eachTrans['item_id'], $blacklist)) )
+                (!in_array($eachTrans['item_id'], $blackList)) )
             {
                 $watchingList[] = $eachTrans['item_id'];
             }
