@@ -15,20 +15,23 @@
             src={!! URL::asset('js/jQuery-bonsai/bower_components/jquery-bonsai/jquery.bonsai.js') !!} defer></script>
 @endsection
 
-@section('title','Set Up Category')
-@section('page-title','Set Up Category')
+@section('title','Smart Promotion Category Selection')
+@section('page-title','Smart Promotion Category Selection')
 @section('breadcrumb-child')
     <li><a href="{{url('admin/system/settings')}}">Settings</a></li>
-    <li class="active">Category</li>
+    <li class="active">Category Selection</li>
 @endsection
 
 @section('content')
-	<div class="date">Last updated taxonomy: TODO</div>
-	<button class="btn btn-primary" id="saveBtn">Save</button>
-	<button class="btn btn-warning" id="updateBtn">Update Taxonomy</button>
+    <button class="btn btn-primary" id="saveBtn">
+        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Save
+    </button>
+    <a href="{{url('admin/system/settings')}}" class="btn btn-default my-cancel-btn">
+        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel
+    </a>
     {!! Form::open(array('route'=> 'system.settings.category', 
     'class' => 'form-group', 'id' => 'saveCat')) !!}
-		@include('system.partials.category-tree')
+    @include('system.partials.category-tree')
     {!! Form::close() !!}
 @endsection
 
@@ -49,10 +52,9 @@
                 checkboxes: true, // depends on jquery.qubit plugin
                 handleDuplicateCheckboxes: true // optional
             });
-        $('button#saveBtn').click(function() {
-        	$('form#saveCat').submit();
+            $('button#saveBtn').click(function () {
+                $('form#saveCat').submit();
+            });
         });
-    });
-
     </script>
 @endsection

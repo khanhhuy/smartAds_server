@@ -49,7 +49,7 @@
                             <thead>
                             <tr>
                                 <th id="select-all-chkbox"></th>
-                                <th>Category</th>
+                                <th>Categories</th>
                                 <th>Minor</th>
                                 <th>Action</th>
                             </tr>

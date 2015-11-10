@@ -8,10 +8,10 @@ $loader = asset('/img/icon/rolling.svg');
     <link rel="stylesheet" type="text/css" href="{{asset('/css/admin-tool.css')}}">
 @endsection
 
-@section('title','Tools')
-@section('page-title','Tools')
+@section('title','Admin Tools')
+@section('page-title','Admin Tools')
 @section('breadcrumb-child')
-    <li class="active">Tools</li>
+    <li class="active">Admin Tools</li>
 @endsection
 
 @section('content')

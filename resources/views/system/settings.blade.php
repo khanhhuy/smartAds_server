@@ -24,7 +24,7 @@ $toRateGroup = "";
                             <a class=" panel-heading panel-title" data-toggle="collapse" role="tab"
                                data-parent="#accordion"
                                href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                Promotion Notification Threshold
+                                Notification Threshold
                             </a>
 
                             <div id="collapseTwo" class="collapse in">
