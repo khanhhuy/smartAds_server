@@ -26,13 +26,12 @@ class MinorRequest extends Request
             return [
                 'minor_id' => 'required|unique:beacon_minors,minor',
             ];
+        } else {
+            $minor = Route::input('minors');
+            return [
+                'minor_id' => 'required|unique:beacon_minors,minor,' . $minor->minor . ',minor',
+            ];
         }
-        // } else {
-        //     $minor = Route::input('minor_id');
-        //     return [
-        //         'minor_id' => 'required|unique:beacon_minors,minor,' . $minor->minor . ',minor',
-        //     ];
-        // }
     }
 
     /**

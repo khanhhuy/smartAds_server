@@ -39,7 +39,9 @@
                                 Add
                             </button>
                             <button type="button" class="btn btn-primary" id="btnSaveEdit" style="display:none;">Save</button>
-                            <button type="button" class="btn" id="btnCancel">Cancel</button>
+                            <button type="button" class="btn btn-default my-cancel-btn" id="btnCancel">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel
+                            </button>
                             <input type="submit" value="Submit" hidden>
 				      	</div>
 				      	<h4 class="modal-title">List Categories</h4>
@@ -114,26 +116,27 @@
 	@include('partials.manage-footer-script')
 	<script>
         function toManagePanel() {
-            $('#minor-table').slideToggle('fast');
-            $('#category-tree').slideToggle('fast');
+            $('#minor-table').slideToggle();
+            $('#category-tree').slideToggle();
             $('#breadcrumbAdd').hide();
             $('#breadcrumbEdit').hide();
             $('#breadcrumbManage').text('Minor - Category Management');
-            $('#btnOpenAdd').toggle();
+            $('#btnOpenAdd').show();
         }
 
         function toAddEditPanel() {
             $('#minor-table').slideToggle('fast');
             $('#category-tree').slideToggle('fast');
             $('.bonsai input[type=checkbox]').prop('checked', false);
-            $('input#node_91083').prop('checked', true);
-            $('#').qubit();
+            $('.bonsai input[type=checkbox]').prop('indeterminate', false);
             $('#minor_id').val('');
             $('ul.category').each( function() {
                 var bonsai = $(this).data('bonsai');
                 bonsai.collapseAll();
             });
-            $('#btnOpenAdd').toggle();
+            $('#btnOpenAdd').hide();
+            $('#btnSaveEdit').hide();
+            $('#btnAddMinor').show();
             $('#breadcrumbManage').html('<a href="{{url('/admin/minors')}}">Minor - Category Management</a>');
         }
 
@@ -150,6 +153,7 @@
     	//add new minor
     	$('#btnAddMinor').click(function(e) {
             e.preventDefault();
+            $('#btnAddMinor').show();
             var $form = $('#saveMinor');
             if (!$form[0].checkValidity()) {
                 $form.find(':submit').click();
@@ -164,10 +168,8 @@
     				$('#pos-message').html(data);
                     if ($('#pos-message .alert-danger').length === 0) {
                         table.draw(false);
-                        @include('partials.fixed-pos-message-script')
-	    				$('.bonsai input[type=checkbox]').prop('checked', false);
+                        toManagePanel();
                     }
-                    toManagePanel();
     			},
     			error: function (jqXHR, type, errorThrown) {
                     if (errorThrown != null) {
@@ -177,10 +179,14 @@
     		});
     	});
 
+        var oldMinor = -1;
         //edit minor
     	function loadEditForm(btn) {
+            $('#btnAddMinor').hide();
+            $('#btnSaveEdit').show();
             var row = table.row($(btn).closest('tr'));
             var minor = row.data()[1];
+            oldMinor = minor;
             $.ajax({
                 type: 'GET',
                 url: "{{url('admin/minors')}}/" + minor,
@@ -190,16 +196,16 @@
                     $('#minor_id').val(data.id);
                     var bonsai = $('ul.category').data('bonsai');
                     $.each(data.categories, function(k, v) {
-                        console.log(" k = " + k + " v = " + v);
+                        parentList = $('input#node_' + v).parents('li');
+                        $(parentList[0]).find('input[type=checkbox]').prop('checked', true);
                         $('input#node_' + v).prop('checked', true);
-                        console.log($('input#node_' + v).prop('checked'));
                     });
                     $('.category').each(function() {
                         $(this).qubit();
                     });
-                    $('#btnSaveEdit').toggle();
-                    $('#btnAddMinor').toggle();
-                    $('#breadcrumbEdit').toggle();
+                    $('#btnSaveEdit').show();
+                    $('#btnAddMinor').hide();
+                    $('#breadcrumbEdit').show();
                 },
                 error: function (jqXHR, type, errorThrown) {
                     if (errorThrown != null) {
@@ -211,16 +217,16 @@
 
         $('#btnSaveEdit').click(function(e) {
             e.preventDefault();
-            var minor = $('#minor_id').val();
             $.ajax({
-                type: 'GET',
-                url: "{{url('admin/minors')}}/" + minor +"/edit",
+                type: 'PUT',
+                url: "{{url('admin/minors')}}/" + oldMinor,
                 data: selectParent(),
                 success: function(data) {
                     $('#pos-message').html(data);
                     if ($('#pos-message .alert-danger').length === 0) {
                         table.draw(false);
-                        @include('partials.fixed-pos-message-script')
+                        toManagePanel();
+                    }
                 },
                 error: function (jqXHR, type, errorThrown) {
                     if (errorThrown != null) {
@@ -262,7 +268,6 @@
             $(".category").each(function() {
                 $(this).wrapAll('<div class="col-md-6"></div>');
             });
-
             //apply bonsai tree
             $('.category').bonsai({
                     expandAll: false,

@@ -3,7 +3,7 @@
         <ul class="bonsai category">
         @foreach ($tree as $lv1node)
             @if (count($lv1node['subcat'] > 0))
-                <li class="has-children collapsed first-level"  id="{{ $lv1node['id'] }}">
+                <li class="has-children collapsed first-level"  id="li_{{ $lv1node['id'] }}">
                 <div class="thumb"></div>
             @else
                 <li class="first-level" id="{{ $lv1node['id'] }}">
@@ -17,7 +17,7 @@
                 <ul class="bonsai">
                 @foreach ($lv1node['subcat'] as $lv2node)
                     @if (count($lv2node['subcat'] > 0))
-                        <li class="has-children collapsed" id="{{ $lv2node['id'] }}">
+                        <li class="has-children collapsed" id="li_{{ $lv2node['id'] }}">
                         <div class="thumb"></div>
                     @else
                         <li id="{{ $lv2node['id'] }}">
@@ -30,7 +30,7 @@
                     @if (count($lv2node['subcat'] > 0))
                         <ul class="bonsai">
                         @foreach ($lv2node['subcat'] as $lv3node)
-                        <li id="{{ $lv3node['id'] }}">
+                        <li id="li_{{ $lv3node['id'] }}">
                         <label>
                             <input type="checkbox" name="{{ $lv3node['id'] }}" id="node_{{ $lv3node['id'] }}"
                                 data-suitable="{{ $lv3node['is_suitable']  }}" > 

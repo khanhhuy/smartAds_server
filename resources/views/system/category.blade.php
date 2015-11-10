@@ -8,8 +8,6 @@
     <link rel="stylesheet" type="text/css" href={!! URL::asset('css/admin-select.css') !!}>
 
     <script type="text/javascript"
-            src={!! URL::asset('js/jQuery-bonsai/bower_components/jquery/dist/jquery.min.js') !!} defer></script>
-    <script type="text/javascript"
             src={!! URL::asset('js/jQuery-bonsai/bower_components/jquery-qubit/jquery.qubit.js') !!} defer></script>
     <script type="text/javascript"
             src={!! URL::asset('js/jQuery-bonsai/bower_components/jquery-bonsai/jquery.bonsai.js') !!} defer></script>

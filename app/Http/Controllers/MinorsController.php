@@ -126,14 +126,24 @@ class MinorsController extends Controller
         return $v;
     }
 
-    public function edit(BeaconMinor $minor, Request $request) {
-        $minor->categories()->detach();
-        $categories = $request->except(['_token', 'minor_id']);
+    public function update(BeaconMinor $minor, MinorRequest $request) {
+        $newMinor = $request->input('minor_id');
         $newCat = array();
+        $categories = $request->except(['_token', 'minor_id']);
         foreach ($categories as $key => $value) {
             $newCat[] = $key;
         }
-        $minor->categories()->attach($newCat);
+        if ($minor->minor == $newMinor) {
+            $minor->categories()->detach();
+            $minor->categories()->attach($newCat);
+        }
+        else {
+            BeaconMinor::destroy($minor->minor);
+            BeaconMinor::create(['minor' => $newMinor]);
+            $currentMinor = BeaconMinor::find($newMinor);
+            $currentMinor->categories()->attach($newCat);
+        }
+
         Flash::success(Lang::get('flash.edit_success'));
         return view('partials.fixed-pos-message');
 
