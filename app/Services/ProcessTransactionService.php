@@ -4,8 +4,8 @@ namespace App\Services;
 use App\ActiveCustomer;
 use App\Category;
 use App\Facades\Connector;
-use Carbon\Carbon;
 use App\Item;
+use Carbon\Carbon;
 
 class ProcessTransactionService
 {
@@ -34,7 +34,7 @@ class ProcessTransactionService
     public function processCustomer(ActiveCustomer $customer, $isContinue = false,
                                                 $fromDate = null, $toDate = null) {
 
-        $transactions = Connector::getShoppingHistoryFromCustomer($customer, $fromDate, $toDate);
+        $transactions = Connector::getShoppingHistoryFromCustomer($customer->id, $fromDate, $toDate);
         $watchingList = [];
         $blackList = $customer->blackList()->lists('id');
 
@@ -45,7 +45,8 @@ class ProcessTransactionService
         //remove duplicate & blacklist item
         foreach ($transactions as $key => $eachTrans) {
             if( (!in_array($eachTrans['item_id'], $watchingList)) &&
-                (!in_array($eachTrans['item_id'], $blacklist)) )
+                (!in_array($eachTrans['item_id'], $blackList))
+            )
             {
                 $watchingList[] = $eachTrans['item_id'];
             }

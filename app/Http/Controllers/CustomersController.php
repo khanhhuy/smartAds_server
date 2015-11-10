@@ -1,8 +1,11 @@
 <?php namespace App\Http\Controllers;
 
 use App\ActiveCustomer;
+use App\BeaconMajor;
 use App\Http\Requests;
 use App\Repositories\CustomerRepositoryInterface;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class CustomersController extends Controller
@@ -57,7 +60,25 @@ class CustomersController extends Controller
         ]);
     }
 
-    public function personalInfo(ActiveCustomer $customer) {
+    public function personalInfo(ActiveCustomer $customer)
+    {
         return $this->customerRepo->getCustomerInfo($customer->id);
+    }
+
+    public function recentMajors(ActiveCustomer $customer)
+    {
+        $from = Carbon::now()->subMonths(config('preload-info.recent_num_months'))->toDateString();
+        $transactions = $this->customerRepo->getShoppingHistory($customer->id, $from);
+        $storesTrans = Collection::make($transactions)->groupBy('store_id');
+        $recentMajors = $storesTrans->map(function ($trans, $key) {
+            $lastVisited = Collection::make($trans)->reduce(function ($result, $item) {
+                return (is_null($result) || $item['time'] > $result) ? $item['time'] : $result;
+            });
+            $storeID = 'S_' . $key;
+            $s['major'] = BeaconMajor::where('store_id', $storeID)->first()->major;
+            $s['last_visited'] = $lastVisited;
+            return $s;
+        });
+        return response()->json($recentMajors);
     }
 }

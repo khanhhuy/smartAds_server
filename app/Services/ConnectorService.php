@@ -9,7 +9,6 @@
 namespace App\Services;
 
 
-use App\ActiveCustomer;
 use App\Category;
 use App\Utils\Utils;
 use GuzzleHttp\Client;
@@ -66,18 +65,19 @@ class ConnectorService
         return json_decode($response->getBody(),$convertToArray);
     }
 
-    public function getShoppingHistoryFromCustomer(ActiveCustomer $customer, $fromDate = null, $toDate = null){
+    public function getShoppingHistoryFromCustomer($customerID, $fromDate = null, $toDate = null)
+    {
 
         if ($fromDate == null && $toDate == null)
         {
-           $response = $this->client->get('customers/'.$customer->id.'/shopping-history');
+            $response = $this->client->get('customers/' . $customerID . '/shopping-history');
         }
         elseif ($fromDate != null && $toDate != null) {
-            $response = $this->client->get('customers/'.$customer->id.'/shopping-history'
+            $response = $this->client->get('customers/' . $customerID . '/shopping-history'
                                             .'?from='.$fromDate.'&to='.$toDate);
         }
         else {
-            $response = $this->client->get('customers/'.$customer->id.'/shopping-history'
+            $response = $this->client->get('customers/' . $customerID . '/shopping-history'
                                             .'?from='.$fromDate);
         }
 
