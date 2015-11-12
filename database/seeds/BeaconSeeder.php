@@ -1,14 +1,10 @@
 <?php
 
-use App\ActiveCustomer;
-use App\Beacon;
 use App\BeaconMajor;
 use App\BeaconMinor;
-use App\Item;
 use App\Store;
 use App\WatchingList;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 
 class BeaconSeeder extends Seeder {
 
@@ -16,7 +12,6 @@ class BeaconSeeder extends Seeder {
 	{
 //        DB::table('beacons')->delete();
         DB::table('beacon_minors')->delete();
-        DB::table('beacon_majors')->delete();
 
         DB::statement("ALTER TABLE `beacon_majors` AUTO_INCREMENT = 1");
 

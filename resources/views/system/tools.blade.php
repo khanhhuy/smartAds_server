@@ -89,13 +89,14 @@ $loader = asset('/img/icon/rolling.svg');
             @foreach($names as $name)
                 obj = OBJS['{{$name}}'];
             $(obj.id).click(function () {
-                handleClick('{{$name}}');
+                var message = "Are you sure?";
+                bootbox.confirm(message, function (result) {
+                    if (result) {
+                        handleClick('{{$name}}');
+                    }
+                });
             });
             @endforeach
-
-
-
-
         });
         function pollingUpdateStatus(obj) {
             $.ajax({
@@ -130,4 +131,5 @@ $loader = asset('/img/icon/rolling.svg');
         @endif
         @endforeach
     </script>
+    <script src="{{asset('/js/bootbox.min.js')}}"></script>
 @endsection

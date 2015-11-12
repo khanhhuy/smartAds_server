@@ -7,6 +7,7 @@ use App\Repositories\CustomerRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection as BaseCollection;
 
 class CustomersController extends Controller
 {
@@ -71,7 +72,7 @@ class CustomersController extends Controller
         $transactions = $this->customerRepo->getShoppingHistory($customer->id, $from);
         $storesTrans = Collection::make($transactions)->groupBy('store_id');
         $recentMajors = $storesTrans->map(function ($trans, $key) {
-            $lastVisited = Collection::make($trans)->reduce(function ($result, $item) {
+            $lastVisited = BaseCollection::make($trans)->reduce(function ($result, $item) {
                 return (is_null($result) || $item['time'] > $result) ? $item['time'] : $result;
             });
             $storeID = 'S_' . $key;

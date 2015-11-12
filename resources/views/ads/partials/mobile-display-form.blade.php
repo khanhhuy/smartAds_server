@@ -44,7 +44,7 @@
     <div class="form-group myHiddenInputGroup" id="webInputGroup">
         {!! Form::label('web_url','Web Page URL',['class'=>"$labelClass"]) !!}
         <div class="{{$urlGroupClass}}">
-            {!! Form::url('web_url',null,['class'=>'form-control','placeholder'=>'eg. http://example.com/ads/a100.html']) !!}
+            {!! Form::url('web_url',null,['class'=>'form-control','placeholder'=>'e.g. http://example.com/ads/a100.html']) !!}
         </div>
     </div>
     <div class="form-group">
