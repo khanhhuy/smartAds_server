@@ -4,9 +4,9 @@ namespace App\Services;
 use App\ActiveCustomer;
 use App\Category;
 use App\Facades\Connector;
-use Carbon\Carbon;
 use App\Item;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Carbon\Carbon;
 
 class ProcessTransactionService
 {
@@ -39,7 +39,7 @@ class ProcessTransactionService
 
     public function processCustomer(ActiveCustomer $customer, $fromDate = null, $toDate = null) {
 
-        $transactions = Connector::getShoppingHistoryFromCustomer($customer, $fromDate, $toDate);
+        $transactions = Connector::getShoppingHistoryFromCustomer($customer->id, $fromDate, $toDate);
         $watchingList = [];
         $blackList = $customer->blackList()->lists('id');
 

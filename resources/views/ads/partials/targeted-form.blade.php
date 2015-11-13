@@ -43,7 +43,7 @@
     <div class="form-group">
         {!! Form::label('gender','Customers\' Gender',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
         <div class="col-sm-2 col-lg-2">
-            {!! Form::select('gender', ['Female', 'Male', 'All'], $rule->gender, ['class' => 'form-control', 'required'=>'required'])!!}
+            {!! Form::select('gender', ['Female', 'Male', 'All'], $rule->gender, ['class' => 'form-control initial-width-control', 'required'=>'required'])!!}
         </div>
     </div>
     <div class="form-group">

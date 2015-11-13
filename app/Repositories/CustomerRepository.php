@@ -41,4 +41,9 @@ class CustomerRepository implements CustomerRepositoryInterface
         $jobsDesc = Connector::getJobDesc();
         return $jobsDesc;
     }
+
+    public function getShoppingHistory($customerID, $from = null, $to = null)
+    {
+        return Connector::getShoppingHistoryFromCustomer($customerID, $from, $to);
+    }
 }
