@@ -17,7 +17,7 @@
     <script type="text/javascript" src={!! URL::asset('js/jQuery-bonsai/bower_components/jquery-bonsai/jquery.bonsai.js') !!} defer></script>	
 @endsection
 
-@section('page-title','Minor - Category Management')
+@section('page-title','Manage Minor - Category')
 	
 @section('content')
 
@@ -26,58 +26,58 @@
     		<button id="btnOpenAdd" class="btn btn-primary">
     			Add Minor - Category
     		</button>
+            <div id="pos-message"></div>
             <div class="panel panel-default category-tree">
-            <div class="panel-body">
-            	<div id="category-tree" style="display: none;">
-	            	{!! Form::open(array('route'=> 'admin.minors.store', 'class' => 'form-group', 'id' => 'saveMinor')) !!}
-				      	<div class="form-group form-inline">
-                            <div id="pos-message"></div>
-				      		{!! Form::label('minor_id','Minor') !!}
-				  			{!! Form::input('number','minor_id', null,['class'=>'form-control', 'id' => 'minor_id','required'=>'required', 'min'=>'1','step'=>'1','max'=>'65535']) !!}
-				  			<button type="button" class="btn btn-primary" id="btnAddMinor">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                                Add
-                            </button>
-                            <button type="button" class="btn btn-primary" id="btnSaveEdit" style="display:none;">Save</button>
-                            <button type="button" class="btn btn-default my-cancel-btn" id="btnCancel">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel
-                            </button>
-                            <input type="submit" value="Submit" hidden>
-				      	</div>
-				      	<h4 class="modal-title">List Categories</h4>
-				    	@include('system.partials.category-tree')
-				    {!! Form::close() !!}
-				</div>
-				<div class="table-responsive" id="minor-table">
-                        <table id="manage-table" class="table table-striped table-bordered table-hover" cellspacing="0"
-                               width="100%">
-                            <thead>
-                            <tr>
-                                <th id="select-all-chkbox"></th>
-                                <th>Categories</th>
-                                <th>Minor</th>
-                                <th>Action</th>
-                            </tr>
-                            <tr>
-                                <td></td>
-                                {!! Utils::genSearchCell('category') !!}
-                                @include('partials.search.number-from-to',['name'=>'minor','min'=>'1','step'=>'1','max'=>'65535'])
-                                @include('partials.search.action-group')
-                            </tr>
-                            </thead>
-                        </table>
+                <div class="panel-body">
+                    <div id="category-tree" style="display: none;">
+    	            	{!! Form::open(array('route'=> 'admin.minors.store', 'class' => 'form-group', 'id' => 'saveMinor')) !!}
+    				      	<div class="form-group form-inline">
+                                
+    				      		{!! Form::label('minor_id','Minor') !!}
+    				  			{!! Form::input('number','minor_id', null,['class'=>'form-control', 'id' => 'minor_id','required'=>'required', 'min'=>'1','step'=>'1','max'=>'65535']) !!}
+    				  			<button type="button" class="btn btn-primary" id="btnAddMinor">
+                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                    Add
+                                </button>
+                                <button type="button" class="btn btn-primary" id="btnSaveEdit" style="display:none;">Save</button>
+                                <button type="button" class="btn btn-default my-cancel-btn" id="btnCancel">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel
+                                </button>
+                                <input type="submit" value="Submit" hidden>
+    				      	</div>
+    				      	<h4 class="modal-title">List Categories</h4>
+    				    	@include('system.partials.category-tree')
+    				    {!! Form::close() !!}
+				    </div>
+    				<div class="table-responsive" id="minor-table">
+                            <table id="manage-table" class="table table-striped table-bordered table-hover" cellspacing="0"
+                                   width="100%">
+                                <thead>
+                                <tr>
+                                    <th id="select-all-chkbox"></th>
+                                    <th>Categories</th>
+                                    <th>Minor</th>
+                                    <th>Action</th>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    {!! Utils::genSearchCell('category') !!}
+                                    @include('partials.search.number-from-to',['name'=>'minor','min'=>'1','step'=>'1','max'=>'65535'])
+                                    @include('partials.search.action-group')
+                                </tr>
+                                </thead>
+                            </table>
                     </div>
+                </div>
             </div>
-            <div class="col-sm-12 col-md-8">
         </div>
-        
     </div>
 	@include('partials.delete-success')
 	
 @endsection
 
 @section('breadcrumb')
-    <li class="active" id="breadcrumbManage">Minor - Category Management</li>
+    <li class="active" id="breadcrumbManage">Manage Minor - Category</li>
     <li class="active" id="breadcrumbAdd" style="display:none;">Add</li>
     <li class="active" id="breadcrumbEdit" style="display:none;">Edit</li>
 @endsection

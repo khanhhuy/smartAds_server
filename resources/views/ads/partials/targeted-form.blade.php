@@ -33,11 +33,11 @@
     <div class="form-group">
         {!! Form::label('age','Customers\' Age',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
         <div class="col-sm-2 col-lg-2">
-            {!! Form::input('number','from_age', $rule->from_age, ['class'=>'form-control inline-width', 'id' => 'from_age', 'placeholder'=>'0']) !!}
+            {!! Form::input('number','from_age', $rule->from_age, ['class'=>'form-control inline-width', 'id' => 'from_age']) !!}
         </div>
         <span class="seperator control-label">to</span>
         <div class="col-sm-2 col-lg-2">
-            {!! Form::input('number','to_age', $rule->to_age, ['class'=>'form-control inline-width', 'id' => 'to_age', 'placeholder'=>'18']) !!}
+            {!! Form::input('number','to_age', $rule->to_age, ['class'=>'form-control inline-width', 'id' => 'to_age']) !!}
         </div>
     </div>
     <div class="form-group">
@@ -49,11 +49,11 @@
     <div class="form-group">
         {!! Form::label('family','Customers\' Family Member',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
         <div class="col-sm-2 col-lg-2">
-            {!! Form::input('number','from_family_members', $rule->from_family_members, ['class'=>'form-control inline-width', 'placeholder'=>'0']) !!}
+            {!! Form::input('number','from_family_members', $rule->from_family_members, ['class'=>'form-control inline-width']) !!}
         </div>
         <span class="seperator control-label">to</span>
         <div class="col-sm-2 col-lg-2">
-            {!! Form::input('number','to_family_members', $rule->to_family_members, ['class'=>'form-control inline-width', 'placeholder'=>'2']) !!}
+            {!! Form::input('number','to_family_members', $rule->to_family_members, ['class'=>'form-control inline-width']) !!}
         </div>
     </div>
     <div class="form-group">
@@ -63,10 +63,10 @@
                     <div class="jobs">
                         <label class="jobs-label">
                             <?php 
-                                $checked = false;
+                                $checked = true;
                                 if ($rule->jobs_desc != null) {
-                                    if (in_array($job["id"], $rule->jobs_desc))
-                                        $checked = true;
+                                    if (!in_array($job["id"], $rule->jobs_desc))
+                                        $checked = false;
                                 }
                             ?>
                             {!! Form::checkbox('jobs_desc[]', $job["id"], $checked, ['class' => 'jobs-input']) !!}

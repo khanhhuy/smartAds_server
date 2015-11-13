@@ -14,9 +14,13 @@ class SystemConfigController extends Controller
 
     public function getSettings()
     {
-        //Todo: get config and show
-
-        return view('system.settings');
+        $relatedItem = Setting::get('process-config.related-item');
+        $timeRange = Setting::get('process-config.process_range_months');
+        if ($relatedItem == null)
+            $relatedItem = false;
+        if ($timeRange == null)
+            $timeRange = 6;
+        return view('system.settings')->with(compact('relatedItem', 'timeRange'));
     }
 
     public function getTools()
@@ -53,4 +57,26 @@ class SystemConfigController extends Controller
         }
     }
 
+    public function updateTransactionConfig(Request $request) {
+
+        $inputs = $request->only('time-range');
+        $v = Validator::make($inputs, [
+            'time-range' => 'required|numeric|min:1',
+        ]);
+
+        if ($v->fails())
+            return view('errors.list')->withErrors($v->errors());
+
+        if ($request->input('time-range') != '')
+            Setting::set('process-config.process_range_months', $request->input('time-range'));
+        if ($request->input('related-item') != '')
+            Setting::set('process-config.related-item', true);
+        else
+            Setting::set('process-config.related-item', false);
+
+        Setting::save();
+
+        Flash::success(Lang::get('flash.save_success'));
+        return view('partials.fixed-pos-message');
+    }
 }

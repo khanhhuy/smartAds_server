@@ -85,16 +85,17 @@ $toRateGroup = "";
 
                             <div id="collapseOne" class="collapse">
                                 <div class="panel-body">
-                                    {!! Form::open(['route'=> 'system.settings','class'=>'form-horizontal','enctype'=>'multipart/form-data', 'id' => 'process-config']) !!}
+                                    <div id="process_errors"></div>
+                                    {!! Form::open(['method' => 'PUT', 'route'=> 'system.settings.update-process-config','class'=>'form-horizontal','enctype'=>'multipart/form-data', 'id' => 'process-config']) !!}
                                     <div class="form-group">
                                         {!! Form::label('time-range','Process customers\' transactions from the last',['class'=>"control-label"]) !!}
-                                        {!! Form::input('number','time-rage', null, ['class'=>'form-control', 'id' => 'time-range', 'placeholder'=>'6']) !!}
+                                        {!! Form::input('number','time-range', $timeRange, ['class'=>'form-control', 'id' => 'time-range', 'required' => 'required']) !!}
                                         <span class="unit"> months </span>
                                     </div>
                                     <div class="form-group">
                                         {!! Form::label('related-item','Use related item suggestion',['class'=>'control-label']) !!}
                                         <div class="my-inline-control">
-                                            {!! Form::checkbox('related-item', 0, false, ['id' => 'related-item']) !!}
+                                            {!! Form::checkbox('related-item', 1, $relatedItem, ['id' => 'related-item']) !!}
                                         </div>
                                     </div>
                                     <hr class="submit-top-hr"/>
@@ -140,6 +141,32 @@ $toRateGroup = "";
                         else {
                             $('#my-fixed-pos-message-container').html(result);
                             $('#threshold_errors').html('');
+                        }
+                    }
+                });
+            })
+
+            $('#process-config').submit(function (e) {
+                e.preventDefault();
+                var url = $(this).prop('action');
+                $('#process_errors').html('');
+                $.ajax({
+                    'url': url,
+                    'method': 'PUT',
+                    data: $(this).serialize(),
+                    success: function (result) {
+                        console.log(result);
+                        if ($(result).is('.alert-danger')) {
+                            $('#process_errors').html(result);
+                        }
+                        else {
+                            $('#my-fixed-pos-message-container').html(result);
+                            $('#process_errors').html('');
+                            bootbox.confirm("Saved successfully, do you want to re-process all of the transactions", 
+                                    function(result) {
+                                        if (result == true)
+                                            window.location.replace("{{url('admin/system/tools')}}");
+                            }); 
                         }
                     }
                 });

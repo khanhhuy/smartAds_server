@@ -109,6 +109,9 @@ Route::group(['middleware' => 'admin'], function () {
     //admin tools
     Route::get('admin/system/tools',
         ['as' => 'system.tools', 'uses' => 'SystemConfigController@getTools']);
+    //save process config
+    Route::put('admin/system/settings/update-process-config',
+        ['as' => 'system.settings.update-process-config', 'uses' => 'SystemConfigController@updateTransactionConfig']);
     //update taxonomy
     Route::post('taxonomy/update-requests',
         ['as' => 'taxonomy.update-requests.process', 'uses' => 'CategoriesController@updateTaxonomy']);
