@@ -25,3 +25,7 @@ label.jobs-label span {
 	vertical-align: middle;
 
 }
+
+select.initial-width-control {
+	width: initial;
+}

@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder {
 	public function run()
 	{
 		Model::unguard();
+//		DB::table('categories')->whereNotIn('id', DB::table('category_minor')->distinct()->lists('category_id'))->delete();
+//
         $this->command->info('-------------Seeding-------------');
 		$this->call('ActiveCustomerSeeder');
         $this->call('PortalUserSeeder');

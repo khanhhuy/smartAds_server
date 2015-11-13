@@ -26,7 +26,6 @@ Route::group(['prefix' => 'api/v1'], function () {
         Route::get('customers/{customers}/config', 'CustomersController@getSettings');
         Route::post('customers/{customers}/config', 'CustomersController@storeSettings');
         Route::put('customers/{customers}/password', 'Auth\APIPasswordController@update');
-        Route::get('customers/{customers}/recent-majors', 'CustomersController@recentMajors');
     });
 
     Route::get('account-status', 'CustomersController@accountStatus');
