@@ -3,6 +3,7 @@
 use App\Ads;
 use App\Item;
 use App\Store;
+use App\Utils\Utils;
 use App\WatchingList;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
@@ -44,6 +45,9 @@ class AdsFaker extends Seeder
                 ]);
 
                 $ads->items()->attach($faker->randomElement(Item::lists('id')));
+            } else {
+                $ads->target_customers_display = Utils::formatRules(null);
+                $ads->save();
             }
 
             //areas

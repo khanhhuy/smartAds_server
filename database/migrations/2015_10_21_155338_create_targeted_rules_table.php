@@ -15,7 +15,7 @@ class CreateTargetedRulesTable extends Migration {
 		Schema::create('targeted_rules', function(Blueprint $table)
 		{	
 			$table->increments('id');
-			$table->unsignedInteger('ads_id')->index();
+			$table->unsignedInteger('ads_id')->unique()->index();
 			$table->unsignedInteger('from_age')->nullable();
 			$table->unsignedInteger('to_age')->nullable();
 			$table->boolean('gender')->nullable();

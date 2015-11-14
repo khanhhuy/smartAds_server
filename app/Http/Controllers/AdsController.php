@@ -357,9 +357,9 @@ class AdsController extends Controller
                                 break;
                             }
                             $itemNames = $this->itemRepo->getItemNamesByIDs($itemIDs);
-                            $filtered = $filtered->get();
+                            $filtered = $filtered->with('items')->get();
                             foreach ($filtered as $p) {
-                                $pItemIDs = $p->items()->lists('id');
+                                $pItemIDs = $p->items->lists('id');
                                 if (empty($pItemIDs)) {
                                     $p->minItemName = null;
                                 } else {
@@ -383,8 +383,10 @@ class AdsController extends Controller
                                 $request->input('start'), $request->input('length'));
                             break;
                         default:
-                            $displayPromotions = $filtered->skip($request->input('start'))->take($request->input('length'))
-                                ->orderBy($orderColumn, $order[0]['dir'])->get();
+                            $filtered->skip($request->input('start'))->take($request->input('length'))
+                                ->orderBy($orderColumn, $order[0]['dir']);
+                            self::eagerLoadPromotionRelations($filtered);
+                            $displayPromotions = $filtered->get();
                             break;
                     }
                 }
@@ -392,9 +394,10 @@ class AdsController extends Controller
                 $useDefaultOrder = true;
             }
             if ($useDefaultOrder) {
-
-                $displayPromotions = $filtered->skip($request->input('start'))->take($request->input('length'))
-                    ->orderBy('updated_at', 'desc')->get();
+                $filtered->skip($request->input('start'))->take($request->input('length'))
+                    ->orderBy('updated_at', 'desc');
+                self::eagerLoadPromotionRelations($filtered);
+                $displayPromotions = $filtered->get();
             }
 
             if ($r['recordsFiltered'] !== 0 && empty($itemNames)) {
@@ -440,6 +443,11 @@ class AdsController extends Controller
         } else {
             return null;
         }
+    }
+
+    public function eagerLoadPromotionRelations($query)
+    {
+        $query->with('items')->with('areas')->with('stores');
     }
 
 }

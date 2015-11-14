@@ -36,14 +36,14 @@ class TargetedAdsController extends AdsController
         return view('ads.targeted.create')->with(compact(['rule', 'ads', 'jobs']));
     }
 
-    public function edit(Ads $ads) {
+    public function edit(Ads $ads)
+    {
         $rule = $ads->targetedRule()->get();
 
         if (!$rule->isEmpty()) {
             $rule = $rule[0];
             $this->formatRuleFromDB($rule);
-        }
-        else
+        } else
             $rule = self::createDefaultRule();
 
         $jobs = $this->customerRepo->getAllJobDesc();
@@ -51,7 +51,8 @@ class TargetedAdsController extends AdsController
         return view('ads.targeted.edit')->with(compact(['rule', 'ads', 'jobs']));
     }
 
-    private function formatRuleFromDB($rule) {
+    private function formatRuleFromDB($rule)
+    {
         if ($rule->to_age == 0) {
             $rule->to_age = '';
             if ($rule->from_age == 0)
@@ -95,7 +96,8 @@ class TargetedAdsController extends AdsController
                         $noResult = Utils::filterByAreas($filtered, $val);
                         break;
                     case 'targeted_customers':
-                        //TODO Huy filter search text
+                        $val = trim($val);
+                        $filtered = $filtered->whereRaw("target_customers_display LIKE ?", ["%$val%"]);
                         break;
                     case 'start_date':
                     case 'end_date':
@@ -120,15 +122,21 @@ class TargetedAdsController extends AdsController
                             $request->input('start'), $request->input('length'));
                         break;
                     case 'targeted_customers':
-                        //TODO Huy: sort by targeted customers
+                        $filtered->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'desc');
+                        self::eagerLoadTargetedRelations($filtered);
+                        $displayAds = $filtered->get();
                         break;
                     default:
-                        $displayAds = $filtered->skip($request->input('start'))->take($request->input('length'))
-                            ->orderBy($orderColumn, $order[0]['dir'])->get();
+                        $filtered->skip($request->input('start'))->take($request->input('length'))
+                            ->orderBy($orderColumn, $order[0]['dir']);
+                        self::eagerLoadTargetedRelations($filtered);
+                        $displayAds = $filtered->get();
                         break;
                 }
             } else {
-                $displayAds = $filtered->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'desc')->get();
+                $filtered->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'desc');
+                self::eagerLoadTargetedRelations($filtered);
+                $displayAds = $filtered->get();
             }
 
             //transform
@@ -137,7 +145,7 @@ class TargetedAdsController extends AdsController
                     $ads->id,
                     $ads->title,
                     Utils::formatTargets($ads->targets),
-                    Utils::formatRules($ads->targetedRule()->get()),
+                    $ads->target_customers_display,
                     Carbon::parse($ads->getOriginal('start_date'))->format('m-d-Y'),
                     Carbon::parse($ads->getOriginal('end_date'))->format('m-d-Y'),
                 ];
@@ -149,9 +157,10 @@ class TargetedAdsController extends AdsController
         return response()->json($r);
     }
 
-    private function validateTargeted($request) {
+    private function validateTargeted($request)
+    {
         $promotionErrors = parent::customValidatePromotionRequest($request);
-        $targetedErrors = self::customValidateTargetedRequest($request);   
+        $targetedErrors = self::customValidateTargetedRequest($request);
         $errors = array_merge($promotionErrors, $targetedErrors);
         return $errors;
     }
@@ -262,19 +271,20 @@ class TargetedAdsController extends AdsController
     }
 
     protected function storeRules($request, $ads)
-    {   
+    {
         $inputs = $request->only('from_age', 'to_age', 'gender', 'from_family_members', 'to_family_members',
             'jobs_desc');
         if (!is_null($inputs['jobs_desc']))
             $inputs['jobs_desc'] = implode(',', $inputs['jobs_desc']);
         $rule = new TargetedRule($inputs);
-        
+
         TargetedRule::where('ads_id', $ads->id)->delete();
         $ads->targetedRule()->save($rule);
+        $ads->target_customers_display = Utils::formatRules($rule);
     }
 
     private static function customValidateTargetedRequest($request)
-    {   
+    {
         $errors = [];
         if (!empty($request->input('from_age')) && !empty($request->input('to_age'))) {
             if ($request->input('from_age') > $request->input('to_age'))
@@ -287,10 +297,16 @@ class TargetedAdsController extends AdsController
         return $errors;
     }
 
-    public static function createDefaultRule() {
+    public static function createDefaultRule()
+    {
         $rule = new TargetedRule(['from_age' => '', 'to_age' => '',
-            'gender' => '2', 'from_family_members' => '', 'to_family_members' => '', 
+            'gender' => '2', 'from_family_members' => '', 'to_family_members' => '',
             'jobs_desc' => null]);
         return $rule;
+    }
+
+    public function eagerLoadTargetedRelations($query)
+    {
+        $query->with('stores')->with('areas');
     }
 }

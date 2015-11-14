@@ -18,11 +18,6 @@ class Ads extends Model
         return $this->belongsToMany('App\Item');
     }
 
-    public function categories()
-    {
-        return $this->belongsToMany('App\Category');
-    }
-
     public function stores()
     {
         return $this->belongsToMany('App\Store');
@@ -97,12 +92,12 @@ class Ads extends Model
 
     public function getTargetsAttribute()
     {
-        return array_merge($this->areas()->lists('name'), $this->stores()->lists('name'));
+        return array_merge($this->areas->lists('name'), $this->stores->lists('name'));
     }
 
     public function getItemsIDAttribute()
     {
-        return $this->items()->lists('id');
+        return $this->items->lists('id');
     }
 
     public function getStartDateAttribute($date)

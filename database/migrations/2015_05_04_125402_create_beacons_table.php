@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateBeaconsTable extends Migration {
 
@@ -15,7 +15,6 @@ class CreateBeaconsTable extends Migration {
         Schema::create('beacon_minors', function(Blueprint $table)
         {
             $table->smallInteger('minor', true, true);
-            $table->boolean('is_entry_minor')->default(false);
             $table->timestamps();
         });
 

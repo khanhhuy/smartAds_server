@@ -128,7 +128,7 @@
 .major-manage div.alert.alert-success {
   text-align: center; }
 
-.major-manage .panel-heading {
+.major-manage .panel-default > .panel-heading {
   background-color: initial; }
 
 .select2-container--default .select2-results > .select2-results__options {

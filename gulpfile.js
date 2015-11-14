@@ -17,6 +17,7 @@ elixir(function(mix) {
     mix.styles([
         "bootstrap.min.css",
         "app.css",
+        "font-awesome.min.css"
     ],null,'public/css');
     mix.sass('manage.scss');
     mix.sass('promotion-form.scss');

@@ -146,7 +146,7 @@ class Utils
 
     public static function sortByAreasThenSlice($adsQuery, $dir, $start, $length)
     {
-        $allAds = $adsQuery->get();
+        $allAds = $adsQuery->with('areas')->with('stores')->get();
         foreach ($allAds as $p) {
             $p->cacheTargets = implode(' ', self::formatTargets($p->targets));
         }
@@ -164,9 +164,9 @@ class Utils
 
     public static function formatRules($rule)
     {
-        if ($rule->isEmpty())
+        if (empty($rule)) {
             return "All";
-        $rule = $rule[0];
+        }
         $displayedRule = '';
         //Age
         if ($rule['to_age'] > 0)

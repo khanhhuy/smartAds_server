@@ -1,6 +1,6 @@
 @extends('admin-master')
 
-@section('title','Majors - Stores Management')
+@section('title','Manage Majors - Stores')
 
 @section('head-footer')
     <link rel="stylesheet" type="text/css" href="{{asset('/datatables/datatables.min.css')}}"

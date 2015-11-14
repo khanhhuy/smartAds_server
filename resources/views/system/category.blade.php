@@ -21,16 +21,33 @@
 @endsection
 
 @section('content')
-    <button class="btn btn-primary" id="saveBtn">
-        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Save
-    </button>
-    <a href="{{url('admin/system/settings')}}" class="btn btn-default my-cancel-btn">
-        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel
-    </a>
-    {!! Form::open(array('route'=> 'system.settings.category', 
-    'class' => 'form-group', 'id' => 'saveCat')) !!}
-    @include('system.partials.category-tree')
-    {!! Form::close() !!}
+    <div class="row">
+        <div class="col-md-offset-1 col-md-10">
+            <div class="panel panel-default categories-selection">
+                <div class="panel-body">
+                    <div>
+                        <div class="categories-label-container">
+                            <label class="control-label">Categories</label>
+                        </div>
+                        <a href="{{url('admin/system/settings')}}" class="btn btn-default my-cancel-btn"
+                           id="cancelBtn">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel
+                        </a>
+                        <button class="btn btn-primary" id="saveBtn">
+                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Save
+                        </button>
+                        <div style="clear:both"></div>
+                    </div>
+                    {!! Form::open(array('route'=> 'system.settings.category',
+                    'class' => 'form-group', 'id' => 'saveCat')) !!}
+
+                    @include('system.partials.category-tree')
+
+                    {!! Form::close() !!}
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('body-footer')
