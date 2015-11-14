@@ -19,12 +19,12 @@ class ProcessDelay extends Command implements SelfHandling, ShouldBeQueued {
 	 * @return void
 	 */
 
-	protected $customer, $lastProcessDate;
+	protected $customer, $fromDate;
 
-	public function __construct($customer, $lastProcessDate = null)
+	public function __construct($customer, $fromDate = null)
 	{
 		$this->customer = $customer;
-		$this->lastProcessDate = $lastProcessDate;
+		$this->fromDate = $fromDate;
 	}
 
 	/**
@@ -34,7 +34,9 @@ class ProcessDelay extends Command implements SelfHandling, ShouldBeQueued {
 	 */
 	public function handle()
 	{
-		ProcessTransaction::processCustomer($this->customer, true, $this->lastProcessDate);
+		ProcessTransaction::processCustomer($this->customer, $this->fromDate);
+		$this->customer->last_mining = Carbon::now();
+		$this->customer->save();
 	}
 
 }

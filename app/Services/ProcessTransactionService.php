@@ -5,6 +5,7 @@ use App\ActiveCustomer;
 use App\Category;
 use App\Facades\Connector;
 use App\Item;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Carbon\Carbon;
 
 class ProcessTransactionService
@@ -20,8 +21,7 @@ class ProcessTransactionService
 
         foreach ($allCustomer as $index => $customer) {
 
-            $watchingList = self::processCustomer($customer, false, $fromDate, $toDate);
-
+            $watchingList = self::processCustomer($customer, $fromDate, $toDate);
             //for testing
             $allWatchingList[$index]['customer'] = $customer->id;
             $allWatchingList[$index]['items'] = $watchingList;
@@ -31,8 +31,13 @@ class ProcessTransactionService
         return $allWatchingList;
     }
 
-    public function processCustomer(ActiveCustomer $customer, $isContinue = false,
-                                                $fromDate = null, $toDate = null) {
+    private function createMockItem($itemID) {
+        $item = Item::find($itemID);
+        if ($item == null)
+            Item::create(['id' => $itemID]);
+    }
+
+    public function processCustomer(ActiveCustomer $customer, $fromDate = null, $toDate = null) {
 
         $transactions = Connector::getShoppingHistoryFromCustomer($customer->id, $fromDate, $toDate);
         $watchingList = [];
@@ -42,41 +47,70 @@ class ProcessTransactionService
             return $watchingList;
         }
 
-        //remove duplicate & blacklist item
+        //remove blacklist item
         foreach ($transactions as $key => $eachTrans) {
-            if( (!in_array($eachTrans['item_id'], $watchingList)) &&
-                (!in_array($eachTrans['item_id'], $blackList)) )
+            if (in_array($eachTrans['item_id'], $blackList))
             {
-                $watchingList[] = $eachTrans['item_id'];
+                unset($transactions[$key]);
             }
         }
 
         //check if item belongs to suitable categories
-        foreach ($watchingList as $key => $item) {
-            $cat = Connector::getCategoryFromItemID($item);
+        foreach ($transactions as $key => $eachTrans) {
+            $cat = Connector::getCategoryFromItemID($eachTrans['item_id']);
             if(!Category::find($cat->id)['is_suitable']) {
-                unset($watchingList[$key]);
-            }
-            elseif (Item::find($item) == null) {
-                Item::create(['id'=>$item]);
+                unset($transactions[$key]);
             }
         }
 
-
-        if (!$isContinue) {
-            //remove old watching list and replace with the new one
-            $customer->watchingList()->detach();
-        }
-        else {
-            //add new item to current watching list
-            $currentWatchingList = $customer->watchingList()->get()->toArray();
-            foreach ($currentWatchingList as $key => $item) {
-                $key = array_search($item['id'], $watchingList);
-                if ($key !== false)
-                    unset($watchingList[$key]);
+        //mining
+        $i = 0;
+        $useRelatedItem = config('process-trans.use_related_items');
+        while($i < count($transactions)) {
+            $j = $i + 1;
+            $count = 1;
+            if ($useRelatedItem)
+                $relatedItems = Connector::getRelatedItem($transactions[$i]['item_id']);
+            $isAddedRelated = false;
+            while ($j < count($transactions)) {
+                if ($transactions[$i]['item_id'] == $transactions[$j]['item_id']) {
+                    $count++;
+                    unset($transactions[$j]);
+                    $transactions = array_values($transactions);
+                    $j--;
+                } elseif ($useRelatedItem && !$isAddedRelated) {
+                    foreach ($relatedItems as $item) {
+                        if ($transactions[$j]['item_id'] == $item['id']) {
+                            $count++;
+                            break;
+                        }
+                    }
+                }
+                if ($count == 2) {
+                    if (!in_array($transactions[$i]['item_id'], $watchingList)) {
+                        $watchingList[] = $transactions[$i]['item_id'];
+                        $this->createMockItem($transactions[$i]['item_id']);
+                    }
+                    if ($useRelatedItem && !$isAddedRelated && ($relatedItems != null)) {
+                        foreach ($relatedItems as $item) {
+                            if (!in_array($item['id'], $watchingList) && 
+                                !in_array($item['id'], $blackList)) {
+                                    $cat = Connector::getCategoryFromItemID($item['id']);
+                                    if(Category::find($cat->id)['is_suitable']) {
+                                        $watchingList[] = $item['id'];
+                                        $this->createMockItem($item['id']);
+                                    }
+                            }
+                        }        
+                        $isAddedRelated = true;
+                    }
+                }
+                $j++;
             }
+            $i++;
         }
 
+        $customer->watchingList()->detach();
         $customer->watchingList()->attach($watchingList);
         $customer->last_mining = Carbon::now();
         $customer->save();

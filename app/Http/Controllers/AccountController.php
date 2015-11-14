@@ -51,25 +51,21 @@ class AccountController extends Controller {
 
 	public function update(ActiveCustomer $customer) {
 
-		$from = Carbon::now()->subMonths(config('process-trans.process_range_months'))->toDateString();
-		$lastProcessDate = Carbon::createFromFormat('Y-m-d H:i:s', $customer->last_mining);
+		$fromDate = Carbon::now()->subMonths(config('process-trans.process_range_months'))->toDateString();
 
-		if (Carbon::now()->subDays(config('process-trans.process_range_lastProcessDays'))
-					->gt($lastProcessDate)) {
-			ProcessTransaction::processCustomer($customer, false, $from);
+		if ($customer->last_mining == '0000-00-00 00:00:00') {
+			Queue::push(new ProcessDelay($customer, $fromDate));
+			return;
 		}
-		//update after 18h
-		else {
+
+		$lastProcessDate = Carbon::createFromFormat('Y-m-d H:i:s', $customer->last_mining);
+		if (Carbon::now()->subDays(config('process-trans.process_range_lastProcessDays'))->gt($lastProcessDate)) {
 			//testing - 10 secs
 			$time = Carbon::now()->addSecond(10);
 			//Queue::push($time, new ProcessDelay($customer, $lastProcessDate->toDateString()));
 			Queue::later($time, new ProcessDelay($customer, $lastProcessDate->toDateString()));
 		}
 
-		$customer->last_mining = Carbon::now();
-		return $customer->watchingList()->get();
+		return;
 	}
-
-
-
 }

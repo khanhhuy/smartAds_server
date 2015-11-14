@@ -23,8 +23,9 @@ class ProcessTransactionController extends Controller {
 
 	public function index(ActiveCustomer $customer)
 	{
-        $from = Carbon::now()->subMonths(config('process-trans.process_range_months'))->toDateString();
-		return ProcessTransaction::processAllCustomer($from);
+        //$from = Carbon::now()->subMonths(config('process-trans.process_range_months'))->toDateString();
+		//return ProcessTransaction::processAllCustomer($from);
+        return ProcessTransaction::processCustomer($customer);
 	}
 
     public function getListCategories() {

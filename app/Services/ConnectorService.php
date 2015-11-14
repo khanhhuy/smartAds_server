@@ -76,9 +76,13 @@ class ConnectorService
             $response = $this->client->get('customers/' . $customerID . '/shopping-history'
                                             .'?from='.$fromDate.'&to='.$toDate);
         }
-        else {
-            $response = $this->client->get('customers/' . $customerID . '/shopping-history'
+        elseif ($fromDate != null) {
+            $response = $this->client->get('customers/'.$customer->id.'/shopping-history'
                                             .'?from='.$fromDate);
+        }
+        else {
+            $response = $this->client->get('customers/'.$customer->id.'/shopping-history'
+                                            .'?to='.$toDate);   
         }
 
         return json_decode($response->getBody(), true);
@@ -184,6 +188,11 @@ class ConnectorService
         $r = $this->client->put("customers/$customerID/password", [
             'form_params' => $param
         ]);
+        return self::decodeResponse($r, true);
+    }
+
+    public function getRelatedItem($itemID) {
+        $r = $this->client->get("items/$itemID/related-items");
         return self::decodeResponse($r, true);
     }
 

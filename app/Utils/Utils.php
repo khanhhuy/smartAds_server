@@ -191,12 +191,14 @@ class Utils
         }
         //Jobs
         if ($rule['jobs_desc'] != null) {
-            $displayedRule .= ', Jobs:';
             $jobDesc = Connector::getJobDesc();
             $jobs = explode(',', $rule['jobs_desc']);
-            foreach ($jobDesc as $job) {
-                if (in_array($job['id'], $jobs))
-                    $displayedRule .= $job['name'] . ', ';
+            if (count($jobDesc) != count($jobs)) {
+                $displayedRule .= ', Jobs:';
+                foreach ($jobDesc as $job) {
+                    if (in_array($job['id'], $jobs))
+                        $displayedRule .= $job['name'] . ', ';
+                }
             }
         }
 

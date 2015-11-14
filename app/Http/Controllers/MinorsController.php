@@ -89,15 +89,8 @@ class MinorsController extends Controller
     }
 
     public function store(MinorRequest $request) {
-        $inputs = $request->input();
-        try {
-            $minor = BeaconMinor::findOrFail($inputs['minor_id']);
-        }
-        catch (ModelNotFoundException $e) {
-            $minor_id = $inputs['minor_id'];
-            BeaconMinor::create(['minor' => $minor_id]);
-            $minor = BeaconMinor::find($minor_id);
-        }
+        $newMinor = $request->input('minor_id');
+        $minor = BeaconMinor::create(['minor' => $newMinor]);
         
         $categories = $request->except(['_token', 'minor_id']);
         $newCat = array();
