@@ -11,3 +11,19 @@ form.taxonomy {
 .my-cancel-btn{
 	margin-left:10px;
 }
+
+.categories-selection #cancelBtn, .categories-selection #saveBtn {
+    float: right;
+}
+
+.categories-selection .categories-label-container {
+    display: inline-block;
+    margin-bottom: -5px;
+}
+
+.categories-selection .categories-label-container label {
+    display: table-cell;
+    margin-bottom: 0;
+    height: 34px;
+    vertical-align: bottom;
+}
