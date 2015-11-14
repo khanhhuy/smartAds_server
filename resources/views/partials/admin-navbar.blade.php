@@ -14,7 +14,7 @@
         </ul>
         <ul class="nav my-nav-pills navbar-nav navbar-right">
             <li @if (Request::is('admin/system/*')) class="active" @endif>
-                <a href="{{url('admin/system')}}"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+                <a href="{{url('admin/system')}}"><i class="fa fa-cogs"></i>
                     System </a>
             </li>
             <li class="dropdown">

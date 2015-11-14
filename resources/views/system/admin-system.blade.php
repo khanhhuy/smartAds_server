@@ -1,13 +1,13 @@
 @extends('admin-master')
 
 @section('head-footer')
-	<link rel="stylesheet" type="text/css" href="{{asset('/css/admin-menubar.css')}}"/>
-	<link rel="stylesheet" type="text/css" href="{{asset('/css/admin.css')}}">
-	@yield('head-footer-child')
+    <link rel="stylesheet" type="text/css" href="{{asset('/css/admin-menubar.css')}}"/>
+    <link rel="stylesheet" type="text/css" href="{{asset('/css/admin.css')}}">
+    @yield('head-footer-child')
 @endsection
 
 @section('menubar')
-	@include('partials.admin-menubar')
+    @include('partials.admin-menubar')
 @endsection
 
 @section('breadcrumb')
