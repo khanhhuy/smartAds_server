@@ -96,7 +96,8 @@ class TargetedAdsController extends AdsController
                         $noResult = Utils::filterByAreas($filtered, $val);
                         break;
                     case 'targeted_customers':
-                        //TODO Huy filter search text
+                        $val = trim($val);
+                        $filtered = $filtered->whereRaw("target_customers_display LIKE ?", ["%$val%"]);
                         break;
                     case 'start_date':
                     case 'end_date':
@@ -121,7 +122,7 @@ class TargetedAdsController extends AdsController
                             $request->input('start'), $request->input('length'));
                         break;
                     case 'targeted_customers':
-                        //TODO Huy: sort by targeted customers
+                        $displayAds = $filtered->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'desc')->get();
                         break;
                     default:
                         $displayAds = $filtered->skip($request->input('start'))->take($request->input('length'))
