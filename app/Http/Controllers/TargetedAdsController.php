@@ -122,15 +122,21 @@ class TargetedAdsController extends AdsController
                             $request->input('start'), $request->input('length'));
                         break;
                     case 'targeted_customers':
-                        $displayAds = $filtered->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'desc')->get();
+                        $filtered->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'desc');
+                        self::eagerLoadTargetedRelations($filtered);
+                        $displayAds = $filtered->get();
                         break;
                     default:
-                        $displayAds = $filtered->skip($request->input('start'))->take($request->input('length'))
-                            ->orderBy($orderColumn, $order[0]['dir'])->get();
+                        $filtered->skip($request->input('start'))->take($request->input('length'))
+                            ->orderBy($orderColumn, $order[0]['dir']);
+                        self::eagerLoadTargetedRelations($filtered);
+                        $displayAds = $filtered->get();
                         break;
                 }
             } else {
-                $displayAds = $filtered->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'desc')->get();
+                $filtered->skip($request->input('start'))->take($request->input('length'))->orderBy('updated_at', 'desc');
+                self::eagerLoadTargetedRelations($filtered);
+                $displayAds = $filtered->get();
             }
 
             //transform
@@ -297,5 +303,10 @@ class TargetedAdsController extends AdsController
             'gender' => '2', 'from_family_members' => '', 'to_family_members' => '',
             'jobs_desc' => null]);
         return $rule;
+    }
+
+    public function eagerLoadTargetedRelations($query)
+    {
+        $query->with('stores')->with('areas');
     }
 }

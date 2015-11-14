@@ -122,7 +122,7 @@
         var myColumns = [
             {
                 data: 0,
-                orderable: false
+                render: "[, ]",
             },
             {
                 data: 1,

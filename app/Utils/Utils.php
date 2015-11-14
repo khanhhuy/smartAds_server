@@ -146,7 +146,7 @@ class Utils
 
     public static function sortByAreasThenSlice($adsQuery, $dir, $start, $length)
     {
-        $allAds = $adsQuery->get();
+        $allAds = $adsQuery->with('areas')->with('stores')->get();
         foreach ($allAds as $p) {
             $p->cacheTargets = implode(' ', self::formatTargets($p->targets));
         }
