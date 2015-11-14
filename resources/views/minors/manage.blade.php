@@ -1,6 +1,6 @@
 @extends('admin-master')
 
-@section('title','Minor - Category Management')
+@section('title','Manage Minors - Categories')
 
 @section('head-footer')
     <link rel="stylesheet" type="text/css"
@@ -46,7 +46,7 @@
     </style>
 @endsection
 
-@section('page-title','Manage Minor - Category')
+@section('page-title','Manage Minors - Categories')
 
 @section('content')
     <div class="row manage-page major-manage minor-manage">
@@ -106,7 +106,7 @@
 @endsection
 
 @section('breadcrumb')
-    <li class="active" id="breadcrumbManage">Manage Minor - Category</li>
+    <li class="active" id="breadcrumbManage">Manage Minors - Categories</li>
     <li class="active" id="breadcrumbAdd" style="display:none;">Add</li>
     <li class="active" id="breadcrumbEdit" style="display:none;">Edit</li>
 @endsection
@@ -149,7 +149,7 @@
             $('#category-tree').slideToggle();
             $('#breadcrumbAdd').hide();
             $('#breadcrumbEdit').hide();
-            $('#breadcrumbManage').text('Minor - Category Management');
+            $('#breadcrumbManage').text('Manage Minors - Categories');
             $('#btnOpenAdd').show();
         }
 
@@ -166,7 +166,7 @@
             $('#btnOpenAdd').hide();
             $('#btnSaveEdit').hide();
             $('#btnAddMinor').show();
-            $('#breadcrumbManage').html('<a href="{{url('/admin/minors')}}">Minor - Category Management</a>');
+            $('#breadcrumbManage').html('<a href="{{url('/admin/minors')}}">Manage Minors - Categories</a>');
         }
 
         $('#btnOpenAdd').click(function () {
