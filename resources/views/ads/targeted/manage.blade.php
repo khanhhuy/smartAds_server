@@ -9,7 +9,7 @@
         <th>ID</th>
         <th>Title</th>
         <th>Areas</th>
-        <th>Targeted Customers</th>
+        <th>Target Customers</th>
         <th>From</th>
         <th>To</th>
         <th>Action</th>
