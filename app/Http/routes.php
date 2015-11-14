@@ -81,6 +81,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/minors', 'MinorsController@manage');
     Route::resource('admin/minors', 'MinorsController', ['only' => ['store','show','create', 'update']]);
     Route::get('minors/table', 'MinorsController@table');
+    Route::get('minors/partial-tree', 'MinorsController@getPartialTree');
     Route::delete('minors', ['as' => 'minors.deleteMulti', 'uses' => 'MinorsController@deleteMulti']);
     Route::match(['get', 'put'], 'minors/errors', 'MinorsController@errors');
     //majors

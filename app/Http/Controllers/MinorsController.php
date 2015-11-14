@@ -84,8 +84,12 @@ class MinorsController extends Controller
 
     public function manage()
     {
-    	$tree = $this->categoryRepo->getCategoryTree();
-        return view('minors.manage', ['tree' => $tree]);
+        return view('minors.manage');
+    }
+
+    public function getPartialTree() {
+        $tree = $this->categoryRepo->getCategoryTree();
+        return view('system.partials.category-tree',  ['tree' => $tree]);
     }
 
     public function store(MinorRequest $request) {
