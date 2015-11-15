@@ -92,6 +92,11 @@ class MinorsController extends Controller
         return view('minors.manage', compact('tree', 'nextMinor'));
     }
 
+    public function getPartialTree() {
+        $tree = $this->categoryRepo->getCategoryTree();
+        return view('system.partials.category-tree',  ['tree' => $tree]);
+    }
+
     public function store(MinorRequest $request)
     {
         $newMinor = $request->input('minor_id');

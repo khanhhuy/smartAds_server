@@ -74,7 +74,7 @@
                         </div>
                         <div style="clear:both"></div>
                         <div><label id="categories_label" class="control-label">Categories</label></div>
-                        @include('system.partials.category-tree')
+                        <div id="partial-tree"></div>
                         {!! Form::close() !!}
                     </div>
                     <div class="table-responsive" id="minor-table">
@@ -151,10 +151,12 @@
             $('#breadcrumbAdd').hide();
             $('#breadcrumbEdit').hide();
             $('#breadcrumbManage').text('Manage Minors - Categories');
+            $('.page-title h1').text('Manage Minors - Categories');
             $('#btnOpenAdd').show();
         }
 
         function toAddEditPanel() {
+            $('.page-title h1').text('Add Minors - Categories');
             $('#minor-table').slideToggle('fast');
             $('#category-tree').slideToggle('fast');
             $('.bonsai input[type=checkbox]').prop('checked', false);
@@ -187,6 +189,7 @@
         }
         //add new minor
         $('#btnAddMinor').click(function (e) {
+            $("body").css("cursor", "progress");
             e.preventDefault();
             $('#btnAddMinor').show();
             var $form = $('#saveMinor');
@@ -200,7 +203,7 @@
                 url: $(this).attr('action'),
                 data: selectParent(),
                 success: function (data) {
-                    console.log(data);
+                    $("body").css("cursor", "default");
                     if (!$(data).is('.alert-danger')) {
                         table.draw(false);
                         $('#errors-container-div').html('');
@@ -213,6 +216,7 @@
                     }
                 },
                 error: function (jqXHR, type, errorThrown) {
+                    $("body").css("cursor", "default");
                     if (errorThrown != null) {
                         alert(errorThrown);
                     }
@@ -223,8 +227,10 @@
         var oldMinor = -1;
         //edit minor
         function loadEditForm(btn) {
+            $("body").css("cursor", "progress");
             $('#btnAddMinor').hide();
             $('#btnSaveEdit').show();
+            $('.page-title h1').text('Edit Minors - Categories');
             var row = table.row($(btn).closest('tr'));
             var minor = row.data()[1];
             oldMinor = minor;
@@ -232,7 +238,6 @@
                 type: 'GET',
                 url: "{{url('admin/minors')}}/" + minor,
                 success: function (data) {
-                    console.log(data);
                     toAddEditPanel();
                     //set up tree
                     $('#minor_id').val(data.id);
@@ -251,8 +256,10 @@
                     $('#btnSaveEdit').show();
                     $('#btnAddMinor').hide();
                     $('#breadcrumbEdit').show();
+                    $("body").css("cursor", "default");
                 },
                 error: function (jqXHR, type, errorThrown) {
+                    $("body").css("cursor", "default");
                     if (errorThrown != null) {
                         alert(errorThrown);
                     }
@@ -260,14 +267,15 @@
             });
         }
 
-        $('#btnSaveEdit').click(function (e) {
+        $('#btnSaveEdit').click(function(e) {
+            $("body").css("cursor", "progress");
             e.preventDefault();
             $.ajax({
                 type: 'PUT',
                 url: "{{url('admin/minors')}}/" + oldMinor,
                 data: selectParent(),
                 success: function (data) {
-                    console.log(data);
+                    $("body").css("cursor", "default");
                     if (!$(data).is('.alert-danger')) {
                         table.draw(false);
                         $('#errors-container-div').html('');
@@ -280,6 +288,7 @@
                     }
                 },
                 error: function (jqXHR, type, errorThrown) {
+                    $("body").css("cursor", "default");
                     if (errorThrown != null) {
                         alert(errorThrown);
                     }
@@ -311,19 +320,31 @@
 
         $(document).ready(function () {
             //split the list to 2 columns
-            var totalList = $(".category .first-level").size();
-            var halfList = Math.floor(totalList / 2);
-            $(".category").each(function () {
-                $(this).children(':gt(' + halfList + ')').detach().wrapAll('<ul class="bonsai category"></ul>').parent().insertAfter(this);
-            });
-            $(".category").each(function () {
-                $(this).wrapAll('<div class="col-md-6"></div>');
-            });
-            //apply bonsai tree
-            $('.category').bonsai({
-                expandAll: false,
-                checkboxes: true, // depends on jquery.qubit plugin
-                handleDuplicateCheckboxes: true // optional
+            $.ajax({
+                type: 'GET',
+                url: "{{url('minors/partial-tree')}}/",
+                success: function(data) {
+                    $('#partial-tree').html(data);
+                    var totalList = $(".category .first-level").size();
+                    var halfList = Math.floor(totalList/2);
+                    $(".category").each(function() {
+                        $(this).children(':gt('+halfList+')').detach().wrapAll('<ul class="bonsai category"></ul>').parent().insertAfter(this);
+                    });
+                    $(".category").each(function() {
+                        $(this).wrapAll('<div class="col-md-6"></div>');
+                    });
+                    //apply bonsai tree
+                    $('.category').bonsai({
+                            expandAll: false,
+                            checkboxes: true, // depends on jquery.qubit plugin
+                            handleDuplicateCheckboxes: true // optional
+                    });
+                },
+                error: function (jqXHR, type, errorThrown) {
+                    if (errorThrown != null) {
+                        alert(errorThrown);
+                    }
+                }
             });
         });
 
