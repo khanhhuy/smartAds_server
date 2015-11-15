@@ -51,13 +51,12 @@
 @section('content')
     <div class="row manage-page major-manage minor-manage">
         <div class="col-sm-offset-1 col-sm-10">
-            <div id="pos-message"></div>
             <div class="panel panel-default no-heading-panel">
                 <div class="panel-body">
                     <div id="category-tree" style="display: none;">
+                        <div id="errors-container-div"></div>
                         {!! Form::open(array('route'=> 'admin.minors.store', 'id' => 'saveMinor')) !!}
                         <div class="form-group form-inline">
-
                             {!! Form::label('minor_id','Minor',['class'=>'control-label']) !!}
                             {!! Form::input('number','minor_id', null,['class'=>'form-control', 'id' => 'minor_id','required'=>'required', 'min'=>'1','step'=>'1','max'=>'65535']) !!}
                             <button type="button" class="btn btn-default my-cancel-btn" id="btnCancel">
@@ -102,7 +101,8 @@
         </div>
     </div>
     @include('partials.delete-success')
-
+    @include('partials.hidden-success-message',['successMessage'=>"",
+    'messageID'=>'my-success-message-container'])
 @endsection
 
 @section('breadcrumb')
@@ -144,6 +144,7 @@
     @include('partials.manage-footer-script')
     <script>
         $('#btn_add_container').html('<button id="btnOpenAdd" class="btn btn-primary"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add</button>');
+        var nextMinor = "{{$nextMinor}}";
         function toManagePanel() {
             $('#minor-table').slideToggle();
             $('#category-tree').slideToggle();
@@ -158,7 +159,7 @@
             $('#category-tree').slideToggle('fast');
             $('.bonsai input[type=checkbox]').prop('checked', false);
             $('.bonsai input[type=checkbox]').prop('indeterminate', false);
-            $('#minor_id').val('');
+            $('#minor_id').val(nextMinor);
             $('ul.category').each(function () {
                 var bonsai = $(this).data('bonsai');
                 bonsai.collapseAll();
@@ -177,8 +178,13 @@
         $('#btnCancel').click(function () {
             toManagePanel();
         });
-
-
+        var addSuccessMessage = "{{Lang::get('flash.add_success')}}";
+        var editSuccessMessage = "{{Lang::get('flash.edit_success')}}";
+        function showSuccessMessage(message) {
+            var container = $('.alert#my-success-message-container');
+            container.find('#my_hidden_success_message_text').text(message);
+            container.show().delay(3000).fadeOut('slow');
+        }
         //add new minor
         $('#btnAddMinor').click(function (e) {
             e.preventDefault();
@@ -194,10 +200,16 @@
                 url: $(this).attr('action'),
                 data: selectParent(),
                 success: function (data) {
-                    $('#pos-message').html(data);
-                    if ($('#pos-message .alert-danger').length === 0) {
+                    console.log(data);
+                    if (!$(data).is('.alert-danger')) {
                         table.draw(false);
+                        $('#errors-container-div').html('');
                         toManagePanel();
+                        showSuccessMessage(addSuccessMessage);
+                        nextMinor = data;
+                    }
+                    else {
+                        $('#errors-container-div').html(data);
                     }
                 },
                 error: function (jqXHR, type, errorThrown) {
@@ -220,6 +232,7 @@
                 type: 'GET',
                 url: "{{url('admin/minors')}}/" + minor,
                 success: function (data) {
+                    console.log(data);
                     toAddEditPanel();
                     //set up tree
                     $('#minor_id').val(data.id);
@@ -254,10 +267,16 @@
                 url: "{{url('admin/minors')}}/" + oldMinor,
                 data: selectParent(),
                 success: function (data) {
-                    $('#pos-message').html(data);
-                    if ($('#pos-message .alert-danger').length === 0) {
+                    console.log(data);
+                    if (!$(data).is('.alert-danger')) {
                         table.draw(false);
+                        $('#errors-container-div').html('');
                         toManagePanel();
+                        showSuccessMessage(editSuccessMessage);
+                        nextMinor = data;
+                    }
+                    else {
+                        $('#errors-container-div').html(data);
                     }
                 },
                 error: function (jqXHR, type, errorThrown) {

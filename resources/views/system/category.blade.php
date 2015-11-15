@@ -48,6 +48,7 @@
             </div>
         </div>
     </div>
+    @include('partials.save-success')
 @endsection
 
 @section('body-footer')
@@ -68,7 +69,20 @@
                 handleDuplicateCheckboxes: true // optional
             });
             $('button#saveBtn').click(function () {
-                $('form#saveCat').submit();
+                var form = $('form#saveCat');
+                $.ajax({
+                    url: form.prop("action"),
+                    method: "POST",
+                    data: form.serialize(),
+                    success: function (data) {
+                        $('.alert#my-save-success-message').show().delay(3000).fadeOut('slow');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        if (errorThrown != null) {
+                            alert(errorThrown);
+                        }
+                    }
+                })
             });
         });
     </script>

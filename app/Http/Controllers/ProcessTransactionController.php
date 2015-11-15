@@ -1,17 +1,10 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use DB;
-use App\Category;
-
 use App\ActiveCustomer;
 use App\Facades\ProcessTransaction;
-use Carbon\Carbon;
-use App\Facades\Connector;
-use Redirect;
+use App\Http\Requests;
 use App\Repositories\CategoryRepositoryInterface;
+use Illuminate\Http\Request;
 
 class ProcessTransactionController extends Controller {
 
@@ -35,7 +28,8 @@ class ProcessTransactionController extends Controller {
     public function selectCategories(Request $request){
         $inputs = $request->all();
         $this->categoryRepo->selectCategory($inputs);
-        return view('system.category', ['tree' => $this->categoryRepo->getCategoryTree()]);
+        $r['result']=true;
+        return response()->json($r);
     }
 
     public function updateTaxonomy() {

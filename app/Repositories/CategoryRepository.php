@@ -8,7 +8,6 @@
 
 namespace App\Repositories;
 
-use App\BeaconMinor;
 use App\Category;
 use App\Facades\Connector;
 use DB;
@@ -115,15 +114,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     public function selectCategory($categories) {
-        DB::table('categories')->update(['is_suitable' => 0]);
-        foreach ($categories as $key => $value) {
-            if ($value == 'on') {
-                $category = Category::find($key);
-                if ($category != null) {
-                    $category->is_suitable = 1;
-                    $category->save();
-                }
-            }
-        }
+        $catsIds=array_keys($categories);
+        DB::table('categories')->whereNotIn('id',$catsIds)->update(['is_suitable'=>0]);
+        DB::table('categories')->whereIn('id',$catsIds)->update(['is_suitable'=>1]);
     }
 }

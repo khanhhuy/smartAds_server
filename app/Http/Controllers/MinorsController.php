@@ -5,9 +5,8 @@ use App\Http\Requests;
 use App\Http\Requests\MinorRequest;
 use App\Repositories\CategoryRepositoryInterface;
 use App\Utils\Utils;
+use DB;
 use Illuminate\Http\Request;
-use Lang;
-use Laracasts\Flash\Flash;
 
 class MinorsController extends Controller
 {
@@ -89,7 +88,8 @@ class MinorsController extends Controller
     public function manage()
     {
         $tree = $this->categoryRepo->getCategoryTree();
-        return view('minors.manage', ['tree' => $tree]);
+        $nextMinor = self::getNextMinor();
+        return view('minors.manage', compact('tree', 'nextMinor'));
     }
 
     public function store(MinorRequest $request)
@@ -104,9 +104,8 @@ class MinorsController extends Controller
             $newCat[] = $key;
         }
         $minor->categories()->attach($newCat);
-        Flash::success(Lang::get('flash.add_success'));
-        //return $minor->categories()->lists('category_id');
-        return view('partials.fixed-pos-message');
+
+        return self::getNextMinor();
     }
 
     public function deleteMulti(Request $request)
@@ -145,14 +144,18 @@ class MinorsController extends Controller
             $currentMinor->categories()->attach($newCat);
         }
 
-        Flash::success(Lang::get('flash.edit_success'));
-        return view('partials.fixed-pos-message');
-
+        return self::getNextMinor();
     }
 
     public function errors()
     {
         return view('errors.list');
+    }
+
+    public static function getNextMinor()
+    {
+        $r = DB::select("SHOW TABLE STATUS LIKE 'beacon_minors'");
+        return $r[0]->Auto_increment;
     }
 
     // public preProcessCategories() {
