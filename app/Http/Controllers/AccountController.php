@@ -1,18 +1,12 @@
 <?php namespace App\Http\Controllers;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use App\ActiveCustomer;
-use App\Facades\ProcessTransaction;
-
-use Illuminate\Support\Facades\Queue;
-use App\Commands\ProcessDelay;
-
-use Carbon\Carbon;
-use App\Item;
 use App\Ads;
-
+use App\Commands\ProcessDelay;
+use App\Http\Requests;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Queue;
 
 class AccountController extends Controller {
 
@@ -54,18 +48,24 @@ class AccountController extends Controller {
 		$fromDate = Carbon::now()->subMonths(config('process-trans.process_range_months'))->toDateString();
 
 		if ($customer->last_mining == '0000-00-00 00:00:00') {
+//			ProcessTransaction::processCustomer($customer, $fromDate);
+//			$customer->last_mining = Carbon::now();
+//			$customer->save();
 			Queue::push(new ProcessDelay($customer, $fromDate));
-			return;
+            return 'FIRST_TIME';
 		}
 
 		$lastProcessDate = Carbon::createFromFormat('Y-m-d H:i:s', $customer->last_mining);
 		if (Carbon::now()->subDays(config('process-trans.process_range_lastProcessDays'))->gt($lastProcessDate)) {
 			//testing - 10 secs
 			$time = Carbon::now()->addSecond(10);
-			//Queue::push($time, new ProcessDelay($customer, $lastProcessDate->toDateString()));
 			Queue::later($time, new ProcessDelay($customer, $lastProcessDate->toDateString()));
-		}
-
-		return;
+//            ProcessTransaction::processCustomer($customer, $lastProcessDate->toDateString());
+//            $customer->last_mining = Carbon::now();
+//            $customer->save();
+            return 'QUEUED';
+		} else {
+            return 'ALREADY_QUEUED';
+        }
 	}
 }
