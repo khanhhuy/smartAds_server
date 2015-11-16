@@ -77,11 +77,11 @@ class ConnectorService
                                             .'?from='.$fromDate.'&to='.$toDate);
         }
         elseif ($fromDate != null) {
-            $response = $this->client->get('customers/'.$customer->id.'/shopping-history'
+            $response = $this->client->get('customers/'.$customerID.'/shopping-history'
                                             .'?from='.$fromDate);
         }
         else {
-            $response = $this->client->get('customers/'.$customer->id.'/shopping-history'
+            $response = $this->client->get('customers/'.$customerID.'/shopping-history'
                                             .'?to='.$toDate);   
         }
 

@@ -15,7 +15,6 @@ class ProcessTransactionService
     }
 
     public function processAllCustomer($fromDate = null, $toDate = null){
-
         $allCustomer = ActiveCustomer::all();
         $allWatchingList = array();
 
@@ -64,8 +63,11 @@ class ProcessTransactionService
         }
 
         //mining
+        $transactions = array_values($transactions);
         $i = 0;
         $useRelatedItem = config('process-trans.use_related_items');
+        if ($useRelatedItem == null)
+            $useRelatedItem = false;
         while($i < count($transactions)) {
             $j = $i + 1;
             $count = 1;

@@ -365,4 +365,10 @@ class Utils
             Store::updateOrCreate(['id' => 'S_' . $as['id']], ['area_id' => $parentID, 'name' => trim($as['name']), 'address' => $as['address']]);
         }
     }
+
+    public static function updateReprocessTrans() {
+        Setting::set('trans_reprocess.updated_at', Carbon::now()->format('m-d-Y'));
+        Setting::save();
+    }
+
 }

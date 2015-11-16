@@ -5,6 +5,10 @@ use App\Facades\ProcessTransaction;
 use App\Http\Requests;
 use App\Repositories\CategoryRepositoryInterface;
 use Illuminate\Http\Request;
+use App\Commands\ReprocessTrans;
+use Setting;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Queue;
 
 class ProcessTransactionController extends Controller {
 
@@ -15,10 +19,15 @@ class ProcessTransactionController extends Controller {
     }
 
 	public function index(ActiveCustomer $customer)
-	{
-        //$from = Carbon::now()->subMonths(config('process-trans.process_range_months'))->toDateString();
-		//return ProcessTransaction::processAllCustomer($from);
-        return ProcessTransaction::processCustomer($customer);
+	{  
+        //return Setting::get('trans_reprocess.updated_at');
+        //Queue::push(new ReprocessTrans(null, null));
+        Setting::set('trans_reprocess.updated_at', 'Now');
+        Setting::save();
+        //$fromDate = Carbon::now()->subMonths(6)->toDateString();
+		//return ProcessTransaction::processAllCustomer($fromDate);
+
+        //return ProcessTransaction::processCustomer($customer);
 	}
 
     public function getListCategories() {
@@ -32,11 +41,6 @@ class ProcessTransactionController extends Controller {
         return response()->json($r);
     }
 
-    public function updateTaxonomy() {
-        //Todo: Update taxonomy
-        return redirect()->action('ProcessTransactionController@getListCategories');
-    }
-
     public function getProcessConfig() {
         //Todo: get config and show
         return view('system.process-config');
@@ -44,5 +48,26 @@ class ProcessTransactionController extends Controller {
 
     public function getAreaConfig() {
         return view('system.area-config');
+    }
+
+    public function processAllTrans()
+    {   
+        if (Setting::get('trans_reprocess.updated_at') !== 'Updating') {
+            $timeRange = Setting::get('process-config.process_range_months');
+            if ($timeRange == null)
+                $timeRange = 6;
+            $fromDate = Carbon::now()->subMonths($timeRange)->toDateString();
+            Queue::push(new ReprocessTrans($fromDate, null));
+            Setting::set('trans_reprocess.updated_at', 'Updating');
+            Setting::save();
+            return "OK";
+        } else {
+            return "Updating";
+        }
+    }
+
+    public function updateProcessStatus()
+    {
+        return Setting::get('trans_reprocess.updated_at');
     }
 }

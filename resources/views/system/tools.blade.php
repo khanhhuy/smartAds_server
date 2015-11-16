@@ -52,6 +52,12 @@ $loader = asset('/img/icon/rolling.svg');
                 requestURL: "{{route('stores.update-requests.process')}}",
                 statusURL: "{{route('stores.update-status')}}",
                 updating: false,
+            },
+            'trans_reprocess': {
+                id: "#btnProcess",
+                requestURL: "{{route('transactions.reprocess')}}",
+                statusURL: "{{route('transactions.update-status')}}",
+                updating: false,
             }
         };
         function showUpdatingIndicator(obj) {
@@ -82,9 +88,6 @@ $loader = asset('/img/icon/rolling.svg');
         }
 
         $(document).ready(function () {
-            $('#btnProcess').click(function () {
-                $(this).find('.icon-loader').show("slow");
-            });
             var obj;
             @foreach($names as $name)
                 obj = OBJS['{{$name}}'];
@@ -97,6 +100,8 @@ $loader = asset('/img/icon/rolling.svg');
                 });
             });
             @endforeach
+
+            
         });
         function pollingUpdateStatus(obj) {
             $.ajax({
@@ -123,13 +128,15 @@ $loader = asset('/img/icon/rolling.svg');
                 }
             });
         }
+
         @foreach($names as $name)
-            @if ($updating[$name])
-                obj = OBJS['{{$name}}'];
+        @if ($updating[$name])
+            obj = OBJS['{{$name}}'];
         showUpdatingIndicator(obj);
         pollingUpdateStatus(obj);
         @endif
         @endforeach
+        
     </script>
     <script src="{{asset('/js/bootbox.min.js')}}"></script>
 @endsection

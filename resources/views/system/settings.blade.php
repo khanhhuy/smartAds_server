@@ -125,6 +125,23 @@ $toRateGroup = "";
 @section('body-footer')
     <script src="{{asset('/js/bootbox.min.js')}}"></script>
     <script>
+
+        function reprocessTrans() {
+            $.ajax({
+                    method: 'POST',
+                    url: "{{route('transactions.reprocess')}}",
+                    success: function (data) {
+                        console.log(data);
+                        window.location = "{{url('admin/system/tools')}}";
+                    },
+                    error: function (jqXHR, type, errorThrown) {
+                        if (errorThrown != null) {
+                            alert(errorThrown);
+                        }
+                    }
+                });
+        }
+
         $(document).ready(function () {
             $('#threshold-config').submit(function (e) {
                 e.preventDefault();
@@ -164,13 +181,16 @@ $toRateGroup = "";
                             $('#process_errors').html('');
                             bootbox.confirm("Saved successfully, do you want to re-process all of the transactions", 
                                     function(result) {
-                                        if (result == true)
-                                            window.location.replace("{{url('admin/system/tools')}}");
+                                        if (result == true) {
+                                            reprocessTrans();
+                                            
+                                        }
                             }); 
                         }
                     }
                 });
             })
+            
         });
     </script>
 @endsection

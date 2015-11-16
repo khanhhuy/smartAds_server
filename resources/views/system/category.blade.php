@@ -52,7 +52,24 @@
 @endsection
 
 @section('body-footer')
+    <script src="{{asset('/js/bootbox.min.js')}}"></script>
     <script>
+        function reprocessTrans() {
+            $.ajax({
+                    method: 'POST',
+                    url: "{{route('transactions.reprocess')}}",
+                    success: function (data) {
+                        console.log(data);
+                        window.location = "{{url('admin/system/tools')}}";
+                    },
+                    error: function (jqXHR, type, errorThrown) {
+                        if (errorThrown != null) {
+                            alert(errorThrown);
+                        }
+                    }
+                });
+        }
+
         $(document).ready(function () {
             $("input[data-suitable=1]").prop("checked", true);
             var totalList = $(".category .first-level").size();
@@ -76,6 +93,12 @@
                     data: form.serialize(),
                     success: function (data) {
                         $('.alert#my-save-success-message').show().delay(3000).fadeOut('slow');
+                        bootbox.confirm("Saved successfully, do you want to re-process all of the transactions", 
+                                    function(result) {
+                                        if (result == true) {
+                                            reprocessTrans();
+                                        }
+                        }); 
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         if (errorThrown != null) {

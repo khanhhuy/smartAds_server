@@ -51,7 +51,10 @@ class AccountController extends Controller {
 
 	public function update(ActiveCustomer $customer) {
 
-		$fromDate = Carbon::now()->subMonths(config('process-trans.process_range_months'))->toDateString();
+		$timeRange = Setting::get('process-config.process_range_months');
+		if ($timeRange == null)
+			$timeRange = 6;
+		$fromDate = Carbon::now()->subMonths($timeRange)->toDateString();
 
 		if ($customer->last_mining == '0000-00-00 00:00:00') {
 			Queue::push(new ProcessDelay($customer, $fromDate));

@@ -113,6 +113,11 @@ Route::group(['middleware' => 'admin'], function () {
     //save process config
     Route::put('admin/system/settings/update-process-config',
         ['as' => 'system.settings.update-process-config', 'uses' => 'SystemConfigController@updateTransactionConfig']);
+    //reprocess transaction
+    Route::post('transactions/reprocess',
+        ['as' => 'transactions.reprocess', 'uses' => 'ProcessTransactionController@processAllTrans']);
+    Route::get('transactions/update-status',
+        ['as' => 'transactions.update-status', 'uses' => 'ProcessTransactionController@updateProcessStatus']);
     //update taxonomy
     Route::post('taxonomy/update-requests',
         ['as' => 'taxonomy.update-requests.process', 'uses' => 'CategoriesController@updateTaxonomy']);

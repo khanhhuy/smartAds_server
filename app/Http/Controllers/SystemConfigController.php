@@ -25,7 +25,7 @@ class SystemConfigController extends Controller
 
     public function getTools()
     {
-        $names = ['taxonomy', 'stores_areas'];
+        $names = ['taxonomy', 'stores_areas', 'trans_reprocess'];
         foreach ($names as $name) {
             $lastUpdated[$name] = Setting::get("$name.updated_at");
             $updating[$name] = ($lastUpdated[$name] === 'Updating');
