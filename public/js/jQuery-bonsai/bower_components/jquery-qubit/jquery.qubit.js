@@ -28,12 +28,13 @@
       try {
         this.suspendListeners = true;
         // all children inherit my state
-        parentItems.eq(0).find('input[type=checkbox]')
+        parentItems.eq(0).find('label > input[type=checkbox]')
           .filter(checkbox.prop('checked') ? ':not(:checked)' : ':checked')
           .each(function() {
-            if (!$(this).parent().hasClass('hidden')) {
+            //if (!$(this).parent().hasClass('hidden')) {
+              console.log(this);
               self.setChecked($(this), checkbox.prop('checked'));
-            }
+            //}
           })
           .trigger('change');
         this.processParents();
@@ -43,10 +44,10 @@
     },
     processParents: function() {
       var self = this, changed = false;
-      this.scope.find('input[type=checkbox]').each(function() {
+      this.scope.find('li.has-children > label > input[type=checkbox]').each(function() {
         var $this = $(this);
         var parent = $this.closest(self.itemSelector);
-        var children = parent.find('input[type=checkbox]').not($this);
+        var children = parent.find('ul > li > label > input[type=checkbox]').not($this);
         var numChecked = children.filter(function() {
           return $(this).prop('checked') || $(this).prop('indeterminate');
         }).length;
@@ -75,7 +76,7 @@
         changed = true;
       }
       if (checkbox.prop('checked') != value) {
-        checkbox.prop('checked', value).trigger('change');
+        checkbox.prop('checked', value);//.trigger('change');
         changed = true;
       }
       return changed;
