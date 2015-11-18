@@ -334,7 +334,7 @@ class Utils
         $cantDelStores1 = DB::table('beacon_majors')->distinct()->lists('store_id');
         $cantDelStores2 = DB::table('ads_store')->distinct()->lists('store_id');
         if ($delete) {
-            DB::table('stores')->whereNotIn('id', array_merge($cantDelStores1, $cantDelStores2))->delete();
+            DB::table('stores')->whereNotIn('id', array_merge($canBtDelStores1, $cantDelStores2))->delete();
             DB::table('areas')->whereNotIn('id', DB::table('ads_area')->distinct()->lists('area_id'))->delete();
         }
         foreach ($stores as $as) {
@@ -365,7 +365,7 @@ class Utils
             Store::updateOrCreate(['id' => 'S_' . $as['id']], ['area_id' => $parentID, 'name' => trim($as['name']), 
                                                                 'address' => $as['address'],
                                                                 'latitude' => $as['latitude'],
-                                                                'longtitude' => $as['longtitude']
+                                                                'longitude' => $as['longitude']
                                                                 ]);
         }
     }
