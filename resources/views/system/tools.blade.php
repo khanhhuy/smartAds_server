@@ -16,7 +16,7 @@ $loader = asset('/img/icon/rolling.svg');
 
 @section('content')
     <div class="btn-rich" id="btnProcess">
-        <div class="btn-name">Re-Process</div>
+        <div class="btn-name">Re-process All Trans</div>
         <img src="{{$loader}}" class="icon-loader">
         <span class="glyphicon glyphicon-ok icon-success" aria-hidden="true"></span>
 

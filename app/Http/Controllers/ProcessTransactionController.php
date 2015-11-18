@@ -22,12 +22,12 @@ class ProcessTransactionController extends Controller {
 	{  
         //return Setting::get('trans_reprocess.updated_at');
         //Queue::push(new ReprocessTrans(null, null));
-        Setting::set('trans_reprocess.updated_at', 'Now');
-        Setting::save();
+        //Setting::set('trans_reprocess.updated_at', 'Now');
+        //return Setting::all();
         //$fromDate = Carbon::now()->subMonths(6)->toDateString();
 		//return ProcessTransaction::processAllCustomer($fromDate);
 
-        //return ProcessTransaction::processCustomer($customer);
+        return ProcessTransaction::processCustomer($customer);
 	}
 
     public function getListCategories() {

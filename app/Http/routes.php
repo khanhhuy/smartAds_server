@@ -28,6 +28,7 @@ Route::group(['prefix' => 'api/v1'], function () {
         Route::put('customers/{customers}/password', 'Auth\APIPasswordController@update');
     });
 
+    Route::get('stores/active', 'StoresController@getActiveStores');
     Route::get('account-status', 'CustomersController@accountStatus');
     Route::controller('auth', 'Auth\APIAuthController');
 });

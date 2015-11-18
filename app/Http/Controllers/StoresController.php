@@ -5,6 +5,8 @@ use App\Commands\UpdateStoresAreas;
 use App\Http\Requests;
 use Queue;
 use Setting;
+use App\Store;
+use App\BeaconMajor;
 
 class StoresController extends Controller
 {
@@ -27,6 +29,13 @@ class StoresController extends Controller
     public function updateStoresStatus()
     {
         return Setting::get('stores_areas.updated_at');
+    }
+
+    public function getActiveStores() {
+        $activeStores = BeaconMajor::lists('store_id');
+        $stores = Store::query()->whereIn('id', $activeStores);
+
+        return $stores->get();
     }
 
 }

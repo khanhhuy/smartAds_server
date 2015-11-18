@@ -97,11 +97,13 @@ class ProcessTransactionService
                         foreach ($relatedItems as $item) {
                             if (!in_array($item['id'], $watchingList) && 
                                 !in_array($item['id'], $blackList)) {
-                                    $cat = Connector::getCategoryFromItemID($item['id']);
-                                    if(Category::find($cat->id)['is_suitable']) {
-                                        $watchingList[] = $item['id'];
-                                        $this->createMockItem($item['id']);
-                                    }
+                                    $watchingList[] = $item['id'];
+                                    $this->createMockItem($item['id']);
+                                    // $cat = Connector::getCategoryFromItemID($item['id']);
+                                    // if(Category::find($cat->id)['is_suitable']) {
+                                    //     $watchingList[] = $item['id'];
+                                    //     $this->createMockItem($item['id']);
+                                    // }
                             }
                         }        
                         $isAddedRelated = true;

@@ -362,7 +362,11 @@ class Utils
                 self::recursiveupdateStoreArea($child, 'A_' . $as['id']);
             }
         } else {
-            Store::updateOrCreate(['id' => 'S_' . $as['id']], ['area_id' => $parentID, 'name' => trim($as['name']), 'address' => $as['address']]);
+            Store::updateOrCreate(['id' => 'S_' . $as['id']], ['area_id' => $parentID, 'name' => trim($as['name']), 
+                                                                'address' => $as['address'],
+                                                                'latitude' => $as['latitude'],
+                                                                'longtitude' => $as['longtitude']
+                                                                ]);
         }
     }
 

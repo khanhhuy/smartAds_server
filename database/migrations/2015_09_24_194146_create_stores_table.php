@@ -18,6 +18,8 @@ class CreateStoresTable extends Migration {
 			$table->primary('id');
 			$table->string('name');
 			$table->string('address')->nullable();
+			$table->float('latitude')->nullable();
+			$table->float('longtitude')->nullable();
             $table->string('display_area')->nullable();
 			$table->timestamps();
 		});

@@ -239,6 +239,7 @@
                 url: "{{url('admin/minors')}}/" + minor,
                 success: function (data) {
                     toAddEditPanel();
+                    $('.page-title h1').text('Edit Minors - Categories');
                     //set up tree
                     $('#minor_id').val(data.id);
                     var bonsai = $('ul.category').data('bonsai');
