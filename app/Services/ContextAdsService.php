@@ -61,10 +61,9 @@ class ContextAdsService
             $a['minors'] = $minors;
         }
 
-        $entranceAds = $entranceAds->merge($this->getTargetedAds($customer));
-
         $result['entranceAds'] = $entranceAds->values();
         $result['aisleAds'] = $aisleAds->values();
+        $result['targetedAds'] = $this->getTargetedAds($customer);
 
         return $result;
     }
