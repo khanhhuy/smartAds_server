@@ -17,9 +17,6 @@ class RedirectIfNotAdsManager
      */
     public function handle($request, Closure $next)
     {
-        //TODO for dev purpose
-        return $next($request);
-
         if (PortalUser::getCurrentUserType() !== 'Ads_Manager') {
             if (Auth::guest()) {
                 if ($request->ajax()) {

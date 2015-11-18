@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Repositories\CustomerRepositoryInterface;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
-use stdClass;
 
 class APIAuthController extends Controller
 {
@@ -45,8 +44,6 @@ class APIAuthController extends Controller
             $token = $this->refreshRememberToken($customer);
             $r['customerID'] = $customerID;
             $r['accessToken'] = $token;
-
-            //TODO: Transaction process
 
             return response()->json($r);
         } else {
