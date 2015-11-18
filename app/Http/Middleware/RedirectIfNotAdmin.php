@@ -17,9 +17,6 @@ class RedirectIfNotAdmin
      */
     public function handle($request, Closure $next)
     {
-        //TODO for dev purpose
-        return $next($request);
-
         if (PortalUser::getCurrentUserType() !== 'Admin') {
             if (Auth::guest()) {
                 if ($request->ajax()) {

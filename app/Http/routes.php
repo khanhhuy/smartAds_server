@@ -128,8 +128,6 @@ Route::group(['middleware' => 'admin'], function () {
         ['as' => 'stores.update-requests.process', 'uses' => 'StoresController@updateStores']);
     Route::get('stores/update-status', ['as' => 'stores.update-status', 'uses' => 'StoresController@updateStoresStatus']);
 
-    Route::get('admin/system/area-config',
-        ['as' => 'system.area-config', 'uses' => 'ProcessTransactionController@getAreaConfig']);
 });
 
 /*

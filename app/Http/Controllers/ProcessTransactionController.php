@@ -40,7 +40,6 @@ class ProcessTransactionController extends Controller {
         $r['result']=true;
         return response()->json($r);
     }
-
     public function getProcessConfig() {
         //Todo: get config and show
         return view('system.process-config');
