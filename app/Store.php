@@ -3,7 +3,7 @@
 use Illuminate\Database\Eloquent\Model;
 
 class Store extends Model {
-    protected $fillable = ['id', 'name', 'address', 'area_id', 'display_area'];
+    protected $fillable = ['id', 'name', 'address', 'area_id', 'display_area','latitude','longitude'];
 
     public function ads()
     {
