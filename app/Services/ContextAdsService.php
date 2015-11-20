@@ -61,8 +61,8 @@ class ContextAdsService
             $a['minors'] = $minors;
         }
 
-        $result['entranceAds'] = $entranceAds->values();
-        $result['aisleAds'] = $aisleAds->values();
+        $result['entrancePromotions'] = $entranceAds->values();
+        $result['aislePromotions'] = $aisleAds->values();
         $result['targetedAds'] = $this->getTargetedAds($customer);
 
         return $result;
