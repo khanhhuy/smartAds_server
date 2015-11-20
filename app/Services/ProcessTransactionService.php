@@ -7,6 +7,7 @@ use App\Facades\Connector;
 use App\Item;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Carbon\Carbon;
+use Setting;
 
 class ProcessTransactionService
 {
@@ -65,12 +66,18 @@ class ProcessTransactionService
         //mining
         $transactions = array_values($transactions);
         $i = 0;
-        $useRelatedItem = config('process-trans.use_related_items');
+        $useRelatedItem = Setting::get('process-config.related-item');
         if ($useRelatedItem == null)
             $useRelatedItem = false;
+
         while($i < count($transactions)) {
             $j = $i + 1;
             $count = 1;
+            if (in_array($transactions[$i]['item_id'], $watchingList)) {
+                $i++;
+                continue;
+            }
+
             if ($useRelatedItem)
                 $relatedItems = Connector::getRelatedItem($transactions[$i]['item_id']);
             $isAddedRelated = false;
@@ -80,7 +87,7 @@ class ProcessTransactionService
                     unset($transactions[$j]);
                     $transactions = array_values($transactions);
                     $j--;
-                } elseif ($useRelatedItem && !$isAddedRelated) {
+                } elseif ($useRelatedItem && !$isAddedRelated && ($relatedItems != null)) {
                     foreach ($relatedItems as $item) {
                         if ($transactions[$j]['item_id'] == $item['id']) {
                             $count++;
@@ -97,13 +104,11 @@ class ProcessTransactionService
                         foreach ($relatedItems as $item) {
                             if (!in_array($item['id'], $watchingList) && 
                                 !in_array($item['id'], $blackList)) {
-                                    $watchingList[] = $item['id'];
-                                    $this->createMockItem($item['id']);
-                                    // $cat = Connector::getCategoryFromItemID($item['id']);
-                                    // if(Category::find($cat->id)['is_suitable']) {
-                                    //     $watchingList[] = $item['id'];
-                                    //     $this->createMockItem($item['id']);
-                                    // }
+                                    $cat = Connector::getCategoryFromItemID($item['id']);
+                                    if(Category::find($cat->id)['is_suitable']) {
+                                        $watchingList[] = $item['id'];
+                                        $this->createMockItem($item['id']);
+                                    }
                             }
                         }        
                         $isAddedRelated = true;
