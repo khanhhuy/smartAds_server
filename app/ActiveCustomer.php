@@ -11,7 +11,7 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
 {
     use Authenticatable, CanResetPassword;
 
-    protected $fillable = ['id'];
+    protected $fillable = ['id','last_mining'];
     public $incrementing = false;
 
     /**

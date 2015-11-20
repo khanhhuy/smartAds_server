@@ -33,36 +33,7 @@ class ContextAdsService
 
     public function getContextAds(ActiveCustomer $customer, BeaconMajor $major, BeaconMinor $minor)
     {
-        $watchingList = $customer->watchingList->lists('id');
-        $wholeSystemAds = Ads::forCustomer($customer)->where('is_whole_system', true)->get();
-        $store = $major->store;
-        $storeAds = $store->ads()->forCustomer($customer)->get();
-        $area = $store->area;
-        $areaAds = $area->getApplyingAdsForCustomer($customer);
-        $allAds = $wholeSystemAds->merge($storeAds)->merge($areaAds);
-        $contextAds = $allAds->filter(function ($ads) use ($watchingList) {
-            $intersect = $ads->items()->whereIn('id', $watchingList)->get();
-            if (!$intersect->isEmpty()) {
-                return true;
-            }
-            return false;
-        });
-        $minEntranceDiscountValue = $customer->getMinEntranceDiscountValue();
-        $minEntranceDiscountRate = $customer->getMinEntranceDiscountRate();
-        $entranceAds = $contextAds->filter(function ($ads) use ($minEntranceDiscountValue, $minEntranceDiscountRate) {
-            return $ads->discount_value >= $minEntranceDiscountValue || $ads->discount_rate >= $minEntranceDiscountRate;
-        });
-        $aisleAds = $contextAds->diff($entranceAds);
-        foreach ($aisleAds as $a) {
-            $items = $a->items;
-            $cats = $this->categoryRepo->getAllCategoryNodesOfItems($items);
-            //$minors=BeaconMinor::join('category_minor','beacon_minors.minor','=','category_minor.beacon_minor')->whereIn('category_id',$cats)->get();
-            $minors = DB::table('category_minor')->whereIn('category_id', $cats)->distinct()->lists('beacon_minor');
-            $a['minors'] = $minors;
-        }
-
-        $result['entrancePromotions'] = $entranceAds->values();
-        $result['aislePromotions'] = $aisleAds->values();
+        $result = $this->getSmartPromotions($customer, $major, $minor);
         $result['targetedAds'] = $this->getTargetedAds($customer);
 
         return $result;
@@ -102,6 +73,41 @@ class ContextAdsService
         }
 
         return Collection::make($targetedAds);
+    }
+
+    public function getSmartPromotions($customer, $major, $minor)
+    {
+        $watchingList = $customer->watchingList->lists('id');
+        $wholeSystemAds = Ads::forCustomer($customer)->where('is_whole_system', true)->get();
+        $store = $major->store;
+        $storeAds = $store->ads()->forCustomer($customer)->get();
+        $area = $store->area;
+        $areaAds = $area->getApplyingAdsForCustomer($customer);
+        $allAds = $wholeSystemAds->merge($storeAds)->merge($areaAds);
+        $contextAds = $allAds->filter(function ($ads) use ($watchingList) {
+            $intersect = $ads->items()->whereIn('id', $watchingList)->get();
+            if (!$intersect->isEmpty()) {
+                return true;
+            }
+            return false;
+        });
+        $minEntranceDiscountValue = $customer->getMinEntranceDiscountValue();
+        $minEntranceDiscountRate = $customer->getMinEntranceDiscountRate();
+        $entranceAds = $contextAds->filter(function ($ads) use ($minEntranceDiscountValue, $minEntranceDiscountRate) {
+            return $ads->discount_value >= $minEntranceDiscountValue || $ads->discount_rate >= $minEntranceDiscountRate;
+        });
+        $aisleAds = $contextAds->diff($entranceAds);
+        foreach ($aisleAds as $a) {
+            $items = $a->items;
+            $cats = $this->categoryRepo->getAllCategoryNodesOfItems($items);
+            //$minors=BeaconMinor::join('category_minor','beacon_minors.minor','=','category_minor.beacon_minor')->whereIn('category_id',$cats)->get();
+            $minors = DB::table('category_minor')->whereIn('category_id', $cats)->distinct()->lists('beacon_minor');
+            $a['minors'] = $minors;
+        }
+
+        $result['entrancePromotions'] = $entranceAds->values();
+        $result['aislePromotions'] = $aisleAds->values();
+        return $result;
     }
 
     /*public function getContextAds(ActiveCustomer $customer, BeaconMinor $minor)
