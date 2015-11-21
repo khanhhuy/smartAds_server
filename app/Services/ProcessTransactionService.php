@@ -5,7 +5,6 @@ use App\ActiveCustomer;
 use App\Category;
 use App\Facades\Connector;
 use App\Item;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Carbon\Carbon;
 use Setting;
 
@@ -33,7 +32,7 @@ class ProcessTransactionService
 
     private function createMockItem($itemID) {
         $item = Item::find($itemID);
-        if ($item == null)
+        if ($item === null)
             Item::create(['id' => $itemID]);
     }
 
@@ -67,7 +66,7 @@ class ProcessTransactionService
         $transactions = array_values($transactions);
         $i = 0;
         $useRelatedItem = Setting::get('process-config.related-item');
-        if ($useRelatedItem == null)
+        if ($useRelatedItem === null)
             $useRelatedItem = false;
 
         while($i < count($transactions)) {
@@ -87,7 +86,7 @@ class ProcessTransactionService
                     unset($transactions[$j]);
                     $transactions = array_values($transactions);
                     $j--;
-                } elseif ($useRelatedItem && !$isAddedRelated && ($relatedItems != null)) {
+                } elseif ($useRelatedItem && !$isAddedRelated && ($relatedItems !== null)) {
                     foreach ($relatedItems as $item) {
                         if ($transactions[$j]['item_id'] == $item['id']) {
                             $count++;
@@ -100,7 +99,7 @@ class ProcessTransactionService
                         $watchingList[] = $transactions[$i]['item_id'];
                         $this->createMockItem($transactions[$i]['item_id']);
                     }
-                    if ($useRelatedItem && !$isAddedRelated && ($relatedItems != null)) {
+                    if ($useRelatedItem && !$isAddedRelated && ($relatedItems !== null)) {
                         foreach ($relatedItems as $item) {
                             if (!in_array($item['id'], $watchingList) && 
                                 !in_array($item['id'], $blackList)) {

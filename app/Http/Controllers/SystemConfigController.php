@@ -16,9 +16,9 @@ class SystemConfigController extends Controller
     {
         $relatedItem = Setting::get('process-config.related-item');
         $timeRange = Setting::get('process-config.process_range_months');
-        if ($relatedItem == null)
+        if ($relatedItem === null)
             $relatedItem = false;
-        if ($timeRange == null)
+        if ($timeRange === null)
             $timeRange = 6;
         return view('system.settings')->with(compact('relatedItem', 'timeRange'));
     }

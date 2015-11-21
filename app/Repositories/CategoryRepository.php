@@ -44,7 +44,7 @@ class CategoryRepository implements CategoryRepositoryInterface
                     }
                     $allCats[] = $cat->id;
                     $cat = $cat->parentCategory;
-                } while ($cat != null);
+                } while ($cat !== null);
             }
         }
         return $allCats;
@@ -93,7 +93,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             $parsedTree[$index1]["subcat"][$index2]["id"] = $category->lv2Id;
             $parsedTree[$index1]["subcat"][$index2]["is_suitable"] = $category->lv2Suitable;
 
-            if ($category->lv3Name != null) {
+            if ($category->lv3Name !== null) {
                 $parsedTree[$index1]["subcat"][$index2]["subcat"][$index3]["name"] = $category->lv3Name;
                 $parsedTree[$index1]["subcat"][$index2]["subcat"][$index3]["id"] = $category->lv3Id;
                 $parsedTree[$index1]["subcat"][$index2]["subcat"][$index3]["is_suitable"] = $category->lv3Suitable;

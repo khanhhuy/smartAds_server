@@ -191,7 +191,7 @@ class Utils
                 break;
         }
         //Jobs
-        if ($rule['jobs_desc'] != null) {
+        if ($rule['jobs_desc'] !== null) {
             $jobDesc = Connector::getJobDesc();
             $jobs = explode(',', $rule['jobs_desc']);
             if (count($jobDesc) != count($jobs)) {

@@ -1,1 +1,15 @@
-{"taxonomy":{"updated_at":"11-18-2015"},"stores_areas":{"updated_at":"11-18-2015"},"process-config":{"process_range_months":"12","related-item":true},"trans_reprocess":{"updated_at":"11-20-2015"}}
+{
+  "taxonomy": {
+    "updated_at": "11-18-2015"
+  },
+  "stores_areas": {
+    "updated_at": "11-21-2015"
+  },
+  "process-config": {
+    "process_range_months": "12",
+    "related-item": true
+  },
+  "trans_reprocess": {
+    "updated_at": "11-20-2015"
+  }
+}
