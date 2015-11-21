@@ -24,7 +24,7 @@ class AccountController extends Controller {
 	public function feedback(ActiveCustomer $customer, Request $request) {
 		$adsId = $request->input('adsId');
 		$ads = Ads::find($adsId);
-		if ($ads == null)
+		if ($ads === null)
 			return;
 		$items = $ads->items()->lists('id');
 		$watchingList = $customer->watchingList()->lists('id');
@@ -47,7 +47,7 @@ class AccountController extends Controller {
 	public function update(ActiveCustomer $customer) {
 
 		$timeRange = Setting::get('process-config.process_range_months');
-		if ($timeRange == null)
+		if ($timeRange === null)
 			$timeRange = 6;
 		$fromDate = Carbon::now()->subMonths($timeRange)->toDateString();
 

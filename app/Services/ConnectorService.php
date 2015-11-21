@@ -68,15 +68,13 @@ class ConnectorService
     public function getShoppingHistoryFromCustomer($customerID, $fromDate = null, $toDate = null)
     {
 
-        if ($fromDate == null && $toDate == null)
+        if ($fromDate === null && $toDate === null)
         {
             $response = $this->client->get('customers/' . $customerID . '/shopping-history');
-        }
-        elseif ($fromDate != null && $toDate != null) {
+        } elseif ($fromDate !== null && $toDate !== null) {
             $response = $this->client->get('customers/' . $customerID . '/shopping-history'
                                             .'?from='.$fromDate.'&to='.$toDate);
-        }
-        elseif ($fromDate != null) {
+        } elseif ($fromDate !== null) {
             $response = $this->client->get('customers/'.$customerID.'/shopping-history'
                                             .'?from='.$fromDate);
         }

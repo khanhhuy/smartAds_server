@@ -1,14 +1,14 @@
 <?php namespace App\Http\Controllers;
 
 use App\ActiveCustomer;
+use App\Commands\ReprocessTrans;
 use App\Facades\ProcessTransaction;
 use App\Http\Requests;
 use App\Repositories\CategoryRepositoryInterface;
-use Illuminate\Http\Request;
-use App\Commands\ReprocessTrans;
-use Setting;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Queue;
+use Setting;
 
 class ProcessTransactionController extends Controller {
 
@@ -56,7 +56,7 @@ class ProcessTransactionController extends Controller {
     {   
         if (Setting::get('trans_reprocess.updated_at') !== 'Updating') {
             $timeRange = Setting::get('process-config.process_range_months');
-            if ($timeRange == null)
+            if ($timeRange === null)
                 $timeRange = 6;
             $fromDate = Carbon::now()->subMonths($timeRange)->toDateString();
             Queue::push(new ReprocessTrans($fromDate, null));

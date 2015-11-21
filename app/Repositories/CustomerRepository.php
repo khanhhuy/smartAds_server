@@ -17,7 +17,7 @@ class CustomerRepository implements CustomerRepositoryInterface
     public function getCustomerIDFromEmail($email)
     {
         $customer=Connector::getCustomerFromEmail($email);
-        if ($customer!=null) {
+        if ($customer !== null) {
             return $customer->id;
         }
         else{

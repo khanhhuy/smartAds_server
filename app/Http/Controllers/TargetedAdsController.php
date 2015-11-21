@@ -63,7 +63,7 @@ class TargetedAdsController extends AdsController
             if ($rule->from_family_members == 0)
                 $rule->from_family_members = '';
         }
-        if ($rule->jobs_desc != null) {
+        if ($rule->jobs_desc !== null) {
             $rule->jobs_desc = explode(',', $rule->jobs_desc);
         }
     }

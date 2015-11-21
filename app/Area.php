@@ -17,7 +17,7 @@ class Area extends Model {
     {
         $allAds=$this->ads()->forCustomer($customer)->get();
         $a=$this;
-        while ($a->parentArea!=null){
+        while ($a->parentArea !== null) {
             $a=$a->parentArea;
             $allAds=$allAds->merge($a->ads()->forCustomer($customer)->get());
         }

@@ -1,13 +1,11 @@
 <?php namespace App\Providers;
 
+use App\Services\ConnectorService;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
-use App\Services\ConnectorService;
 
 class ConnectorServiceProvider extends ServiceProvider {
 
-
-    protected $defer =true;
 
 	/**
 	 * Bootstrap the application services.
@@ -31,8 +29,4 @@ class ConnectorServiceProvider extends ServiceProvider {
         });
 	}
 
-    public function provides()
-    {
-        return ['connector'];
-    }
 }

@@ -1,11 +1,12 @@
 <?php namespace App\Providers;
 
+use App\Services\ProcessTransactionService;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
-use App\Services\ProcessTransactionService;
 
 class ProcessTransactionProvider extends ServiceProvider {
 
+    protected $defer = true;
 	/**
 	 * Bootstrap the application services.
 	 *
@@ -28,4 +29,8 @@ class ProcessTransactionProvider extends ServiceProvider {
         });
 	}
 
+    public function provides()
+    {
+        return ['processTransaction'];
+    }
 }

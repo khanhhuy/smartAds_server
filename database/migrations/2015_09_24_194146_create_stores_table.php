@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class CreateStoresTable extends Migration {
 
@@ -17,7 +17,6 @@ class CreateStoresTable extends Migration {
 			$table->string('id');
 			$table->primary('id');
 			$table->string('name');
-			$table->string('address')->nullable();
 			$table->double('latitude', 11, 7)->nullable();
 			$table->double('longitude', 11, 7)->nullable();
             $table->string('display_area')->nullable();

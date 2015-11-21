@@ -33,6 +33,50 @@ class ContextAdsService
 
     public function getContextAds(ActiveCustomer $customer, BeaconMajor $major, BeaconMinor $minor)
     {
+        $result = $this->getSmartPromotions($customer, $major, $minor);
+        $result['targetedAds'] = $this->getTargetedAds($customer);
+
+        return $result;
+    }
+
+    public function getTargetedAds(ActiveCustomer $customer) {
+        $customerInfo = $this->customerRepo->getCustomerInfo($customer->id);
+        $allTargeted = Ads::available()->targeted()->get();
+        $targetedAds = array();
+
+        foreach ($allTargeted as $ads) {
+            $rule = $ads->targetedRule()->get();
+            if ($rule->isEmpty())
+                continue;
+            $rule = $rule[0];
+            if (($customerInfo['gender'] != $rule->gender) && ($rule->gender != 2))
+                continue;
+            $age = Carbon::now()->diffInYears(Carbon::createFromFormat('Y-m-d', $customerInfo['birth']));
+            $toAge = ($rule->to_age == 0) ? $rule->to_age + $age + 1 : $rule->to_age; //to age = 0 exception
+            if (($age < $rule->from_age) || ($age > $toAge))
+                continue;
+
+            $toMember = ($rule->to_family_members == 0) ? $rule->to_family_members + $age + 1 : $rule->to_family_members;
+            if (($customerInfo['family_members'] < $rule->from_family_members) 
+                || ($customerInfo['family_members'] > $toMember))
+                continue;
+
+            if ($rule->jobs_desc !== null) {
+                if ($customerInfo['jobs_id'] === null)
+                    continue;
+                $jobs= explode(',', $rule->jobs_desc);
+                if (!in_array($customerInfo['jobs_id'], $jobs))
+                    continue;
+            }
+
+            $targetedAds[] = $ads;
+        }
+
+        return Collection::make($targetedAds);
+    }
+
+    public function getSmartPromotions($customer, $major, $minor)
+    {
         $watchingList = $customer->watchingList->lists('id');
         $wholeSystemAds = Ads::forCustomer($customer)->where('is_whole_system', true)->get();
         $store = $major->store;
@@ -63,45 +107,7 @@ class ContextAdsService
 
         $result['entrancePromotions'] = $entranceAds->values();
         $result['aislePromotions'] = $aisleAds->values();
-        $result['targetedAds'] = $this->getTargetedAds($customer);
-
         return $result;
-    }
-
-    public function getTargetedAds(ActiveCustomer $customer) {
-        $customerInfo = $this->customerRepo->getCustomerInfo($customer->id);
-        $allTargeted = Ads::available()->targeted()->get();
-        $targetedAds = array();
-
-        foreach ($allTargeted as $ads) {
-            $rule = $ads->targetedRule()->get();
-            if ($rule->isEmpty())
-                continue;
-            $rule = $rule[0];
-            if (($customerInfo['gender'] != $rule->gender) && ($rule->gender != 2))
-                continue;
-            $age = Carbon::now()->diffInYears(Carbon::createFromFormat('Y-m-d', $customerInfo['birth']));
-            $toAge = ($rule->to_age == 0) ? $rule->to_age + $age + 1 : $rule->to_age; //to age = 0 exception
-            if (($age < $rule->from_age) || ($age > $toAge))
-                continue;
-
-            $toMember = ($rule->to_family_members == 0) ? $rule->to_family_members + $age + 1 : $rule->to_family_members;
-            if (($customerInfo['family_members'] < $rule->from_family_members) 
-                || ($customerInfo['family_members'] > $toMember))
-                continue;            
-
-            if ($rule->jobs_desc != null) {
-                if ($customerInfo['jobs_id'] == null)
-                    continue;
-                $jobs= explode(',', $rule->jobs_desc);
-                if (!in_array($customerInfo['jobs_id'], $jobs))
-                    continue;
-            }
-
-            $targetedAds[] = $ads;
-        }
-
-        return Collection::make($targetedAds);
     }
 
     /*public function getContextAds(ActiveCustomer $customer, BeaconMinor $minor)

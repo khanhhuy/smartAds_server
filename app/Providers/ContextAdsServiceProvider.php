@@ -1,13 +1,12 @@
 <?php namespace App\Providers;
 
-use App\Repositories\CategoryRepository;
-use App\Repositories\StoreRepository;
 use App\Services\ContextAdsService;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 
 class ContextAdsServiceProvider extends ServiceProvider
 {
+    protected $defer = true;
 
     /**
      * Bootstrap the application services.
@@ -27,7 +26,6 @@ class ContextAdsServiceProvider extends ServiceProvider
     public function register()
     {
         App::bind('App\Repositories\StoreRepositoryInterface', 'App\Repositories\StoreRepository');
-        App::bind('App\Repositories\CategoryRepositoryInterface', 'App\Repositories\CategoryRepository');
         App::bind('App\Repositories\CustomerRepositoryInterface', 'App\Repositories\CustomerRepository');
         App::bind('contextAdsService', function ($app) {
             return new ContextAdsService($app->make('App\Repositories\CategoryRepositoryInterface'),
@@ -36,4 +34,10 @@ class ContextAdsServiceProvider extends ServiceProvider
                 );
         });
     }
+
+    public function provides()
+    {
+        return ['App\Repositories\StoreRepositoryInterface', 'App\Repositories\CustomerRepositoryInterface', 'contextAdsService'];
+    }
+
 }

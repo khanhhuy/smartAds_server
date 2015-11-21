@@ -11,7 +11,7 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
 {
     use Authenticatable, CanResetPassword;
 
-    protected $fillable = ['id'];
+    protected $fillable = ['id','last_mining'];
     public $incrementing = false;
 
     /**
@@ -35,7 +35,7 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
 
     public function getMinEntranceDiscountValue()
     {
-        if ($this->min_entrance_value != null) {
+        if ($this->min_entrance_value !== null) {
             return $this->min_entrance_value;
         } else {
             return Config::get('promotion-threshold.entrance_value');
@@ -44,7 +44,7 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
 
     public function getMinEntranceDiscountRate()
     {
-        if ($this->min_entrance_rate != null) {
+        if ($this->min_entrance_rate !== null) {
             return $this->min_entrance_rate;
         } else {
             return Config::get('promotion-threshold.entrance_rate');
@@ -53,7 +53,7 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
 
     public function getMinDiscountValue()
     {
-        if ($this->min_aisle_value != null) {
+        if ($this->min_aisle_value !== null) {
             return $this->min_aisle_value;
         } else {
             return Config::get('promotion-threshold.aisle_value');
@@ -62,7 +62,7 @@ class ActiveCustomer extends Model implements AuthenticatableContract, CanResetP
 
     public function getMinDiscountRate()
     {
-        if ($this->min_aisle_rate != null) {
+        if ($this->min_aisle_rate !== null) {
             return $this->min_aisle_rate;
         } else {
             return Config::get('promotion-threshold.aisle_rate');

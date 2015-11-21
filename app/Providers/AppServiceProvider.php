@@ -1,5 +1,6 @@
 <?php namespace App\Providers;
 
+use App;
 use App\Validators\CustomValidator;
 use Illuminate\Support\ServiceProvider;
 use Validator;
@@ -30,18 +31,9 @@ class AppServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		$this->app->bind(
-			'Illuminate\Contracts\Auth\Registrar',
-			'App\Services\Registrar'
-		);
-
-		$this->app->bind(
-			'App\Repositories\CustomerRepositoryInterface',
-			'App\Repositories\CustomerRepository'
-		);
-		$this->app->bind(
 			'App\Repositories\ItemRepositoryInterface',
 			'App\Repositories\ItemRepository'
 		);
+        App::bind('App\Repositories\CategoryRepositoryInterface', 'App\Repositories\CategoryRepository');
 	}
-
 }
