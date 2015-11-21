@@ -24,9 +24,9 @@ class ProcessTransactionController extends Controller {
         //Queue::push(new ReprocessTrans(null, null));
         //Setting::set('trans_reprocess.updated_at', 'Now');
         
-         Setting::set('taxonomy.updated_at', Carbon::now()->format('m-d-Y'));
-         Setting::save();
-        // return Setting::all();
+        //  Setting::set('taxonomy.updated_at', Carbon::now()->format('m-d-Y'));
+        //  Setting::save();
+        // // return Setting::all();
         //$fromDate = Carbon::now()->subMonths(6)->toDateString();
 		//return ProcessTransaction::processAllCustomer($fromDate);
 

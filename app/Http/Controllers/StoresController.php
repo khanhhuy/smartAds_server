@@ -33,9 +33,14 @@ class StoresController extends Controller
 
     public function getActiveStores() {
         $activeStores = BeaconMajor::lists('store_id');
-        $stores = Store::query()->whereIn('id', $activeStores);
+        $stores = Store::query()->whereIn('id', $activeStores)->get()->filter(function ($store) {
+            if ($store->latitude === null || $store->longitude === null)
+                return false;
+            else
+                return true;
+        });
 
-        return $stores->get();
+        return $stores;
     }
 
 }
