@@ -10,7 +10,6 @@ class BeaconSeeder extends Seeder {
 
 	public function run()
 	{
-//        DB::table('beacons')->delete();
         DB::table('beacon_minors')->delete();
 
         DB::statement("ALTER TABLE `beacon_majors` AUTO_INCREMENT = 1");
@@ -22,12 +21,6 @@ class BeaconSeeder extends Seeder {
         $m1->store()->associate(Store::find('S_vn_tphcm_binhtan'))->save();
         BeaconMajor::create(['major'=>'2'])->store()->associate(Store::find('S_vn_tphcm_binhtrieu'))->save();
         BeaconMajor::create(['major'=>'3'])->store()->associate(Store::find('S_vn_dongnam_binhduong'))->save();
-
-        /*$icy=new Beacon(['major'=>'1','color' => 'icy marshmallow']);
-        $icyMinor->beacons()->save($icy);
-
-        $mintMinor->beacons()->save(new Beacon(['major'=>'2','color' => 'mint cocktail']));
-        $blueMinor->beacons()->save(new Beacon(['major'=>'3','color' => 'blueberry pie']));*/
 	}
 
 }

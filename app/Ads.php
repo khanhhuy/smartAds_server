@@ -36,8 +36,8 @@ class Ads extends Model
     public function scopeAvailable($query)
     {
         return $query->where(function ($query) {
-            $query->where('start_date', '<=', Carbon::now())->orWhereNull('start_date');
-        })->where('end_date', '>=', new Carbon());
+            $query->where('start_date', '<=', Carbon::now()->toDateString())->orWhereNull('start_date');
+        })->where('end_date', '>=', Carbon::now()->toDateString());
     }
 
     public function scopePromotions($query)

@@ -1,6 +1,7 @@
 <?php
 namespace App\Utils;
 
+use App;
 use App\Area;
 use App\Category;
 use App\Facades\Connector;
@@ -363,9 +364,8 @@ class Utils
             }
         } else {
             Store::updateOrCreate(['id' => 'S_' . $as['id']], ['area_id' => $parentID, 'name' => trim($as['name']), 
-                                                                'address' => $as['address'],
-                                                                'latitude' => $as['latitude'],
-                                                                'longitude' => $as['longitude']
+                                                                'latitude' => @$as['latitude'],
+                                                                'longitude' => @$as['longitude']
                                                                 ]);
         }
     }
@@ -373,6 +373,11 @@ class Utils
     public static function updateReprocessTrans() {
         Setting::set('trans_reprocess.updated_at', Carbon::now()->format('m-d-Y'));
         Setting::save();
+    }
+
+    public static function notTestingEnv()
+    {
+        return App::environment()!=='testing';
     }
 
 }

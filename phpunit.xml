@@ -19,5 +19,9 @@
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
+        <env name="DB_DEFAULT" value="mysql"/>
+        <env name="DB_DATABASE" value="ttlvservertest"/>
+        <env name="DB_USERNAME" value="ttlvservertest"/>
+        <env name="DB_PASSWORD" value="ttlvservertest"/>
     </php>
 </phpunit>
