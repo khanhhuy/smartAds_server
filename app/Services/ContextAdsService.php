@@ -39,7 +39,8 @@ class ContextAdsService
         return $result;
     }
 
-    public function getTargetedAds(ActiveCustomer $customer) {
+    public function getTargetedAds(ActiveCustomer $customer)
+    {
         $customerInfo = $this->customerRepo->getCustomerInfo($customer->id);
         $allTargeted = Ads::available()->targeted()->get();
         $targetedAds = array();
@@ -57,14 +58,15 @@ class ContextAdsService
                 continue;
 
             $toMember = ($rule->to_family_members == 0) ? $rule->to_family_members + $age + 1 : $rule->to_family_members;
-            if (($customerInfo['family_members'] < $rule->from_family_members) 
-                || ($customerInfo['family_members'] > $toMember))
+            if (($customerInfo['family_members'] < $rule->from_family_members)
+                || ($customerInfo['family_members'] > $toMember)
+            )
                 continue;
 
             if ($rule->jobs_desc !== null) {
                 if ($customerInfo['jobs_id'] === null)
                     continue;
-                $jobs= explode(',', $rule->jobs_desc);
+                $jobs = explode(',', $rule->jobs_desc);
                 if (!in_array($customerInfo['jobs_id'], $jobs))
                     continue;
             }
@@ -110,38 +112,4 @@ class ContextAdsService
         return $result;
     }
 
-    /*public function getContextAds(ActiveCustomer $customer, BeaconMinor $minor)
-    {
-        $watchingList = $customer->watchingList->lists('id');
-        $nearbyCategories = $minor->categories;
-        $nearbyItemIDs = $this->categoryRepo->getItemIDsFromCategories($nearbyCategories);
-
-        $nearbyWatchingItemIDs = array_values(array_intersect($watchingList, $nearbyItemIDs));
-
-        $contextAds1 = Ads::all()->filter(function ($ads) use ($nearbyWatchingItemIDs) {
-            if ($ads->items != null) {
-                $intersect = array_intersect($ads->items->lists('id'), $nearbyWatchingItemIDs);
-                if (!empty($intersect)) {
-                    return true;
-                }
-            }
-            return false;
-        });
-        $contextAds2 = Ads::all()->filter(function ($ads) use ($nearbyWatchingItemIDs, $contextAds1) {
-            $categories = $ads->categories;
-            if (!$contextAds1->contains($ads) && $categories != null) {
-                foreach ($categories as $category) {
-                    $itemIDs = Connector::getItemIDsFromCategory($category);
-                    $intersect = array_intersect($itemIDs, $nearbyWatchingItemIDs);
-                    if (!empty($intersect)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        });
-        $contextAds = $contextAds1->merge($contextAds2);
-
-        return $contextAds;
-    }*/
 }

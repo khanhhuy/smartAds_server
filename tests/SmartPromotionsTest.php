@@ -1,6 +1,7 @@
 <?php
 
 use App\Area;
+use App\BeaconMinor;
 use App\Item;
 use Carbon\Carbon;
 
@@ -58,8 +59,9 @@ class SmartPromotionsTest extends ContextAdsTestCase
             ['S_vn_tphcm_lythuongkiet', 'S_vn_tphcm_phutho'],//3
             ['A_vn_tphcm'],//4
             ['A_vn_bac'],//5
+            ['A_vn'] //6
         ];
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < count($targets); $i++) {
             $ads = $this->createBasicPromotion([
                 'is_whole_system' => false,
             ]);
@@ -82,7 +84,7 @@ class SmartPromotionsTest extends ContextAdsTestCase
         $this->major->store_id = 'S_vn_tphcm_lythuongkiet';
         $this->major->save();
 
-        $expectedIds = [1, 3, 4];
+        $expectedIds = [1, 3, 4, 6];
 
         //act
         $result = $this->contextAdsService->getSmartPromotions($this->customer,
@@ -100,7 +102,7 @@ class SmartPromotionsTest extends ContextAdsTestCase
         $this->major->store_id = 'S_vn_tphcm_phutho';
         $this->major->save();
 
-        $expectedIds = [2, 3, 4];
+        $expectedIds = [2, 3, 4, 6];
 
         //act
         $result = $this->contextAdsService->getSmartPromotions($this->customer,
@@ -118,7 +120,7 @@ class SmartPromotionsTest extends ContextAdsTestCase
         $this->major->store_id = 'S_vn_tphcm_cuchi';
         $this->major->save();
 
-        $expectedIds = [4];
+        $expectedIds = [4, 6];
 
         //act
         $result = $this->contextAdsService->getSmartPromotions($this->customer,
@@ -136,7 +138,7 @@ class SmartPromotionsTest extends ContextAdsTestCase
         $this->major->store_id = 'S_vn_trung_danang';
         $this->major->save();
 
-        $expectedIds = [];
+        $expectedIds = [6];
 
         //act
         $result = $this->contextAdsService->getSmartPromotions($this->customer,
@@ -154,7 +156,7 @@ class SmartPromotionsTest extends ContextAdsTestCase
         $this->major->store_id = 'S_vn_bac_bacgiang';
         $this->major->save();
 
-        $expectedIds = [5];
+        $expectedIds = [5, 6];
 
         //act
         $result = $this->contextAdsService->getSmartPromotions($this->customer,
@@ -322,7 +324,7 @@ class SmartPromotionsTest extends ContextAdsTestCase
         $this->assertSetEquals($expectedIds, $ids);
     }
 
-    private function setUpPromotionsForCustomerThresholdTests()
+    private function setUpForCustomerThresholdTests()
     {
         $thresholds = [
             [0, 0],
@@ -351,7 +353,7 @@ class SmartPromotionsTest extends ContextAdsTestCase
     public function test_promotions_classification_1()
     {
         //arrange
-        $this->setUpPromotionsForCustomerThresholdTests();
+        $this->setUpForCustomerThresholdTests();
 
         $expectedAisles = [4, 5, 6];
         $expectedEntrances = [7, 8, 9];
@@ -370,7 +372,7 @@ class SmartPromotionsTest extends ContextAdsTestCase
     public function test_promotions_classification_2()
     {
         //arrange
-        $this->setUpPromotionsForCustomerThresholdTests();
+        $this->setUpForCustomerThresholdTests();
         $this->customer->min_aisle_rate = 1;
         $this->customer->min_aisle_value = 1000;
         $this->customer->min_entrance_rate = 5;
@@ -393,7 +395,7 @@ class SmartPromotionsTest extends ContextAdsTestCase
     public function test_promotions_classification_3()
     {
         //arrange
-        $this->setUpPromotionsForCustomerThresholdTests();
+        $this->setUpForCustomerThresholdTests();
         $this->customer->min_aisle_rate = 5;
         $this->customer->min_aisle_value = 4000;
         $this->customer->min_entrance_rate = 15;
@@ -416,7 +418,7 @@ class SmartPromotionsTest extends ContextAdsTestCase
     public function test_promotions_classification_4()
     {
         //arrange
-        $this->setUpPromotionsForCustomerThresholdTests();
+        $this->setUpForCustomerThresholdTests();
         $this->customer->min_aisle_rate = 15;
         $this->customer->min_aisle_value = 20000;
         $this->customer->min_entrance_rate = 55;
@@ -439,7 +441,7 @@ class SmartPromotionsTest extends ContextAdsTestCase
     public function test_promotions_classification_5()
     {
         //arrange
-        $this->setUpPromotionsForCustomerThresholdTests();
+        $this->setUpForCustomerThresholdTests();
         $this->customer->min_aisle_rate = 0;
         $this->customer->min_aisle_value = 0;
         $this->customer->min_entrance_rate = 20;
@@ -462,7 +464,7 @@ class SmartPromotionsTest extends ContextAdsTestCase
     public function test_promotions_classification_6()
     {
         //arrange
-        $this->setUpPromotionsForCustomerThresholdTests();
+        $this->setUpForCustomerThresholdTests();
         $this->customer->min_aisle_rate = 0;
         $this->customer->min_aisle_value = 0;
         $this->customer->min_entrance_rate = 0;
@@ -480,6 +482,238 @@ class SmartPromotionsTest extends ContextAdsTestCase
         //assert
         $this->assertSetEquals($expectedEntrances, $result['entrancePromotions']->lists('id'));
         $this->assertSetEquals($expectedAisles, $result['aislePromotions']->lists('id'));
+    }
+
+    public function test_promotions_classification_7()
+    {
+        //arrange
+        $this->setUpForCustomerThresholdTests();
+        $this->customer->min_aisle_rate = 0;
+        $this->customer->min_aisle_value = 0;
+        $this->customer->min_entrance_rate = 100;
+        $this->customer->min_entrance_value = 99999999;
+        $this->customer->save();
+
+        $expectedAisles = [1, 2, 3, 4, 5, 6, 7, 8];
+        $expectedEntrances = [9];
+
+
+        //act
+        $result = $this->contextAdsService->getSmartPromotions($this->customer,
+            $this->major, $this->minor);
+
+        //assert
+        $this->assertSetEquals($expectedEntrances, $result['entrancePromotions']->lists('id'));
+        $this->assertSetEquals($expectedAisles, $result['aislePromotions']->lists('id'));
+    }
+
+    public function test_promotions_classification_8()
+    {
+        //arrange
+        $this->setUpForCustomerThresholdTests();
+        $this->customer->min_aisle_rate = 100;
+        $this->customer->min_aisle_value = 99999999;
+        $this->customer->min_entrance_rate = 100;
+        $this->customer->min_entrance_value = 99999999;
+        $this->customer->save();
+
+        $expectedAisles = [];
+        $expectedEntrances = [9];
+
+
+        //act
+        $result = $this->contextAdsService->getSmartPromotions($this->customer,
+            $this->major, $this->minor);
+
+        //assert
+        $this->assertSetEquals($expectedEntrances, $result['entrancePromotions']->lists('id'));
+        $this->assertSetEquals($expectedAisles, $result['aislePromotions']->lists('id'));
+    }
+
+    public function test_promotions_classification_9()
+    {
+        //arrange
+        $this->setUpForCustomerThresholdTests();
+        $this->customer->min_aisle_rate = 25;
+        $this->customer->min_aisle_value = 15000;
+        $this->customer->min_entrance_rate = 25;
+        $this->customer->min_entrance_value = 15000;
+        $this->customer->save();
+
+        $expectedAisles = [];
+        $expectedEntrances = [7, 8, 9];
+
+
+        //act
+        $result = $this->contextAdsService->getSmartPromotions($this->customer,
+            $this->major, $this->minor);
+
+        //assert
+        $this->assertSetEquals($expectedEntrances, $result['entrancePromotions']->lists('id'));
+        $this->assertSetEquals($expectedAisles, $result['aislePromotions']->lists('id'));
+    }
+
+    public function test_promotions_classification_10()
+    {
+        //arrange
+        $this->setUpForCustomerThresholdTests();
+        $this->customer->min_aisle_rate = 25;
+        $this->customer->min_aisle_value = 1000;
+        $this->customer->min_entrance_rate = 25;
+        $this->customer->min_entrance_value = 15000;
+        $this->customer->save();
+
+        $expectedAisles = [4, 5, 6];
+        $expectedEntrances = [7, 8, 9];
+
+
+        //act
+        $result = $this->contextAdsService->getSmartPromotions($this->customer,
+            $this->major, $this->minor);
+
+        //assert
+        $this->assertSetEquals($expectedEntrances, $result['entrancePromotions']->lists('id'));
+        $this->assertSetEquals($expectedAisles, $result['aislePromotions']->lists('id'));
+    }
+
+    public function test_promotions_classification_11()
+    {
+        //arrange
+        $this->setUpForCustomerThresholdTests();
+        $this->customer->min_aisle_rate = 1;
+        $this->customer->min_aisle_value = 15000;
+        $this->customer->min_entrance_rate = 25;
+        $this->customer->min_entrance_value = 15000;
+        $this->customer->save();
+
+        $expectedAisles = [3, 4, 5, 6];
+        $expectedEntrances = [7, 8, 9];
+
+
+        //act
+        $result = $this->contextAdsService->getSmartPromotions($this->customer,
+            $this->major, $this->minor);
+
+        //assert
+        $this->assertSetEquals($expectedEntrances, $result['entrancePromotions']->lists('id'));
+        $this->assertSetEquals($expectedAisles, $result['aislePromotions']->lists('id'));
+    }
+
+    public function test_promotions_classification_12()
+    {
+        //arrange
+        $this->setUpForCustomerThresholdTests();
+        $this->customer->min_aisle_rate = 7;
+        $this->customer->min_aisle_value = 3000;
+        $this->customer->min_entrance_rate = 25;
+        $this->customer->min_entrance_value = 5000;
+        $this->customer->save();
+
+        $expectedAisles = [];
+        $expectedEntrances = [5, 6, 7, 8, 9];
+
+        //act
+        $result = $this->contextAdsService->getSmartPromotions($this->customer,
+            $this->major, $this->minor);
+
+        //assert
+        $this->assertSetEquals($expectedEntrances, $result['entrancePromotions']->lists('id'));
+        $this->assertSetEquals($expectedAisles, $result['aislePromotions']->lists('id'));
+    }
+
+    private function setUpForMinorMatchingTests()
+    {
+        $ads = $this->createBasicPromotion([
+            'discount_rate' => 10,
+            'discount_value' => 7000,
+        ]);
+        Config::set('promotion-threshold.aisle_rate', 5);
+        Config::set('promotion-threshold.aisle_value', 4000);
+        Config::set('promotion-threshold.entrance_rate', 20);
+        Config::set('promotion-threshold.entrance_value', 15000);
+
+        $leafCatsIds = [
+            '1115193_1071967_1149392',//Fabric Softener
+            '1115193_1071967_1149379',//Laundry Detergents
+            '1085666_1007221_1023020',//Toothpaste
+            '976759_976782_1001680', //Soft Drink
+        ];
+        $nonLeafCatsIds = [
+            '1115193_1071967', //Laundry Room
+            '1115193',//Household Essentials
+            '1085666_1007221',//Oral Care
+            '1085666',//Beauty
+            '976759_976782',//Beverages
+            '976759',//Food
+        ];
+
+        foreach ($leafCatsIds as $catId) {
+            $item = Item::create([
+                'id' => $catId,
+            ]);
+            $this->customer->watchingList()->attach($item);
+        }
+
+        Connector::shouldReceive('getCategoryFromItemID')->andReturnUsing(function ($itemID) {
+            return (object)['id' => $itemID];
+        });
+
+        foreach (array_merge($leafCatsIds, $nonLeafCatsIds) as $catId) {
+            $ids = explode('_', $catId);
+            $minor = '';
+            foreach ($ids as $id) {
+                $minor .= ((int)$id) % 10;
+            }
+            BeaconMinor::create([
+                'minor' => $minor,
+            ])->categories()->attach($catId);
+        }
+
+        return $ads;
+    }
+
+    public function test_minor_matching_for_aisle_promotions_1()
+    {
+        //arrange
+        $ads = $this->createBasicPromotion([
+            'discount_rate' => 10,
+            'discount_value' => 7000,
+        ]);
+        Config::set('promotion-threshold.aisle_rate', 5);
+        Config::set('promotion-threshold.aisle_value', 4000);
+        Config::set('promotion-threshold.entrance_rate', 20);
+        Config::set('promotion-threshold.entrance_value', 15000);
+        $this->minor->categories()->detach();
+        $this->minor->categories()->attach('1115193');//Household Essentials
+
+        $fakeCatReturn = (object)['id' => '1115193_1071967_1149379']; //Laundry Detergents
+        Connector::shouldReceive('getCategoryFromItemID')->once()->with(1)->andReturn($fakeCatReturn);
+
+        //act
+        $result = $this->contextAdsService->getSmartPromotions($this->customer,
+            $this->major, $this->minor);
+
+        //assert
+        $aislePromotions = $result['aislePromotions'];
+        $this->assertSetEquals([1], $aislePromotions->lists('id'));
+        $this->assertSetEquals([1], $aislePromotions[0]->minors);
+    }
+
+    public function test_minor_matching_for_aisle_promotions_2()
+    {
+        //arrange
+        $ads = $this->setUpForMinorMatchingTests();
+        $ads->items()->attach(['1115193_1071967_1149392']);
+
+        $expectedMinors = [372, 37, 3];
+        //act
+        $result = $this->contextAdsService->getSmartPromotions($this->customer,
+            $this->major, $this->minor);
+
+        //assert
+        $aislePromotions = $result['aislePromotions'];
+        $this->assertSetEquals([1], $aislePromotions->lists('id'));
+        $this->assertSetEquals($expectedMinors, $aislePromotions[0]->minors);
     }
 
 }
