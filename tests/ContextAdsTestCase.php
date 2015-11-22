@@ -36,12 +36,6 @@ class ContextAdsTestCase extends ApiTestCase
         $this->minor = BeaconMinor::find(1);
     }
 
-
-    public function tearDown()
-    {
-        parent::tearDown();
-    }
-
     public function extractPromotions($result)
     {
         return $result['entrancePromotions']->merge($result['aislePromotions']);
@@ -65,7 +59,7 @@ class ContextAdsTestCase extends ApiTestCase
     public function mockConnectorReturnForItem1()
     {
         $fakeCatReturn = (object)['id' => '1115193_1071967_1149379']; //Laundry Detergents
-        Connector::shouldReceive('getCategoryFromItemID')->once()->with(1)->andReturn($fakeCatReturn);
+        Connector::shouldReceive('getCategoryFromItemID')->with(1)->andReturn($fakeCatReturn);
     }
 
     public function setDefaultThresholds()
