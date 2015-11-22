@@ -1,14 +1,9 @@
 <?php
 
-use App\ActiveCustomer;
 use App\Ads;
-use App\Beacon;
-use App\BeaconMinor;
-use App\Item;
 use App\WatchingList;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 
 class AdsSeeder extends Seeder {
 
@@ -35,7 +30,7 @@ class AdsSeeder extends Seeder {
         'thumbnail_url'=>'/img/thumbnails/2.png'])->items()->attach(5);
 
         Ads::create(['id'=>3,'title'=>'Kem đánh răng COLGATE the mát bạc hà 150g Giảm giá 19%',
-        'is_whole_system'=>false,'end_date'=>Carbon::createFromDate(2016,1,1),
+            'is_whole_system' => false, 'end_date' => Carbon::createFromDate(2015, 1, 1),
             'discount_value'=>'3800',
             'discount_rate'=>'19',
              'thumbnail_url'=>'/img/thumbnails/3.png'])->items()->attach(2);

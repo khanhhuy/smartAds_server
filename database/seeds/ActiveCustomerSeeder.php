@@ -4,7 +4,6 @@ use App\ActiveCustomer;
 use App\Item;
 use App\WatchingList;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Eloquent\Model;
 
 class ActiveCustomerSeeder extends Seeder {
 
@@ -39,7 +38,7 @@ class ActiveCustomerSeeder extends Seeder {
         Item::create(['id'=>'23591257']);
         Item::create(['id'=>'43172984']);
 
-         $dao->watchingList()->attach(['1','2','3','4']);
+        $dao->watchingList()->attach(['1', '2', '3', '4', '5']);
          $huy->watchingList()->attach(['3','5','6','7']);
 	}
 
