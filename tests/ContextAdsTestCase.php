@@ -61,4 +61,18 @@ class ContextAdsTestCase extends ApiTestCase
 
         return Ads::create($fields);
     }
+
+    public function mockConnectorReturnForItem1()
+    {
+        $fakeCatReturn = (object)['id' => '1115193_1071967_1149379']; //Laundry Detergents
+        Connector::shouldReceive('getCategoryFromItemID')->once()->with(1)->andReturn($fakeCatReturn);
+    }
+
+    public function setDefaultThresholds()
+    {
+        Config::set('promotion-threshold.aisle_rate', 5);
+        Config::set('promotion-threshold.aisle_value', 4000);
+        Config::set('promotion-threshold.entrance_rate', 20);
+        Config::set('promotion-threshold.entrance_value', 15000);
+    }
 }
