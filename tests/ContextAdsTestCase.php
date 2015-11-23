@@ -44,8 +44,8 @@ class ContextAdsTestCase extends ApiTestCase
     public function createBasicPromotion($overwriteFields = [])
     {
         $fields = array_merge([
-            'discount_value' => $this->fake->numberBetween(0, 99999999999),
-            'discount_rate' => $this->fake->numberBetween(0, 100),
+            'discount_value' => 99999999999999,
+            'discount_rate' => 100,
             'is_whole_system' => true,
             'is_promotion' => true,
             'title' => $this->fake->sentence,
