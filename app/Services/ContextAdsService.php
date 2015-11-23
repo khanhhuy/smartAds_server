@@ -80,11 +80,11 @@ class ContextAdsService
     public function getSmartPromotions($customer, $major, $minor)
     {
         $watchingList = $customer->watchingList->lists('id');
-        $wholeSystemAds = Ads::forCustomer($customer)->where('is_whole_system', true)->get();
+        $wholeSystemAds = Ads::promotions()->forCustomer($customer)->where('is_whole_system', true)->get();
         $store = $major->store;
-        $storeAds = $store->ads()->forCustomer($customer)->get();
+        $storeAds = $store->ads()->promotions()->forCustomer($customer)->get();
         $area = $store->area;
-        $areaAds = $area->getApplyingAdsForCustomer($customer);
+        $areaAds = $area->getApplyingPromotionsForCustomer($customer);
         $allAds = $wholeSystemAds->merge($storeAds)->merge($areaAds);
         $contextAds = $allAds->filter(function ($ads) use ($watchingList) {
             $intersect = $ads->items()->whereIn('id', $watchingList)->get();
