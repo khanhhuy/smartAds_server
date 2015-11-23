@@ -26,21 +26,23 @@ class AccountController extends Controller {
 		$ads = Ads::find($adsId);
 		if ($ads === null)
 			return;
+		$items = $ads->items;
+		if ($items->isEmpty())
+			return;
 		$items = $ads->items()->lists('id');
 		$watchingList = $customer->watchingList()->lists('id');
 		$blackList = $customer->blackList()->lists('id');
 
 		foreach ($items as  $key => $item) {
-			if (!in_array($item, $watchingList))
-				unset($items[$key]);
-			if(in_array($item, $blackList))
-            	unset($items[$key]);
+			if (in_array($item, $watchingList)) {
+				$customer->watchingList()->detach($item);
+			}
+			if (!in_array($item, $blackList)) {
+            	$customer->blackList()->attach($item);
+        	}
 		}
 
-        $customer->blackList()->attach($items);
-       	$customer->watchingList()->detach($items);
 		$customer->save();
-
 		return $items;
 	}
 
