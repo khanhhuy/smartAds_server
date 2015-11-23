@@ -57,12 +57,12 @@ class ContextAdsService
             if (($age < $rule->from_age) || ($age > $toAge))
                 continue;
 
-            $toMember = ($rule->to_family_members == 0) ? $rule->to_family_members + $age + 1 : $rule->to_family_members;
+            $toMember = ($rule->to_family_members == 0) ? $customerInfo['family_members'] + 1 : $rule->to_family_members;
             if (($customerInfo['family_members'] < $rule->from_family_members)
                 || ($customerInfo['family_members'] > $toMember)
             )
                 continue;
-
+            
             if ($rule->jobs_desc !== null) {
                 if ($customerInfo['jobs_id'] === null)
                     continue;
