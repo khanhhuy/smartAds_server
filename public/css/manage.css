@@ -95,8 +95,7 @@
   text-align: right; }
 
 #manage-ads .popover, .manage-page .popover {
-  max-width: initial;
-}
+  max-width: initial; }
 
 @media (min-width: 992px) {
   #manage-ads .table-responsive {

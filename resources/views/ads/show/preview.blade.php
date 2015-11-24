@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{$ads->title}}</title>
     <style>
+        html {
+            overflow-y: hidden;
+        }
         #display-label, #title-label {
             font-weight: bold;
             margin-right: 5px;
@@ -71,7 +74,7 @@
     <div id="display-label">Display</div>
     <div id="second-col">
         <div id="frame-container">
-            <iframe id="ads-show" src="{{route('ads.show',$ads)}}" width="344px" height="510px"></iframe>
+            <iframe id="ads-show" src="{{route('ads.show',$ads)}}" width="344px" height="509px"></iframe>
         </div>
     </div>
 </div>
