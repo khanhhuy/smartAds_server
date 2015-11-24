@@ -13,6 +13,7 @@ class Area extends Model {
     {
         return $this->belongsTo('App\Area','parent_id');
     }
+
     public function getApplyingAdsForCustomer(ActiveCustomer $customer)
     {
         $allAds=$this->ads()->forCustomer($customer)->get();
@@ -24,4 +25,13 @@ class Area extends Model {
         return $allAds;
     }
 
+    public function getAllAds() {
+        $allAds=$this->ads()->get();
+        $a=$this;
+        while ($a->parentArea !== null) {
+            $a=$a->parentArea;
+            $allAds=$allAds->merge($a->ads()->get());
+        }
+        return $allAds;
+    }
 }

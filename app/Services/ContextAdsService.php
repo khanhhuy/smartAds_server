@@ -34,18 +34,25 @@ class ContextAdsService
     public function getContextAds(ActiveCustomer $customer, BeaconMajor $major, BeaconMinor $minor)
     {
         $result = $this->getSmartPromotions($customer, $major, $minor);
-        $result['targetedAds'] = $this->getTargetedAds($customer);
+        $result['targetedAds'] = $this->getTargetedAds($customer, $major, $minor);
 
         return $result;
     }
 
-    public function getTargetedAds(ActiveCustomer $customer)
-    {
+    public function getTargetedAds($customer, $major, $minor)
+    {   
+        $allTargeted = Ads::available()->targeted()->where('is_whole_system', true)->get();
+        $store = $major->store;
+        $storeAds = $store->ads()->get();
+        $area = $store->area;
+        $areaAds = $area->getAllAds($customer);
+        $regionTargetedAds = $allTargeted->merge($storeAds)->merge($areaAds);
+
         $customerInfo = $this->customerRepo->getCustomerInfo($customer->id);
-        $allTargeted = Ads::available()->targeted()->get();
+        
         $targetedAds = array();
 
-        foreach ($allTargeted as $ads) {
+        foreach ($regionTargetedAds as $ads) {
             $rule = $ads->targetedRule()->get();
             if ($rule->isEmpty())
                 continue;
