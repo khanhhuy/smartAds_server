@@ -167,7 +167,8 @@ class AdsController extends Controller
         if (!empty($errors)) {
             return redirect()->back()->withInput()->withErrors($errors);
         }
-        $inputs = $request->except(['_token', '_method', 'itemsID', 'targetsID', 'provide_image_link', 'image_url']);
+        $inputs = $request->except(['_token', '_method', 'itemsID', 'targetsID',
+            'provide_image_link', 'image_url','provide_thumbnail_link','thumbnail_url']);
         if (!$request->has('is_whole_system')) {
             $inputs['is_whole_system'] = false;
         }
@@ -186,75 +187,10 @@ class AdsController extends Controller
         $ads->items()->sync($itemsID);
 
         //targets
-        if (!$inputs['is_whole_system']) {
-            $targetsID = $request->input('targetsID');
-            if (!empty($targetsID)) {
-                foreach ($targetsID as $targetID) {
-                    $a = Area::find($targetID);
-                    if (!empty($a)) {
-                        $ads->areas()->attach($targetID);
-                    } else {
-                        $ads->stores()->attach($targetID);
-                    }
-                }
-            }
-        }
+        $this->storeArea($request,$ads);
 
-        //image
-        if ($request->input('image_display')) {
-            if (!$request->input('provide_image_link')) {
-                $ads->provide_image_link = false;
-                $image = $request->file('image_file');
-                $fullSaveFileName = $ads->id . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('/img/ads'), $fullSaveFileName);
-                $ads->image_url = ('/img/ads/' . $fullSaveFileName);
-            } else {
-                if ($ads->provide_image_link) {
-                    $ads->image_url = $request->input('image_url');
-                } else {
-                    if ($ads->image_url !== $request->input('image_url')) {
-                        $ads->provide_image_link = true;
-                        $ads->image_url = $request->input('image_url');
-                    }
-                }
-            }
-        }
-
-        //thumbnail
-        if (!$request->has('auto_thumbnail')) {
-            if (!$request->input('provide_thumbnail_link')) {
-                if ($request->hasFile('thumbnail_file')) {
-                    $thumbnail = $request->file('thumbnail_file');
-                    $fullSaveFileName = $ads->id . '.' . $thumbnail->getClientOriginalExtension();
-                    $thumbnail->move(public_path('/img/thumbnails'), $fullSaveFileName);
-                    $ads->thumbnail_url = ('/img/thumbnails/' . $fullSaveFileName);
-                }
-            }
-        } elseif ($request->input('auto_thumbnail') && $request->input('image_display')) {
-            $ext = 'png';
-            $provide_image_link = $request->input('provide_image_link');
-            $adsID = $ads->id;
-            $image_url = '';
-            if (!$provide_image_link) {
-                $ext = $image->getClientOriginalExtension();
-            } else {
-                $image_url = $request->input('image_url');
-            }
-            Queue::push(function ($job) use ($provide_image_link, $adsID, $ext, $image_url) {
-                if (!$provide_image_link) {
-                    Utils::createThumbnail($adsID, $ext, public_path('img/ads') . "/$adsID" . ".$ext");
-                } else {
-                    $ext = Utils::createThumbnailFromURL($image_url, $adsID);
-                }
-                $ads = Ads::find($adsID);
-                $ads->thumbnail_url = ('/img/thumbnails/' . $adsID . '.' . $ext);
-                $ads->save();
-
-                $job->delete();
-            });
-
-            $ads->thumbnail_url = ('/img/thumbnails/' . $ads->id . '.' . $ext);
-        }
+        //image + thumbnail
+        $this->updateImageAndThumbnail($ads, $request);
 
         $ads->save();
 
@@ -276,6 +212,9 @@ class AdsController extends Controller
             } elseif (!($request->hasFile('image_file'))) {
                 $errors[] = 'Image File is required';
             }
+        }
+        elseif ($request->has('auto_thumbnail')&&$request->input('auto_thumbnail')){
+            $errors[]='Auto generate thumbnail for WebPage is currently not supported';
         }
         return $errors;
     }
@@ -448,6 +387,75 @@ class AdsController extends Controller
     public function eagerLoadPromotionRelations($query)
     {
         $query->with('items')->with('areas')->with('stores');
+    }
+
+    protected function updateImageAndThumbnail(Ads $ads, Request $request)
+    {
+        //image
+        if ($request->input('image_display')) {
+            if (!$request->input('provide_image_link')) {
+                $ads->provide_image_link = false;
+                $image = $request->file('image_file');
+                $fullSaveFileName = $ads->id . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('/img/ads'), $fullSaveFileName);
+                $ads->image_url = ('/img/ads/' . $fullSaveFileName);
+            } else {
+                if ($ads->provide_image_link) {
+                    $ads->image_url = $request->input('image_url');
+                } else {
+                    if ($ads->image_url !== $request->input('image_url')) {
+                        $ads->provide_image_link = true;
+                        $ads->image_url = $request->input('image_url');
+                    }
+                }
+            }
+        }
+
+        //thumbnail
+        if (!$request->has('auto_thumbnail')) {
+            if (!$request->input('provide_thumbnail_link')) {
+                $ads->provide_thumbnail_link = false;
+                if ($request->hasFile('thumbnail_file')) {
+                    $thumbnail = $request->file('thumbnail_file');
+                    $fullSaveFileName = $ads->id . '.' . $thumbnail->getClientOriginalExtension();
+                    $thumbnail->move(public_path('/img/thumbnails'), $fullSaveFileName);
+                    $ads->thumbnail_url = ('/img/thumbnails/' . $fullSaveFileName);
+                }
+            } else {
+                if ($ads->provide_thumbnail_link) {
+                    $ads->thumbnail_url = $request->input('thumbnail_url');
+                } else {
+                    if ($ads->thumbnail_url !== $request->input('thumbnail_url')) {
+                        $ads->provide_thumbnail_link = true;
+                        $ads->thumbnail_url = $request->input('thumbnail_url');
+                    }
+                }
+            }
+        } elseif ($request->input('auto_thumbnail') && $request->input('image_display')) {
+            $ext = 'png';
+            $provide_image_link = $request->input('provide_image_link');
+            $adsID = $ads->id;
+            $image_url = '';
+            if (!$provide_image_link) {
+                $ext = $image->getClientOriginalExtension();
+            } else {
+                $image_url = $request->input('image_url');
+            }
+            Queue::push(function ($job) use ($provide_image_link, $adsID, $ext, $image_url) {
+                if (!$provide_image_link) {
+                    Utils::createThumbnail($adsID, $ext, public_path('img/ads') . "/$adsID" . ".$ext");
+                } else {
+                    $ext = Utils::createThumbnailFromURL($image_url, $adsID);
+                }
+                $ads = Ads::find($adsID);
+                $ads->thumbnail_url = ('/img/thumbnails/' . $adsID . '.' . $ext);
+                $ads->save();
+
+                $job->delete();
+            });
+
+            $ads->thumbnail_url = ('/img/thumbnails/' . $ads->id . '.' . $ext);
+        }
     }
 
 }
