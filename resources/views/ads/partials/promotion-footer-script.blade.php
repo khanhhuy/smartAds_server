@@ -109,6 +109,7 @@
         $('#webInputGroup').show();
         setRequiredWebGroup(true);
         setRequiredImageGroup(false);
+        $('#auto_thumbnail').prop('disabled', true);
     }
     else {
         setRequiredImageGroup(true);

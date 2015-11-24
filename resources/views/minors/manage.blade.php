@@ -103,6 +103,7 @@
     @include('partials.delete-success')
     @include('partials.hidden-success-message',['successMessage'=>"",
     'messageID'=>'my-success-message-container'])
+    @include('partials.flash-overlay')
 @endsection
 
 @section('breadcrumb')
@@ -352,6 +353,8 @@
         //for search
         var COLS = ["category", "minor"];
         var divider = 2;
+
+        $('#flash-overlay-modal').modal();
     </script>
     @include('partials.search.footer-script')
 @endsection
