@@ -72,11 +72,6 @@ class ProcessTransactionService
         while($i < count($transactions)) {
             $j = $i + 1;
             $count = 1;
-            if (in_array($transactions[$i]['item_id'], $watchingList)) {
-                $i++;
-                continue;
-            }
-
             if ($useRelatedItem)
                 $relatedItems = Connector::getRelatedItem($transactions[$i]['item_id']);
             $isAddedRelated = false;
