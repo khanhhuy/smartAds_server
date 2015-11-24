@@ -2,10 +2,12 @@
 
 html {
   overflow-y: scroll;
+  height: 100%;
 }
 
 body {
   background: #eff3f8;
+  min-height: 100%;
 }
 
 .container-main {

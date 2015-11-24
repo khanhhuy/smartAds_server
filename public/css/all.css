@@ -35,10 +35,12 @@
     font-size: 28px; }
 
 html {
-  overflow-y: scroll; }
+  overflow-y: scroll;
+  height: 100%; }
 
 body {
-  background: #eff3f8; }
+  background: #eff3f8;
+  min-height: 100%; }
 
 .container-main {
   padding-bottom: 30px; }
@@ -81,8 +83,7 @@ body {
   text-align: center; }
 
 div.panel.no-heading-panel {
-  margin-bottom: 0;
-}
+  margin-bottom: 0; }
 
 /*# sourceMappingURL=app.css.map */
 

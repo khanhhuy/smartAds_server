@@ -1,13 +1,1 @@
-{
-  "version": 3,
-  "sources": [
-    "change-info.scss"
-  ],
-  "names": [],
-  "mappings": "AAAA;EACE;IACE,aAAa;IACb,kBAAkB;IAClB,mBAAmB;IACnB,cAAc,EAJI;EAOD;IACjB,oBAAoB,EADU,EAAA;;AAKlC;EACE,kBAAkB,EADJ;;AAIhB;EACE,iBAAiB;EACjB,iBAAiB,EAFJ",
-  "file": "change-info.css",
-  "sourcesContent": [
-    "@media (min-width: 768px) {\r\n  #my-password-panel {\r\n    width: 550px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding: 10px;\r\n  }\r\n\r\n  #my-password-panel .panel-body {\r\n    padding-right: 50px;\r\n  }\r\n}\r\n\r\n#my-cancel-btn {\r\n  margin-left: 10px;\r\n}\r\n\r\n#action-group {\r\n  padding-top: 5px;\r\n  margin-bottom: 0;\r\n}"
-  ],
-  "sourceRoot": "/source/"
-}
+{"version":3,"sources":["change-info.scss"],"names":[],"mappings":"AAAA;EACE;IACE,aAAa;IACb,kBAAkB;IAClB,mBAAmB;IACnB,cAAc,EAJI;EAOD;IACjB,oBAAoB,EADU,EAAA;;AAKlC;EACE,kBAAkB,EADJ;;AAIhB;EACE,iBAAiB;EACjB,iBAAiB,EAFJ","file":"change-info.css","sourcesContent":["@media (min-width: 768px) {\r\n  #my-password-panel {\r\n    width: 550px;\r\n    margin-left: auto;\r\n    margin-right: auto;\r\n    padding: 10px;\r\n  }\r\n\r\n  #my-password-panel .panel-body {\r\n    padding-right: 50px;\r\n  }\r\n}\r\n\r\n#my-cancel-btn {\r\n  margin-left: 10px;\r\n}\r\n\r\n#action-group {\r\n  padding-top: 5px;\r\n  margin-bottom: 0;\r\n}"],"sourceRoot":"/source/"}

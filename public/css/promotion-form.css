@@ -17,9 +17,7 @@
   .promotion-form .my-inline-input-group {
     display: inline-table; }
   .promotion-form .my-inline-input-group input[type=number] {
-    float: initial;
-  }
-}
+    float: initial; } }
 
 .promotion-form .my-inline-input-group .input-group-addon {
   width: initial; }
