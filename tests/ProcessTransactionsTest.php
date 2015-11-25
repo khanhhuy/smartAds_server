@@ -1,9 +1,8 @@
 <?php
 
-use App\Ads;
-use App\Item;
 use App\ActiveCustomer;
 use App\Category;
+use App\Item;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
 
@@ -91,15 +90,6 @@ class ProcessTransactionsTest extends ApiTestCase {
     		$cat->is_suitable = false;
     		$cat->save();
     	}
-    }
-
-    private function setupRelatedItem($relatedItems) {
-    	$relatedArray = array();
-    	foreach ($relatedItems as $item) {
-    		$relatedArray[] = ['id' => $item['id'], 'name' => $this->fake->sentence, 
-    						'category_id' => $item['category_id']];
-    	}
-    	return $transaction;
     }
 
     public function test_simple_process() {
