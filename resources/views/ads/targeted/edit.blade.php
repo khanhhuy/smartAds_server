@@ -16,7 +16,7 @@
             <button type="submit" class="btn btn-primary">
                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Save
             </button>
-            <a href="{{route('promotions.manager-manage')}}" class="btn btn-default my-cancel-edit-btn">
+            <a href="{{route('targeted.manager-manage')}}" class="btn btn-default my-cancel-edit-btn">
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel
             </a>
         </div>
