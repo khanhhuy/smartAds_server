@@ -1,9 +1,8 @@
 <?php
 
-use App\Ads;
-use App\Item;
 use App\ActiveCustomer;
 use App\Category;
+use App\Item;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
 
