@@ -57,7 +57,7 @@
     <script>
         var myTableURL = "{{url('/majors/table')}}";
         var myOrder = [];
-        var myDom = "<'row'<'col-sm-6'lB><'col-sm-6'i>>" +
+        var myDom = "<'row'<'col-sm-6 col-lg-5'lB><'col-sm-6 col-lg-7'i>>" +
                 "<'row'<'col-sm-12'tr>>" +
                 "<'row'<'col-sm-12'p>>";
         var myDeleteURL = '{{route('majors.deleteMulti')}}';
