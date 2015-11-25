@@ -93,15 +93,6 @@ class ProcessTransactionsTest extends ApiTestCase {
     	}
     }
 
-    private function setupRelatedItem($relatedItems) {
-    	$relatedArray = array();
-    	foreach ($relatedItems as $item) {
-    		$relatedArray[] = ['id' => $item['id'], 'name' => $this->fake->sentence, 
-    						'category_id' => $item['category_id']];
-    	}
-    	return $transaction;
-    }
-
     public function test_simple_process() {
     	$date = Carbon::now()->subMonths(6)->toDateString();
     	Connector::shouldReceive('getShoppingHistoryFromCustomer')->with(anything(), $date, null)

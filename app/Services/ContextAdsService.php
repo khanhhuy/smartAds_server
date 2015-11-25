@@ -43,7 +43,7 @@ class ContextAdsService
     {   
         $allTargeted = Ads::available()->targeted()->where('is_whole_system', true)->get();
         $store = $major->store;
-        $storeAds = $store->ads()->get();
+        $storeAds = $store->ads()->available()->targeted()->get();
         $area = $store->area;
         $areaAds = $area->getAllAds($customer);
         $regionTargetedAds = $allTargeted->merge($storeAds)->merge($areaAds);

@@ -56,6 +56,20 @@ class ContextAdsTestCase extends ApiTestCase
         return Ads::create($fields);
     }
 
+    public function createBasicTargeted($overwriteFields = [])
+    {
+        $fields = array_merge([
+            'title'=>$this->fake->sentence,
+            'is_whole_system' => true, 
+            'is_promotion' => false,
+            'start_date' => Carbon::now()->subDays(1)->toDateString(),
+            'end_date' => Carbon::now()->addDays(1)->toDateString(),
+            'thumbnail_url'=>'/img/thumbnails/3.png'
+        ], $overwriteFields);
+
+        return Ads::create($fields);
+    }
+
     public function mockConnectorReturnForItem1()
     {
         $fakeCatReturn = (object)['id' => '1115193_1071967_1149379']; //Laundry Detergents

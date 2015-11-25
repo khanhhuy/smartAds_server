@@ -26,11 +26,11 @@ class Area extends Model {
     }
 
     public function getAllAds() {
-        $allAds=$this->ads()->get();
+        $allAds=$this->ads()->available()->targeted()->get();
         $a=$this;
         while ($a->parentArea !== null) {
             $a=$a->parentArea;
-            $allAds=$allAds->merge($a->ads()->get());
+            $allAds=$allAds->merge($a->ads()->available()->targeted()->get());
         }
         return $allAds;
     }

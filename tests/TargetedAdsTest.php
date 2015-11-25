@@ -43,6 +43,7 @@ class TargetedAdsTest extends ContextAdsTestCase
     	$ad1 = Ads::find(1);
     	$ad1->targetedRule()->save($rule1);
 
+
     	Connector::shouldReceive('getCustomerInfo')->andReturn(['id' => '1','password' => bcrypt('123456'),
                             'first_name' => 'John', 'last_name' => 'Maxwell',
                             'address' => 'nothing', 'email' => 'john@gmail.com',
@@ -50,7 +51,7 @@ class TargetedAdsTest extends ContextAdsTestCase
                             'family_members' => '6', 'jobs_id' => '2'
                             ]);
 
-    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer);
+    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer, $this->major, $this->minor);
 		$this->assertEquals($ad1->id, $targetedAds[0]->id);	
     }
 
@@ -62,7 +63,7 @@ class TargetedAdsTest extends ContextAdsTestCase
                             'family_members' => '6', 'jobs_id' => '2'
                             ]);
 
-    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer);
+    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer, $this->major, $this->minor);
     	$this->assertTrue($targetedAds->isEmpty());
     }
 
@@ -95,7 +96,7 @@ class TargetedAdsTest extends ContextAdsTestCase
                             'family_members' => '0', 'jobs_id' => '2'
                             ]);
 
-    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer)->lists('id');
+    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer, $this->major, $this->minor)->lists('id');
     	$this->assertContains($ad2->id, $targetedAds);
     	$this->assertContains($ad3->id, $targetedAds);
     	$this->assertNotContains($ad1->id, $targetedAds);
@@ -130,7 +131,7 @@ class TargetedAdsTest extends ContextAdsTestCase
                             'family_members' => '0', 'jobs_id' => '2'
                             ]);
 
-    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer)->lists('id');
+    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer, $this->major, $this->minor)->lists('id');
     	$this->assertContains($ad1->id, $targetedAds);
     	$this->assertContains($ad2->id, $targetedAds);
     	$this->assertNotContains($ad3->id, $targetedAds);	
@@ -165,7 +166,7 @@ class TargetedAdsTest extends ContextAdsTestCase
                             'family_members' => '0', 'jobs_id' => '2'
                             ]);
 
-    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer)->lists('id');
+    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer, $this->major, $this->minor)->lists('id');
     	$this->assertContains($ad1->id, $targetedAds);
     	$this->assertNotContains($ad2->id, $targetedAds);
     	$this->assertNotContains($ad3->id, $targetedAds);	
@@ -200,7 +201,7 @@ class TargetedAdsTest extends ContextAdsTestCase
                             'family_members' => '3', 'jobs_id' => '2'
                             ]);
 
-    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer)->lists('id');
+    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer, $this->major, $this->minor)->lists('id');
     	$this->assertContains($ad1->id, $targetedAds);
     	$this->assertContains($ad2->id, $targetedAds);
     	$this->assertNotContains($ad3->id, $targetedAds);	
@@ -235,7 +236,7 @@ class TargetedAdsTest extends ContextAdsTestCase
                             'family_members' => '1', 'jobs_id' => '2'
                             ]);
 
-    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer)->lists('id');
+    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer, $this->major, $this->minor)->lists('id');
     	$this->assertContains($ad1->id, $targetedAds);
     	$this->assertContains($ad2->id, $targetedAds);
     	$this->assertNotContains($ad3->id, $targetedAds);	
@@ -270,7 +271,7 @@ class TargetedAdsTest extends ContextAdsTestCase
                             'family_members' => '3', 'jobs_id' => '2'
                             ]);
 
-    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer)->lists('id');
+    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer, $this->major, $this->minor)->lists('id');
     	$this->assertContains($ad1->id, $targetedAds);
     	$this->assertContains($ad2->id, $targetedAds);
     	$this->assertNotContains($ad3->id, $targetedAds);	
@@ -305,10 +306,145 @@ class TargetedAdsTest extends ContextAdsTestCase
                             'family_members' => '3', 'jobs_id' => null
                             ]);
 
-    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer)->lists('id');
+    	$targetedAds = $this->contextAdsService->getTargetedAds($this->customer, $this->major, $this->minor)->lists('id');
     	$this->assertNotContains($ad1->id, $targetedAds);
     	$this->assertContains($ad2->id, $targetedAds);
     	$this->assertNotContains($ad3->id, $targetedAds);	
+    }
+
+
+    private function setupCustomerInfo() {
+        Connector::shouldReceive('getCustomerInfo')->andReturn(['id' => '1','password' => bcrypt('123456'),
+                            'first_name' => 'John', 'last_name' => 'Maxwell',
+                            'address' => 'nothing', 'email' => 'john@gmail.com',
+                            'birth' => '1997-10-18', 'gender' => '0', 
+                            'family_members' => '3', 'jobs_id' => null
+                            ]);
+    }
+
+    private function setUpTargetedForStoreTests()
+    {
+        $targets = [
+            ['S_vn_tphcm_lythuongkiet'],//1
+            ['S_vn_tphcm_phutho'],//2
+            ['S_vn_tphcm_lythuongkiet', 'S_vn_tphcm_phutho'],//3
+            ['A_vn_tphcm'],//4
+            ['A_vn_bac'],//5
+            ['A_vn'] //6
+        ];
+        for ($i = 0; $i < count($targets); $i++) {
+            $ads = $this->createBasicTargeted([
+                'is_whole_system' => false,
+            ]);
+            foreach ($targets[$i] as $t) {
+                $a = Area::find($t);
+                if (!empty($a)) {
+                    $ads->areas()->attach($t);
+                } else {
+                    $ads->stores()->attach($t);
+                }
+            }
+            $rule = new TargetedRule(['from_age' => '0', 'to_age' => '0',
+                                'gender' => '2', 'from_family_members' => '0', 'to_family_members' => '0', 
+                                'jobs_desc' => null]);
+            $ads->targetedRule()->save($rule);
+        }
+    }
+
+
+
+    public function test_targeted_store_1()
+    {
+        //arrange
+        $this->setUpTargetedForStoreTests();
+        $this->setupCustomerInfo();
+        $this->major->store_id = 'S_vn_tphcm_lythuongkiet';
+        $this->major->save();
+
+        $expectedIds = [1, 3, 4, 6];
+
+        //act
+        $result = $this->contextAdsService->getTargetedAds($this->customer,
+            $this->major, $this->minor);
+        //assert
+        $ids = $result->lists('id');
+        $this->assertSetEquals($expectedIds, $ids);
+    }
+
+    public function test_targeted_store_2()
+    {
+        //arrange
+        $this->setUpTargetedForStoreTests();
+        $this->setupCustomerInfo();
+        $this->major->store_id = 'S_vn_tphcm_phutho';
+        $this->major->save();
+
+        $expectedIds = [2, 3, 4, 6];
+
+        //act
+        $result = $this->contextAdsService->getTargetedAds($this->customer,
+            $this->major, $this->minor);
+
+        //assert
+        $ids = $result->lists('id');
+        $this->assertSetEquals($expectedIds, $ids);
+    }
+
+    public function test_targeted_store_3()
+    {
+        //arrange
+        $this->setUpTargetedForStoreTests();
+        $this->setupCustomerInfo();
+        $this->major->store_id = 'S_vn_tphcm_cuchi';
+        $this->major->save();
+
+        $expectedIds = [4, 6];
+
+        //act
+        $result = $this->contextAdsService->getTargetedAds($this->customer,
+            $this->major, $this->minor);
+
+        //assert
+        $ids = $result->lists('id');
+        $this->assertSetEquals($expectedIds, $ids);
+    }
+
+    public function test_targeted_store_4()
+    {
+        //arrange
+        $this->setUpTargetedForStoreTests();
+        $this->setupCustomerInfo();
+        $this->major->store_id = 'S_vn_trung_danang';
+        $this->major->save();
+
+        $expectedIds = [6];
+
+        //act
+        $result = $this->contextAdsService->getTargetedAds($this->customer,
+            $this->major, $this->minor);
+
+        //assert
+        $ids = $result->lists('id');
+        $this->assertSetEquals($expectedIds, $ids);
+    }
+
+    public function test_targeted_store_5()
+    {
+        //arrange
+        $this->setUpTargetedForStoreTests();
+        $this->setupCustomerInfo();
+        $this->major->store_id = 'S_vn_bac_bacgiang';
+        $this->major->save();
+
+        $expectedIds = [5, 6];
+
+        //act
+        $result = $this->contextAdsService->getTargetedAds($this->customer,
+            $this->major, $this->minor);
+
+        //assert
+        $ids = $result->lists('id');
+        $this->assertSetEquals($expectedIds, $ids);
     }
 
 }
