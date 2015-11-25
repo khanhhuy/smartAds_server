@@ -169,6 +169,14 @@ class Utils
             return "All";
         }
         $displayedRule = '';
+        if (empty($rule['from_age']))
+            $rule['from_age'] = 0;
+        if (empty($rule['to_age']))
+            $rule['to_age'] = 0;
+        if (empty($rule['to_family_members']))
+            $rule['to_family_members'] = 0;
+        if (empty($rule['from_family_members']))
+            $rule['from_family_members'] = 0;
         //Age
         if ($rule['to_age'] > 0)
             $displayedRule .= 'Age:' . $rule['from_age'] . '-' . $rule['to_age'];
