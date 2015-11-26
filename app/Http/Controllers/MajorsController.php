@@ -44,6 +44,7 @@ class MajorsController extends Controller
                             $filtered = $filtered->join('stores', 'beacon_majors.store_id', '=', 'stores.id')
                                 ->whereRaw("stores.display_area LIKE ?", ["%$val%"]);
                         } else {
+                            $joinedStore = true;
                             $filtered->whereRaw("stores.display_area LIKE ?", ["%$val%"]);
                         }
                         break;
@@ -63,11 +64,19 @@ class MajorsController extends Controller
             $orderColumn = $MAJOR_COLUMNS[$order[0]['column'] - 1];
             switch ($orderColumn) {
                 case 'store':
-                    $displays = $filtered->join('stores', 'beacon_majors.store_id', '=', 'stores.id')->skip($request->input('start'))->take($request->input('length'))
+                    if (!$joinedStore) {
+                        $joinedStore = true;
+                        $filtered->join('stores', 'beacon_majors.store_id', '=', 'stores.id');
+                    }
+                    $displays = $filtered->skip($request->input('start'))->take($request->input('length'))
                         ->orderBy('stores.name', $order[0]['dir'])->get();
                     break;
                 case 'area':
-                    $displays = $filtered->join('stores', 'beacon_majors.store_id', '=', 'stores.id')->skip($request->input('start'))->take($request->input('length'))
+                    if (!$joinedStore) {
+                        $joinedStore = true;
+                        $filtered->join('stores', 'beacon_majors.store_id', '=', 'stores.id');
+                    }
+                    $displays = $filtered->skip($request->input('start'))->take($request->input('length'))
                         ->orderBy('stores.display_area', $order[0]['dir'])->get();
                     break;
                 default:

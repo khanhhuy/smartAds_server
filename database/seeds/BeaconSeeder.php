@@ -11,7 +11,7 @@ class BeaconSeeder extends Seeder {
 	public function run()
 	{
         DB::table('beacon_minors')->delete();
-
+        DB::statement("ALTER TABLE `beacon_minors` AUTO_INCREMENT = 1");
         DB::statement("ALTER TABLE `beacon_majors` AUTO_INCREMENT = 1");
 
         $icyMinor=BeaconMinor::create(['minor'=>'1']);
