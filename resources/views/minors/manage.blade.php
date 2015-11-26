@@ -157,6 +157,7 @@
         }
 
         function toAddEditPanel() {
+            $('#errors-container-div').html('');
             $('.page-title h1').text('Add Minors - Categories');
             $('#minor-table').slideToggle('fast');
             $('#category-tree').slideToggle('fast');

@@ -33,7 +33,7 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::controller('auth', 'Auth\APIAuthController');
 });
 
-Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
+//Route::get('process-trans/{customers}', 'ProcessTransactionController@index');
 
 
 /*

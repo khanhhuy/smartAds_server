@@ -20,7 +20,7 @@ $loader = asset('/img/icon/rolling.svg');
         <img src="{{$loader}}" class="icon-loader">
         <span class="glyphicon glyphicon-ok icon-success" aria-hidden="true"></span>
 
-        <div class="btn-update">Last updated: 11-1-2015</div>
+        <div class="btn-update btn-processed">Last processed: {{$lastUpdated['trans_reprocess']}}</div>
     </div>
     <div class="btn-rich" id="btnTaxonomy">
         <div class="btn-name">Update Taxonomy</div>
@@ -65,6 +65,7 @@ $loader = asset('/img/icon/rolling.svg');
             $(obj.id + ' .icon-success').hide();
             $(obj.id + ' .icon-loader').show("slow");
             $(obj.id + ' .btn-update').text('Last updated: Updating ...');
+            $(obj.id + ' .btn-processed').text('Last processed: Updating ...');
         }
         function handleClick(name) {
             var obj = OBJS[name];
@@ -115,6 +116,7 @@ $loader = asset('/img/icon/rolling.svg');
                     }
                     else {
                         $(obj.id + ' .btn-update').text('Last updated: ' + data);
+                        $(obj.id + ' .btn-processed').text('Last processed: ' + data);
                         $(obj.id + ' .icon-loader').hide();
                         $(obj.id + ' .icon-success').show("slow");
                         obj.updating = false;
