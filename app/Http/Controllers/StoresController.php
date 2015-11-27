@@ -40,7 +40,7 @@ class StoresController extends Controller
                 return true;
         });
 
-        return $stores;
+        return $stores->values();
     }
 
 }

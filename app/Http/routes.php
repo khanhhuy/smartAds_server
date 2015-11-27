@@ -133,7 +133,7 @@ Route::group(['middleware' => 'admin'], function () {
 /*
 |------------------------Others Route---------------------|
 */
-Route::get('ads/thumbnail/{ads}', 'AdsController@thumbnail');
+Route::get('ads/{ads}/thumbnail', 'AdsController@thumbnail');
 Route::get('ads/{ads}/preview', 'AdsController@preview');
 Route::get('ads/{ads}/', ['as' => 'ads.show', 'uses' => 'AdsController@show']);
 
