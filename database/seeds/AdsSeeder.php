@@ -26,7 +26,7 @@ class AdsSeeder extends Seeder {
             'image_url' => '/img/ads/1.png'])->items()->attach(1);
 
         Ads::create(['id'=>2,'title'=>'Bột giặt ARIEL DOWNY 4.1kg Giảm giá 20%',
-            'end_date'=>Carbon::createFromDate(2015,1,1),
+            'end_date'=>Carbon::createFromDate(2016,1,1),
         'discount_value'=>'35500',
             'is_whole_system'=>true,
         'discount_rate'=>'20',
@@ -46,8 +46,8 @@ class AdsSeeder extends Seeder {
 
         Ads::create(['id'=>4,'title'=>'Nước xả DOWNY nắng mai túi 1.8L Giảm giá 18%',
             'is_whole_system'=>false,'end_date'=>Carbon::createFromDate(2017,1,1),
-            'discount_value'=>'17200',//17200
-            'discount_rate'=>'18',//18
+            'discount_value'=>'5000',//17200
+            'discount_rate'=>'10',//18
             'thumbnail_url' => '/img/thumbnails/4.png',
             'provide_image_link' => false,
             'auto_thumbnail' => true,
