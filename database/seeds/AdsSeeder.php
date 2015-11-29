@@ -46,8 +46,8 @@ class AdsSeeder extends Seeder {
 
         Ads::create(['id'=>4,'title'=>'Nước xả DOWNY nắng mai túi 1.8L Giảm giá 18%',
             'is_whole_system'=>false,'end_date'=>Carbon::createFromDate(2017,1,1),
-            'discount_value'=>'5000',//17200
-            'discount_rate'=>'10',//18
+            'discount_value'=>'17200',//17200
+            'discount_rate'=>'18',//18
             'thumbnail_url' => '/img/thumbnails/4.png',
             'provide_image_link' => false,
             'auto_thumbnail' => true,
