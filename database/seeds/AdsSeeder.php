@@ -26,7 +26,7 @@ class AdsSeeder extends Seeder {
             'image_url' => '/img/ads/1.png'])->items()->attach(1);
 
         Ads::create(['id'=>2,'title'=>'Bột giặt ARIEL DOWNY 4.1kg Giảm giá 20%',
-            'end_date'=>Carbon::createFromDate(2016,1,1),
+            'end_date' => Carbon::createFromDate(2015, 1, 1),
         'discount_value'=>'35500',
             'is_whole_system'=>true,
         'discount_rate'=>'20',
