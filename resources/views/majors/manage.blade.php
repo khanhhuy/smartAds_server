@@ -88,7 +88,9 @@
             loadCreateForm();
         }
         var myDrawCallbackFunc = function () {
-            updateEditingRow(editingRow);
+            if (typeof updateEditingRow !== 'undefined') {
+                updateEditingRow(editingRow);
+            }
         }
     </script>
     @include('partials.manage-footer-script')
