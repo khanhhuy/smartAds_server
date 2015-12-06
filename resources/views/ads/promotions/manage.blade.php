@@ -57,10 +57,12 @@
             {
                 "className": "dt-right",
                 data: 5,
+        width: "60px",
             },
             {
                 "className": "dt-right",
                 data: 6,
+        width: "60px",
             },
             {
                 orderable: false,
