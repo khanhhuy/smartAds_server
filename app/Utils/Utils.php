@@ -310,7 +310,7 @@ class Utils
         Setting::set('taxonomy.updated_at', 'Updating');
         Setting::save();
         if ($delete) {
-            DB::table('categories')->whereNotIn('id', DB::table('category_minor')->distinct()->lists('category_id'))->delete();
+            DB::table('categories')->whereNotIn('id', DB::table('category_minor')->distinct()->lists('category_id'))->where('is_suitable', '=', false)->delete();
         }
         $categories = $taxonomy['categories'];
         foreach ($categories as $category) {
