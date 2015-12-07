@@ -49,10 +49,5 @@
         <div id="name-container"><p id="name">{{$itemName}}</p></div>
     @show
 </div>
-{{--<script src="{{asset('/js/all.js')}}"></script>--}}
-{{--<script>--}}
-{{--var s=$('body').width()+" "+$('body').height();--}}
-{{--//    $('#name').text(s);--}}
-{{--</script>--}}
 </body>
 </html>
