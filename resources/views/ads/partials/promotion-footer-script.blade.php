@@ -28,7 +28,7 @@
             },
             cache: true
         },
-        minimumInputLength: 3,
+        minimumInputLength: 4,
         templateResult: templateFunc,
         templateSelection: templateFunc,
     });
