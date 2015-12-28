@@ -33,11 +33,11 @@
     <div class="form-group">
         {!! Form::label('age','Customers\' Age',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
         <div class="col-sm-2 col-lg-2">
-            {!! Form::input('number','from_age', $rule->from_age, ['class'=>'form-control inline-width', 'id' => 'from_age']) !!}
+            {!! Form::input('number','from_age', $rule->from_age, ['class'=>'form-control inline-width', 'id' => 'from_age','min'=>0]) !!}
         </div>
         <span class="seperator control-label">to</span>
         <div class="col-sm-2 col-lg-2">
-            {!! Form::input('number','to_age', $rule->to_age, ['class'=>'form-control inline-width', 'id' => 'to_age']) !!}
+            {!! Form::input('number','to_age', $rule->to_age, ['class'=>'form-control inline-width', 'id' => 'to_age','min'=>0]) !!}
         </div>
     </div>
     <div class="form-group">
@@ -49,11 +49,11 @@
     <div class="form-group">
         {!! Form::label('family','Customers\' Family Member',['class'=>'col-sm-3 col-lg-3 control-label']) !!}
         <div class="col-sm-2 col-lg-2">
-            {!! Form::input('number','from_family_members', $rule->from_family_members, ['class'=>'form-control inline-width']) !!}
+            {!! Form::input('number','from_family_members', $rule->from_family_members, ['class'=>'form-control inline-width','min'=>0]) !!}
         </div>
         <span class="seperator control-label">to</span>
         <div class="col-sm-2 col-lg-2">
-            {!! Form::input('number','to_family_members', $rule->to_family_members, ['class'=>'form-control inline-width']) !!}
+            {!! Form::input('number','to_family_members', $rule->to_family_members, ['class'=>'form-control inline-width','min'=>0]) !!}
         </div>
     </div>
     <div class="form-group">
